@@ -11,13 +11,13 @@ void createReportsPage(FcgiData* fcgi, std::vector<std::string> parameters, void
 	}
 	else{
 		if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			createPageHeader(fcgi, data);
+			createPageHeader(fcgi, data, subdatinId);
 			fcgi->out << "<div class='errorText'>You do not have the correct permissions to view this page.</div>";
 			createPageFooter(fcgi, data);
 			return;
 		}
 		
-		createPageHeader(fcgi, data);
+		createPageHeader(fcgi, data, subdatinId);
 		
 		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id, reason, commentId, threadId, ip, userId FROM reports WHERE subdatinId = ? ORDER BY threadId, commentId"));
 		prepStmt->setInt64(1, subdatinId);

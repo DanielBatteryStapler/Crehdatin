@@ -61,6 +61,8 @@
 		<Unit filename="FormatPost.h" />
 		<Unit filename="HandleAddAdministrator.cpp" />
 		<Unit filename="HandleAddAdministrator.h" />
+		<Unit filename="HandleAddModerator.cpp" />
+		<Unit filename="HandleAddModerator.h" />
 		<Unit filename="HandleChangePassword.cpp" />
 		<Unit filename="HandleChangePassword.h" />
 		<Unit filename="HandleCreateAccount.cpp" />
@@ -81,12 +83,26 @@
 		<Unit filename="HandleNewThread.h" />
 		<Unit filename="HandleRemoveAdministrator.cpp" />
 		<Unit filename="HandleRemoveAdministrator.h" />
+		<Unit filename="HandleRemoveSubdatinOfficial.cpp" />
+		<Unit filename="HandleRemoveSubdatinOfficial.h" />
 		<Unit filename="HandleReportComment.cpp" />
 		<Unit filename="HandleReportComment.h" />
 		<Unit filename="HandleReportThread.cpp" />
 		<Unit filename="HandleReportThread.h" />
+		<Unit filename="HandleSetBureaucrat.cpp" />
+		<Unit filename="HandleSetBureaucrat.h" />
 		<Unit filename="HandleSetCssTheme.cpp" />
 		<Unit filename="HandleSetCssTheme.h" />
+		<Unit filename="HandleSetModerator.cpp" />
+		<Unit filename="HandleSetModerator.h" />
+		<Unit filename="HandleSetSubdatinCommentLocked.cpp" />
+		<Unit filename="HandleSetSubdatinCommentLocked.h" />
+		<Unit filename="HandleSetSubdatinPostLocked.cpp" />
+		<Unit filename="HandleSetSubdatinPostLocked.h" />
+		<Unit filename="HandleSetThreadLocked.cpp" />
+		<Unit filename="HandleSetThreadLocked.h" />
+		<Unit filename="HandleSetThreadStickied.cpp" />
+		<Unit filename="HandleSetThreadStickied.h" />
 		<Unit filename="InputHandler.cpp" />
 		<Unit filename="InputHandler.h" />
 		<Unit filename="LoginPage.cpp" />
@@ -117,6 +133,9 @@
 		<Unit filename="SubdatinData.h" />
 		<Unit filename="SubdatinPage.cpp" />
 		<Unit filename="SubdatinPage.h" />
+		<Unit filename="TerminologyHelp.txt">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
 		<Unit filename="ThreadPage.cpp" />
 		<Unit filename="ThreadPage.h" />
 		<Unit filename="UserData.cpp" />

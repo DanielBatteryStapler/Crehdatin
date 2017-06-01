@@ -6,30 +6,30 @@ void handleDeleteComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	int64_t subdatinId = getSubdatinId(data->con, parameters[0]);
 	
 	if(subdatinId == -1){
-		handleDeleteCommentErrorPage(fcgi, data, "You cannot delete a comment from a subdatin that doesn't exist");
+		handleDeleteCommentErrorPage(fcgi, data, -1, "You cannot delete a comment from a subdatin that doesn't exist");
 	}
 	else{
 		std::string authToken;
 		if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
 			|| authToken != data->authToken){
-			handleDeleteCommentErrorPage(fcgi, data, "Invalid Authentication Token");
+			handleDeleteCommentErrorPage(fcgi, data, subdatinId, "Invalid Authentication Token");
 			return;
 		}
 		
-		if(hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			handleDeleteCommentErrorPage(fcgi, data, "You Do Not Have The Correct Permissions To Do This");
+		if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
+			handleDeleteCommentErrorPage(fcgi, data, subdatinId, "You Do Not Have The Correct Permissions To Do This");
 			return;
 		}
 		
 		std::string commentId;
 		if(getPostValue(fcgi->cgi, commentId, "commentId", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError){
-			handleDeleteCommentErrorPage(fcgi, data, "Invalid Comment Id");
+			handleDeleteCommentErrorPage(fcgi, data, subdatinId, "Invalid Comment Id");
 			return;
 		}
 		
 		std::string threadId = percentDecode(parameters[1]);
 		
-		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id FROM comments WHERE id = ? AND threadId = ? AND subdatin = ?"));
+		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id FROM comments WHERE id = ? AND threadId = ? AND subdatinId = ?"));
 		prepStmt->setString(1, commentId);
 		prepStmt->setString(2, threadId);
 		prepStmt->setInt64(3, subdatinId);
@@ -54,13 +54,13 @@ void handleDeleteComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 			finishHttpHeader(fcgi->out);
 		}
 		else{
-			handleDeleteCommentErrorPage(fcgi, data, "This Comment Does Not Exist");
+			handleDeleteCommentErrorPage(fcgi, data, subdatinId, "This Comment Does Not Exist");
 		}
 	}
 }
 
-void handleDeleteCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
+void handleDeleteCommentErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error){
+	createPageHeader(fcgi, data, subdatinId);
 	fcgi->out << "<div class='errorText'>" << error << "</div>";
 	createPageFooter(fcgi, data);
 }

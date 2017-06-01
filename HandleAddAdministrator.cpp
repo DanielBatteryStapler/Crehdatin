@@ -51,7 +51,7 @@ void handleAddAdministrator(FcgiData* fcgi, std::vector<std::string> parameters,
 
 void createAddAdministratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
 	createPageHeader(fcgi, data);
-	std::cout << "<div class='errorText'>" << error << "</div>";
+	fcgi->out << "<div class='errorText'>" << error << "</div>";
 	createPageFooter(fcgi, data);
 }
 

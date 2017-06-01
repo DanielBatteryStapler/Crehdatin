@@ -140,8 +140,6 @@ bool Database::createDatabase(){
 	"body TEXT NOT NULL,"
 	"anonId TEXT DEFAULT NULL,"
 	"userId BIGINT DEFAULT NULL,"
-	"sticked BOOL NOT NULL DEFAULT FALSE,"
-	"removed BOOL NOT NULL DEFAULT FALSE,"
 	"posterIp TEXT NOT NULL,"
 	"subdatinId BIGINT NOT NULL,"
 	"INDEX (subdatinId),"

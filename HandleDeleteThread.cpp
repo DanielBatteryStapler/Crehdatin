@@ -5,18 +5,18 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	int64_t subdatinId = getSubdatinId(data->con, parameters[0]);
 	
 	if(subdatinId == -1){
-		handleDeleteThreadErrorPage(fcgi, data, "Cannot delete a thread in a subdatin that doesn't exist");
+		handleDeleteThreadErrorPage(fcgi, data, -1, "Cannot delete a thread in a subdatin that doesn't exist");
 	}
 	else{
 		std::string authToken;
 		if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
 			|| authToken != data->authToken){
-			handleDeleteThreadErrorPage(fcgi, data, "Invalid Authentication Token");
+			handleDeleteThreadErrorPage(fcgi, data, subdatinId, "Invalid Authentication Token");
 			return;
 		}
 		
-		if(hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			handleDeleteThreadErrorPage(fcgi, data, "You Do Not Have The Correct Permissions To Do This");
+		if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
+			handleDeleteThreadErrorPage(fcgi, data, subdatinId, "You Do Not Have The Correct Permissions To Do This");
 			return;
 		}
 		
@@ -38,7 +38,7 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 			
 			sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 			if(error != InputError::NoError || seeAlso.size() == 0){
-				sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
+				sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/d/" + parameters[0]);
 			}
 			else{
 				sendLocationHeader(fcgi->out, seeAlso);
@@ -46,13 +46,13 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 			finishHttpHeader(fcgi->out);
 		}
 		else{
-			handleDeleteThreadErrorPage(fcgi, data, "This Thread Does Not Exist");
+			handleDeleteThreadErrorPage(fcgi, data, subdatinId, "This Thread Does Not Exist");
 		}
 	}
 }
 
-void handleDeleteThreadErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
+void handleDeleteThreadErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error){
+	createPageHeader(fcgi, data, subdatinId);
 	fcgi->out << "<div class='errorText'>" << error << "</div>";
 	createPageFooter(fcgi, data);
 }

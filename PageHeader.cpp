@@ -77,7 +77,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, int64_t subdatinId){
 	else{
 		fcgi->out <<
 		"<div class='toolbarEntry'>"
-		"Welcome back, " << escapeHtml(data->userName) << "!"
+		"Welcome back, <a href='https://" << Config::getDomain() << "/user/" << percentEncode(data->userName) << "'>" << escapeHtml(data->userName) << "</a>!"
 		"</div>";
 	}
 	fcgi->out << "</div>";

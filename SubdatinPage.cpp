@@ -12,7 +12,7 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	}
 	else{
 		createPageHeader(fcgi, data, subdatinId);
-		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id, title, anonId, userId, locked FROM threads WHERE subdatinId = ? ORDER BY lastBumpTime DESC"));
+		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id, title, anonId, userId, locked, stickied FROM threads WHERE subdatinId = ? ORDER BY stickied DESC, lastBumpTime DESC"));
 		prepStmt->setInt64(1, subdatinId);
 		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 		
@@ -36,8 +36,11 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 					userName = getUserName(data->con, userId);
 				}
 				
-				fcgi->out << "<div class='thread'><a href='https://" << Config::getDomain() << "/d/" << percentEncode(parameters[0]) << "/thread/" << std::to_string(threadId) << "'><div class='threadTitle'>"
+				fcgi->out << "<div class='thread'><a href='https://" << Config::getDomain() << "/d/" << parameters[0] << "/thread/" << std::to_string(threadId) << "'><div class='threadTitle'>"
 				<< escapeHtml(title) << "</div></a><div class='extraPostInfo'><div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</div>";
+				if(res->getBoolean("stickied")){
+					fcgi->out << "<div class='postInfoElement'>Stickied</div>";
+				}
 				if(res->getBoolean("locked")){
 					fcgi->out << "<div class='postInfoElement'>Locked</div>";
 				}

@@ -18,5 +18,5 @@
 #include "PageHeader.h"
 #include "PageFooter.h"
 
-void handleAddAdministrator(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createAddAdministratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error);
+void handleSetSubdatinCommentLocked(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void createSetSubdatinCommentLockedErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error);

@@ -19,4 +19,4 @@
 #include "InputHandler.h"
 
 void handleDeleteComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleDeleteCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error);
+void handleDeleteCommentErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error);

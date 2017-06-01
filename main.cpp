@@ -42,6 +42,15 @@
 #include "HandleAddAdministrator.h"
 #include "HandleRemoveAdministrator.h"
 
+#include "HandleAddModerator.h"
+#include "HandleSetModerator.h"
+#include "HandleSetBureaucrat.h"
+#include "HandleRemoveSubdatinOfficial.h"
+#include "HandleSetSubdatinPostLocked.h"
+#include "HandleSetSubdatinCommentLocked.h"
+#include "HandleSetThreadLocked.h"
+#include "HandleSetThreadStickied.h"
+
 #include "HandleReportThread.h"
 #include "HandleDeleteThread.h"
 #include "HandleReportComment.h"
@@ -101,7 +110,6 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::setRequestEndHandle([](FcgiData* fcgi, void* _data){
 			
-			
 		});
 		
 		WebsiteFramework::setError404Handle([](FcgiData* fcgi, void* _data){
@@ -137,6 +145,15 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addPostHandleMap("/addAdministrator", handleAddAdministrator);
 		WebsiteFramework::addPostHandleMap("/removeAdministrator", handleRemoveAdministrator);
+		
+		WebsiteFramework::addPostHandleMap("/d/*/addModerator", handleAddModerator);
+		WebsiteFramework::addPostHandleMap("/d/*/setModerator", handleSetModerator);
+		WebsiteFramework::addPostHandleMap("/d/*/setBureaucrat", handleSetBureaucrat);
+		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatinOfficial", handleRemoveSubdatinOfficial);
+		WebsiteFramework::addPostHandleMap("/d/*/setPostLocked", handleSetSubdatinPostLocked);
+		WebsiteFramework::addPostHandleMap("/d/*/setCommentLocked", handleSetSubdatinCommentLocked);
+		WebsiteFramework::addPostHandleMap("/d/*/thread/*/setThreadLocked", handleSetThreadLocked);
+		WebsiteFramework::addPostHandleMap("/d/*/thread/*/setThreadStickied", handleSetThreadStickied);
 		
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/reportThread", handleReportThread);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/deleteThread", handleDeleteThread);

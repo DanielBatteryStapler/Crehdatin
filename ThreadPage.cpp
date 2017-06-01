@@ -11,8 +11,10 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 		createPageFooter(fcgi, data);
 	}
 	else{
+		std::string userPosition = getEffectiveUserPosition(data->con, data->userId, subdatinId);
+		
 		std::string threadId = percentDecode(parameters[1]);
-		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, body, anonId, userId, locked FROM threads WHERE id = ? AND subdatinId = ?"));
+		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, body, anonId, userId, locked, stickied FROM threads WHERE id = ? AND subdatinId = ?"));
 		prepStmt->setString(1, threadId);
 		prepStmt->setInt64(2, subdatinId);
 		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
@@ -32,27 +34,34 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 				userId = res->getInt("userId");
 				userName = getUserName(data->con, userId);
 			}
-			bool canReply = !res->getBoolean("locked") || hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId));
+			bool canReply = !res->getBoolean("locked") || hasModerationPermissions(userPosition);
 			
-			body = formatUserPostBody(escapeHtml(body), getEffectiveUserPosition(data->con, userId, subdatinId));
+			body = formatUserPostBody(escapeHtml(body), userPosition);
 			
 			fcgi->out << "<div class='thread'><div class='threadTitle'>"
-				<< escapeHtml(title) << "</div><div class='extraPostInfo'>";
+				<< escapeHtml(title) << "</div><div class='extraPostInfo'>"
+				"<div class='postInfoElement'>"
+				<< getFormattedPosterString(data->con, anonId, userId, subdatinId) << 
+				"</div>";
 			if(canReply){
 				createReplyMenu(fcgi, data, threadId, parameters[0]);
 			}
 			createReportMenu(fcgi, data, threadId, parameters[0]);
+			if(hasModerationPermissions(userPosition)){
+				createModerationMenu(fcgi, data, threadId, parameters[0], userPosition, -1, res->getBoolean("locked"), res->getBoolean("stickied"));
+			}
 			if(res->getBoolean("locked")){
 				fcgi->out << "<div class='postInfoElement'>Locked</div>";
 			}
-			fcgi->out << "<div class='postInfoElement'>"
-				<< getFormattedPosterString(data->con, anonId, userId, subdatinId) << 
-				"</div>"
+			if(res->getBoolean("stickied")){
+				fcgi->out << "<div class='postInfoElement'>Stickied</div>";
+			}
+			fcgi->out << 
 				"</div>"
 				"<div class='threadText'>" << body
 				<< "</div></div>";
 				
-			createCommentLine(fcgi, data, threadId, subdatinId, canReply, parameters[0]);
+			createCommentLine(fcgi, data, threadId, subdatinId, userPosition, canReply, parameters[0]);
 		}
 		else{
 			createPageHeader(fcgi, data, subdatinId);
@@ -62,7 +71,7 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	}
 }
 
-void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& threadId, int64_t subdatinId, bool canReply, std::string& subdatinTitle, int64_t layer, int64_t parentId){
+void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& threadId, int64_t subdatinId, std::string& userPosition, bool canReply, std::string& subdatinTitle, int64_t layer, int64_t parentId){
 	std::unique_ptr<sql::PreparedStatement> prepStmt;
 		
 	if(parentId == -1){
@@ -105,12 +114,15 @@ void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& threadId,
 			createReplyMenu(fcgi, data, threadId, subdatinTitle, commentId);
 		}
 		createReportMenu(fcgi, data, threadId, subdatinTitle, commentId);
+		if(hasModerationPermissions(userPosition)){
+			createModerationMenu(fcgi, data, threadId, subdatinTitle, userPosition, commentId);
+		}
 			
 		fcgi->out << getFormattedPosterString(data->con, anonId, userId, subdatinId)
 			<< "</div><div class='commentText'>"
 			<< body << "</div>";
 				
-		createCommentLine(fcgi, data, threadId, subdatinId, canReply, subdatinTitle, layer + 1, commentId);
+		createCommentLine(fcgi, data, threadId, subdatinId, userPosition, canReply, subdatinTitle, layer + 1, commentId);
 		
 		fcgi->out << "</div>";
 	}
@@ -184,17 +196,6 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, 
 			"<input type='text' name='reason' class='inline'>"
 			"</form>"
 			"</li>";
-		if(hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			fcgi->out <<
-				"<li>"
-				"<form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/deleteThread' class='inline'>"
-				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-				"<button type='submit' class='link-button'>"
-				"Delete"
-				"</button>"
-				"</form>"
-				"</li>";
-		}
 	}
 	else{
 		fcgi->out <<
@@ -258,18 +259,6 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, 
 			"<input type='text' name='reason' class='inline'>"
 			"</form>"
 			"</li>";
-		if(hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			fcgi->out <<
-				"<li>"
-				"<form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/deleteComment' class='inline'>"
-				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-				"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
-				"<button type='submit' class='link-button'>"
-				"Delete"
-				"</button>"
-				"</form>"
-				"</li>";
-		}
 	}
 	
 	fcgi->out << 
@@ -301,5 +290,74 @@ void createReplyMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, s
 	"</div>";
 }
 
+void createModerationMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, std::string& subdatinTitle, std::string& userPosition, int64_t commentId, bool locked, bool stickied){
+	fcgi->out << "<div class='postInfoElement'>"
+	"<div class='dropDown'>"
+	"<div class='dropBtn'>"
+	"Moderate"
+	"</div>"
+	"<ul>";
+	if(commentId == -1){
+		fcgi->out <<
+		"<li>"
+		"<form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/deleteThread' class='inline'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<button type='submit' class='link-button'>"
+		"Delete"
+		"</button>"
+		"</form>"
+		"</li>";
+		fcgi->out <<
+		"<li>"
+		"<form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/setThreadLocked' class='inline'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
+		if(locked){
+			fcgi->out << "<button type='submit' class='link-button' name='locked' value='false'>"
+			"Unlock Thread"
+			"</button>";
+		}
+		else{
+			fcgi->out << "<button type='submit' class='link-button' name='locked' value='true'>"
+			"Lock Thread"
+			"</button>";
+		}
+		fcgi->out << "</form>"
+		"</li>";
+		fcgi->out <<
+		"<li>"
+		"<form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/setThreadStickied' class='inline'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
+		if(hasSubdatinControlPermissions(userPosition)){
+			if(stickied){
+				fcgi->out << "<button type='submit' class='link-button' name='stickied' value='false'>"
+				"Make Thread Non-sticky"
+				"</button>";
+			}
+			else{
+				fcgi->out << "<button type='submit' class='link-button' name='stickied' value='true'>"
+				"Make Thread Sticky"
+				"</button>";
+			}
+		}
+		fcgi->out << "</form>"
+		"</li>";
+	}
+	else{
+		fcgi->out <<
+		"<li>"
+		"<form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/deleteComment' class='inline'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
+		"<button type='submit' class='link-button'>"
+		"Delete"
+		"</button>"
+		"</form>"
+		"</li>";
+	}
+	fcgi->out << "</ul>"
+	"</form>"
+	"</div>"
+	"</div>";
+}
 
 

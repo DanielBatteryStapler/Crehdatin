@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Config.h"
 
 #include <cppconn/driver.h>
@@ -9,14 +11,12 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
-
-#include "InputHandler.h"
 #include "RequestData.h"
-#include "UserData.h"
-#include "UserPermissions.h"
-#include "Response.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "UserData.h"
 
-void handleAddAdministrator(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createAddAdministratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error);
+#include "InputHandler.h"
+
+void handleSetThreadLocked(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void handleSetThreadLockedErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error);

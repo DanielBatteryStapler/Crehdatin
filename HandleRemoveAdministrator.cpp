@@ -51,7 +51,7 @@ void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> paramete
 
 void createRemoveAdministratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
 	createPageHeader(fcgi, data);
-	std::cout << "<div class='errorText'>" << error << "</div>";
+	fcgi->out << "<div class='errorText'>" << error << "</div>";
 	createPageFooter(fcgi, data);
 }
 

@@ -19,4 +19,4 @@
 #include "InputHandler.h"
 
 void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleDeleteThreadErrorPage(FcgiData* fcgi, RequestData* data, std::string error);
+void handleDeleteThreadErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error);
