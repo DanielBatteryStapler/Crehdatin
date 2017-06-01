@@ -13,7 +13,9 @@
 struct RequestData{
 	sql::Connection* con;
 	sql::Statement* stmt;
-	int64_t currentTime;
+	
+	//user data
+	
 	std::string sessionToken;
 	std::string userName;
 	int64_t userId;
@@ -22,4 +24,11 @@ struct RequestData{
 	std::string cssTheme;
 	bool blocked;
 	int64_t lastPostTime;
+	
+	//request data
+	
+	int64_t currentTime;
+	int64_t subdatinId;
+	int64_t threadId;
+	int64_t commentId;
 };

@@ -53,10 +53,10 @@
 		<Unit filename="Config.h" />
 		<Unit filename="CrehdatinControlPanelPage.cpp" />
 		<Unit filename="CrehdatinControlPanelPage.h" />
-		<Unit filename="Cryptography.cpp" />
-		<Unit filename="Cryptography.h" />
 		<Unit filename="Database.cpp" />
 		<Unit filename="Database.h" />
+		<Unit filename="DirectoryHandles.cpp" />
+		<Unit filename="DirectoryHandles.h" />
 		<Unit filename="FormatPost.cpp" />
 		<Unit filename="FormatPost.h" />
 		<Unit filename="HandleAddAdministrator.cpp" />
@@ -103,8 +103,6 @@
 		<Unit filename="HandleSetThreadLocked.h" />
 		<Unit filename="HandleSetThreadStickied.cpp" />
 		<Unit filename="HandleSetThreadStickied.h" />
-		<Unit filename="InputHandler.cpp" />
-		<Unit filename="InputHandler.h" />
 		<Unit filename="LoginPage.cpp" />
 		<Unit filename="LoginPage.h" />
 		<Unit filename="MainPage.cpp" />
@@ -122,8 +120,6 @@
 		<Unit filename="RequestData.h" />
 		<Unit filename="RequestStartHandle.cpp" />
 		<Unit filename="RequestStartHandle.h" />
-		<Unit filename="Response.cpp" />
-		<Unit filename="Response.h" />
 		<Unit filename="SettingsPage.cpp" />
 		<Unit filename="SettingsPage.h" />
 		<Unit filename="StringHelper.h" />
@@ -145,16 +141,6 @@
 		<Unit filename="UserPermissions.cpp" />
 		<Unit filename="UserPermissions.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="scrypt/crypto_scrypt-nosse.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="scrypt/crypto_scrypt.h" />
-		<Unit filename="scrypt/scrypt_platform.h" />
-		<Unit filename="scrypt/sha256.cpp">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="scrypt/sha256.h" />
-		<Unit filename="scrypt/sysendian.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

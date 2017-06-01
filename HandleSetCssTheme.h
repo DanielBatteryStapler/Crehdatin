@@ -11,8 +11,8 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
 
 #include "SettingsPage.h"
-#include "InputHandler.h"
 
 void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

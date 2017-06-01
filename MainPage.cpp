@@ -17,7 +17,7 @@ void createMainPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 		do{
 			std::string title = res->getString("title");
 			std::string name = res->getString("name");
-			fcgi->out << "<div class='thread'><a href='https://" << Config::getDomain() << "/d/" << percentEncode(title) << "'><div class='threadTitle'>"
+			fcgi->out << "<div class='thread'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "'><div class='threadTitle'>"
 			<< escapeHtml(name) << "</div></a><div class='extraPostInfo'><div class='postInfoElement'>/" << escapeHtml(title) << "/</div>";
 			if(res->getBoolean("postLocked")){
 				fcgi->out << "<div class='postInfoElement'>Posts Locked</div>";

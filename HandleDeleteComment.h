@@ -11,12 +11,12 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+
 #include "RequestData.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
 #include "UserData.h"
 
-#include "InputHandler.h"
-
 void handleDeleteComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleDeleteCommentErrorPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error);
+void handleDeleteCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

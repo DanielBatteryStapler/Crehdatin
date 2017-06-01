@@ -11,9 +11,9 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
 
 #include "NewThreadPage.h"
-#include "InputHandler.h"
 #include "UserData.h"
 
 void handleNewThread(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

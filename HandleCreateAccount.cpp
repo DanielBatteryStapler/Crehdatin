@@ -8,13 +8,6 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		return;
 	}
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createLoginPage(fcgi, data, "", "Invalid Authentication Token");
-		return;
-	}
-	
 	std::string captcha;
 	if(getPostValue(fcgi->cgi, captcha, "g-recaptcha-response", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
 		|| !validateRecaptcha(captcha, fcgi->env->getRemoteAddr())){
@@ -110,13 +103,13 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
 	finishHttpHeader(fcgi->out);
 }
 
 void createCreateAccountPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/login");
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/login");
 	finishHttpHeader(fcgi->out);
 }
 

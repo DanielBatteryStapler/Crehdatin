@@ -16,11 +16,6 @@ std::string Config::getSqlDatabaseName(){
 	return "Crehdatin";
 }
 
-std::string Config::getDomain(){
-	//return "crehdatin.karagory.com";
-	return "website.cloud.karagory.com";
-}
-
 std::size_t Config::getUniqueTokenLength(){
 	return 512;
 }

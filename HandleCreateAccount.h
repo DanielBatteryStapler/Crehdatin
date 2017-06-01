@@ -11,10 +11,10 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+#include <WebsiteFramework/Cryptography.h>
 
 #include "LoginPage.h"
-#include "InputHandler.h"
-#include "Cryptography.h"
 #include "Recaptcha.h"
 
 void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

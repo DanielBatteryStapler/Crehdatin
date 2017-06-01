@@ -16,4 +16,4 @@
 #include "PageFooter.h"
 
 void createNewThreadPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createNewThreadPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string error);
+void createNewThreadPage(FcgiData* fcgi, RequestData* data, std::string error);

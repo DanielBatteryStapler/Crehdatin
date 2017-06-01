@@ -10,9 +10,13 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 
-#include "Response.h"
+#include <WebsiteFramework/Response.h>
+#include <WebsiteFramework/Cryptography.h>
+#include <WebsiteFramework/InputHandler.h>
+
 #include "RequestData.h"
-#include "Cryptography.h"
+#include "PageHeader.h"
+#include "PageFooter.h"
 
 bool requestStartHandle(FcgiData* fcgi, void* _data);
 bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionToken);

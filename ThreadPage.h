@@ -10,20 +10,18 @@
 #include <string>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+
 #include "UserData.h"
-
-#include "InputHandler.h"
 #include "StringHelper.h"
-
 #include "PageHeader.h"
 #include "PageFooter.h"
-
 #include "FormatPost.h"
 
 void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& threadId, int64_t subdatinId, std::string& userPosition, bool canReply, std::string& subdatinTitle, int64_t layer = 0, int64_t parentId = -1);
-void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, std::string& subdatinTitle, int64_t commentId = -1);
-void createReplyMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, std::string& subdatinTitle, int64_t commentId = -1);
-void createModerationMenu(FcgiData* fcgi, RequestData* data, std::string& threadId, std::string& subdatinTitle, std::string& userPosition, int64_t commentId, bool locked = false, bool stickied = false);
+void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& userPosition, bool canReply, std::string& subdatinTitle, int64_t layer = 0, int64_t parentId = -1);
+void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTitle, int64_t commentId = -1);
+void createReplyMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTitle, int64_t commentId = -1);
+void createModerationMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTitle, std::string& userPosition, int64_t commentId, bool locked = false, bool stickied = false);
 
 

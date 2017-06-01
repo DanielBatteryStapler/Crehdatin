@@ -5,22 +5,7 @@ void handleLogout(FcgiData* fcgi, std::vector<std::string> parameters, void* _da
 	
 	if(data->userId == -1){
 		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-		sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
-		finishHttpHeader(fcgi->out);
-		return;
-	}
-	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError){
-		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-		sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
-		finishHttpHeader(fcgi->out);
-		return;
-	}
-	
-	if(data->authToken != authToken){
-		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-		sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
 		finishHttpHeader(fcgi->out);
 		return;
 	}
@@ -33,7 +18,7 @@ void handleLogout(FcgiData* fcgi, std::vector<std::string> parameters, void* _da
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
 	finishHttpHeader(fcgi->out);
 }
 

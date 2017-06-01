@@ -8,13 +8,6 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 		return;
 	}
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createSettingsPage(fcgi, data, "", "Invalid Authentication Token");
-		return;
-	}
-	
 	std::string oldPassword;
 	switch(getPostValue(fcgi->cgi, oldPassword, "oldPassword", Config::getMaxPasswordLength(), InputFlag::DontCheckInputContents)){
 	default:
@@ -91,7 +84,7 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 	prepStmt->execute();
 	
 	createPageHeader(fcgi, data);
-	fcgi->out << "<p>Successfully changed password!</p><a href='https://" << Config::getDomain() << "/settings'>Back to settings</a>";
+	fcgi->out << "<p>Successfully changed password!</p><a href='https://" << WebsiteFramework::getDomain() << "/settings'>Back to settings</a>";
 	createPageFooter(fcgi, data);
 }
 

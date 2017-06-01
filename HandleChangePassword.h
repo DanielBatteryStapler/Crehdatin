@@ -11,9 +11,9 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+#include <WebsiteFramework/Cryptography.h>
 
-#include "InputHandler.h"
-#include "Cryptography.h"
 #include "SettingsPage.h"
 
 void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

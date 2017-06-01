@@ -3,39 +3,30 @@
 void createSubdatinControlPanelPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	int64_t subdatinId = getSubdatinId(data->con, parameters[0]);
-	
-	if(subdatinId == -1){
+	if(!hasSubdatinControlPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
 		createPageHeader(fcgi, data);
-		fcgi->out << "<div class='errorText'>Cannot view a control panel for a subdatin that doesn't exist</div>";
+		fcgi->out << "<div class='errorText'>You do not have the correct permissions to view this page</div>";
 		createPageFooter(fcgi, data);
+		return;
 	}
-	else{
-		if(!hasSubdatinControlPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			createPageHeader(fcgi, data, subdatinId);
-			fcgi->out << "<div class='errorText'>You do not have the correct permissions to view this page</div>";
-			createPageFooter(fcgi, data);
-			return;
-		}
-		createSubdatinControlPanelPage(fcgi, data, subdatinId, parameters[0]);
-	}
+	createSubdatinControlPanelPage(fcgi, data, parameters[0]);
 }
 
-void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string subdatinTitle){
-	createPageHeader(fcgi, data, subdatinId);
+void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::string subdatinTitle){
+	createPageHeader(fcgi, data);
 	
 	std::string title;
 	std::string name;
 	bool postsLocked;
 	bool commentsLocked;
-	getSubdatinData(data->con, subdatinId, title, name, postsLocked, commentsLocked);
+	getSubdatinData(data->con, data->subdatinId, title, name, postsLocked, commentsLocked);
 	
 	fcgi->out << "<h1>Control Panel</h1>"
 	"<div class='commentEven'><h2>Subdatin Officials</h2>"
 	"<div class='commentOdd'><div class='commentText'>";
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT userId, userPosition FROM userPositions WHERE subdatinId = ?"));
-	prepStmt->setInt64(1, subdatinId);
+	prepStmt->setInt64(1, data->subdatinId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	
 	res->beforeFirst();
@@ -43,15 +34,15 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t s
 		do{
 			std::string userName = getUserName(data->con, res->getInt64("userId"));
 			fcgi->out << 
-			"<form method='post' action='https://" << Config::getDomain() << "/d/" << subdatinTitle << "/removeSubdatinOfficial' accept-charset='UTF-8'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/removeSubdatinOfficial' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
-			"<div class='postInfoElement'><a href=https://'" << Config::getDomain() << "/user/" << percentEncode(userName) << ">";
+			"<div class='postInfoElement'><a href=https://'" << WebsiteFramework::getDomain() << "/user/" << percentEncode(userName) << ">";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << 
-				"<form method='post' action='https://" << Config::getDomain() << "/d/" << subdatinTitle << "/setModerator' accept-charset='UTF-8'>"
+				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setModerator' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
 				"<div class='postInfoElement'><button type='submit'>Set Moderator</button></div>"
@@ -60,7 +51,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t s
 			}
 			else if(res->getString("userPosition") == "moderator"){
 				fcgi->out << 
-				"<form method='post' action='https://" << Config::getDomain() << "/d/" << subdatinTitle << "/setBureaucrat' accept-charset='UTF-8'>"
+				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setBureaucrat' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
 				"<div class='postInfoElement'><button type='submit'>Set Bureaucrat</button></div>"
@@ -79,7 +70,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t s
 	
 	fcgi->out << "</div></div>"
 	"<div class='commentText'>"
-	"<form method='post' action='https://" << Config::getDomain() << "/d/" << subdatinTitle << "/addModerator' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/addModerator' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<div class='postInfoElement'><input type='text' name='userName'></div>"
 	"<button type='submit'>Add New</button>"
@@ -89,7 +80,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t s
 	"<div class='commentEven'>"
 	"<h2>Settings</h2>"
 	"<div class='commentText'>"
-	"<form method='post' action='https://" << Config::getDomain() << "/d/" << subdatinTitle << "/setPostLocked' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setPostLocked' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
 	if(postsLocked){
 		fcgi->out << "<button type='submit' name='locked' value='false'>Unlock Posts</button>";
@@ -98,7 +89,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t s
 		fcgi->out << "<button type='submit' name='locked' value='true'>Lock Posts</button>";
 	}
 	fcgi->out << "</form>"
-	"<form method='post' action='https://" << Config::getDomain() << "/d/" << subdatinTitle << "/setCommentLocked' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setCommentLocked' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
 	if(commentsLocked){
 		fcgi->out << "<button type='submit' name='locked' value='false'>Unlock Comments</button>";

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Config.h"
 
 #include <cppconn/driver.h>
@@ -11,12 +9,10 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
-#include <WebsiteFramework/InputHandler.h>
 
-#include "RequestData.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
-#include "UserData.h"
 
-void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleNewCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error);
+bool subdatinDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+bool threadDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+bool commentDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

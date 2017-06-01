@@ -24,12 +24,12 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 	if(res->next()){
 		do{
 			fcgi->out << 
-			"<form method='post' action='https://" << Config::getDomain() << "/removeAdministrator' accept-charset='UTF-8'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/removeAdministrator' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='userName' value='" << escapeHtml(res->getString("userName")) << "'>"
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
-			"<a href=https://'" << Config::getDomain() << "/user/" << percentEncode(res->getString("userName")) << ">"
+			"<a href=https://'" << WebsiteFramework::getDomain() << "/user/" << percentEncode(res->getString("userName")) << ">"
 			<< escapeHtml(res->getString("userName")) <<
 			"</a><br>";
 		}while(res->next());
@@ -39,7 +39,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 	}
 	
 	fcgi->out << "</div></div>"
-	"<form method='post' action='https://" << Config::getDomain() << "/addAdministrator' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/addAdministrator' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<div class='postInfoElement'><input type='text' name='userName'></div>"
 	"<button type='submit'>Add New</button>"

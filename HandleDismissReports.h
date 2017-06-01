@@ -11,12 +11,12 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+
 #include "RequestData.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
 #include "UserData.h"
-
-#include "InputHandler.h"
 
 void handleDismissReports(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void handleDismissReportsErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

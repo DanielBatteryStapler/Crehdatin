@@ -10,14 +10,12 @@
 #include <string>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+
 #include "UserData.h"
-
-#include "InputHandler.h"
 #include "StringHelper.h"
-
 #include "PageHeader.h"
 #include "PageFooter.h"
-
 #include "FormatPost.h"
 
 void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

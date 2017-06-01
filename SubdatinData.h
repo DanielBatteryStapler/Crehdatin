@@ -9,8 +9,9 @@
 #include <memory>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+
 #include "RequestData.h"
-#include "InputHandler.h"
 
 int64_t getSubdatinId(sql::Connection* con, std::string subdatinTitle);
 void getSubdatinData(sql::Connection* con, int64_t id, std::string& title, std::string& name, bool& postLocked, bool& commentLocked);

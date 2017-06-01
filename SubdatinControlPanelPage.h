@@ -14,4 +14,4 @@
 #include "PageFooter.h"
 
 void createSubdatinControlPanelPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, int64_t subdatinId, std::string subdatinTitle);
+void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::string subdatinTitle);

@@ -7,8 +7,6 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	
 	res->first();
 	
-	data->currentTime = res->getInt64(1);
-	
 	data->sessionToken = "";
 	data->userName = "";
 	data->userId = -1;
@@ -17,6 +15,11 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	data->cssTheme = "dark";
 	data->blocked = false;
 	data->lastPostTime = 0;
+	
+	data->currentTime = res->getInt64(1);
+	data->subdatinId = -1;
+	data->threadId = -1;
+	data->commentId = -1;
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT " 
 	"blocked, UNIX_TIMESTAMP(lastPostTime) "
@@ -48,16 +51,21 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 		}
 	}
 	
-	if(sessionToken.size() != 0){
-		if(getUserRequestData(fcgi, data, sessionToken) == false){
+	if(getUserRequestData(fcgi, data, sessionToken) == false){
+		return false;
+	}
+	
+	if(fcgi->env->getRequestMethod() == "POST"){//if you are trying to do a post request, you must have a correct auth token
+		std::string authToken;
+		if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
+			|| authToken != data->authToken){
+			createPageHeader(fcgi, data);
+			fcgi->out << "<div class='errorText'>Invalid Authentication Token. Do You Have Cookies Enabled?</div>";
+			createPageFooter(fcgi, data);
 			return false;
 		}
 	}
 	
-	if(data->sessionToken.size() == 0){
-		createNewSession(data);
-		sendCookieHeader(fcgi->out, "sessionToken", data->sessionToken);
-	}
 	return true;
 }
 
@@ -109,6 +117,10 @@ bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionTo
 		if(!res->isNull("shownId")){
 			data->shownId = res->getString("shownId");
 		}
+	}
+	else{
+		createNewSession(data);
+		sendCookieHeader(fcgi->out, "sessionToken", data->sessionToken);
 	}
 	return true;
 }

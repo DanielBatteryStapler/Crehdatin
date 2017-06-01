@@ -42,7 +42,7 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 	}
 	
 	fcgi->out << "</h3>"
-	"<form method='post' action='https://" << Config::getDomain() << "/setCssTheme' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setCssTheme' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<select name='theme'>"
 	"<option value='dark'>Dark</option>"
@@ -62,7 +62,7 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 		"</div></p>";
 	}
 	fcgi->out << "<h3>Change Password</h3>"
-	"<form method='post' action='https://" << Config::getDomain() << "/changePassword' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/changePassword' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='password' name='oldPassword'>Old Password<br>"
 	"<input type='password' name='newPassword'>New Password<br>"

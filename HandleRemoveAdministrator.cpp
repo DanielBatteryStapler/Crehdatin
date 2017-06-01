@@ -3,13 +3,6 @@
 void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createRemoveAdministratorErrorPage(fcgi, data, "Invalid Authentication Token");
-		return;
-	}
-	
 	if(!hasAdministrationControlPermissions(getEffectiveUserPosition(data->con, data->userId))){
 		createRemoveAdministratorErrorPage(fcgi, data, "You do not have the correct permissions to do this");
 		return;
@@ -45,7 +38,7 @@ void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> paramete
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/controlPanel");
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/controlPanel");
 	finishHttpHeader(fcgi->out);
 }
 

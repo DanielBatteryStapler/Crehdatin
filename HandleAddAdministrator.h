@@ -9,12 +9,12 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
+#include <WebsiteFramework/Response.h>
 
-#include "InputHandler.h"
 #include "RequestData.h"
 #include "UserData.h"
 #include "UserPermissions.h"
-#include "Response.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
 

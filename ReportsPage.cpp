@@ -2,25 +2,18 @@
 
 void createReportsPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
-	int64_t subdatinId = getSubdatinId(data->con, parameters[0]);
 	
-	if(subdatinId == -1){
-		createPageHeader(fcgi, data);
-		fcgi->out << "<div class='errorText'><i>This subdatin does not exist...</i></div>";
-		createPageFooter(fcgi, data);
-	}
-	else{
-		if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, subdatinId))){
-			createPageHeader(fcgi, data, subdatinId);
+		if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
+			createPageHeader(fcgi, data);
 			fcgi->out << "<div class='errorText'>You do not have the correct permissions to view this page.</div>";
 			createPageFooter(fcgi, data);
 			return;
 		}
 		
-		createPageHeader(fcgi, data, subdatinId);
+		createPageHeader(fcgi, data);
 		
 		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id, reason, commentId, threadId, ip, userId FROM reports WHERE subdatinId = ? ORDER BY threadId, commentId"));
-		prepStmt->setInt64(1, subdatinId);
+		prepStmt->setInt64(1, data->subdatinId);
 		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 		
 		res->beforeFirst();
@@ -67,7 +60,6 @@ void createReportsPage(FcgiData* fcgi, std::vector<std::string> parameters, void
 		}
 		
 		createPageFooter(fcgi, data);
-	}
 }
 
 void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
@@ -101,18 +93,18 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 		
 		body = formatUserPostBody(escapeHtml(body), getEffectiveUserPosition(data->con, userId, subdatinId));
 		
-		fcgi->out << "<div class='thread'><a href='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "'>"
+		fcgi->out << "<div class='thread'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "'>"
 			<< escapeHtml(title) << "</a><br><div class='extraPostInfo'>";
 		
-		fcgi->out << "<div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/deleteThread' class='inline'>"
+		fcgi->out << "<div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/deleteThread' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='seeAlso' value='https://" << Config::getDomain() << "/reports'>"
+			"<input type='hidden' name='seeAlso' value='https://" << WebsiteFramework::getDomain() << "/reports'>"
 			"<button type='submit' class='link-button'>"
 			"Delete"
 			"</button>"
 			"</form></li>";
 			
-		fcgi->out << "<li><form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/dismissReports' class='inline'>"
+		fcgi->out << "<li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/dismissReports' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='threadId' value='" << std::to_string(threadId) << "'>"
 			"<input type='hidden' name='commentId' value='-1'>"
@@ -169,17 +161,16 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 		body = escapeHtml(body);
 		body = formatUserPostBody(body, getEffectiveUserPosition(data->con, userId, subdatinId));
 		
-		fcgi->out << "<div class='commentEven'><div class='extraPostInfo'><a href='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "thread/" << std::to_string(threadId) << "#" << std::to_string(commentId) << "'>comment</a>, "
-			"<div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/deleteComment' class='inline'>"
+		fcgi->out << "<div class='commentEven'><div class='extraPostInfo'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "thread/" << std::to_string(threadId) << "#" << std::to_string(commentId) << "'>comment</a>, "
+			"<div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
-			"<input type='hidden' name='seeAlso' value='https://" << Config::getDomain() << "/reports'>"
+			"<input type='hidden' name='seeAlso' value='https://" << WebsiteFramework::getDomain() << "/reports'>"
 			"<button type='submit' class='link-button'>"
 			"Delete"
 			"</button>"
 			"</form></li>";
 			
-		fcgi->out << "<li><form method='post' action='https://" << Config::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/dismissReports' class='inline'>"
+		fcgi->out << "<li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/dismissReports' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='threadId' value='" << std::to_string(threadId) << "'>"
 			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"

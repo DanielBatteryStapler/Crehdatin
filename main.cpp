@@ -7,6 +7,8 @@
 #include <csignal>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/Cryptography.h>
+#include <WebsiteFramework/Response.h>
 
 #include <cppconn/driver.h>
 #include <cppconn/exception.h>
@@ -16,9 +18,9 @@
 #include "mysql_driver.h" 
 
 #include "Database.h"
-#include "Cryptography.h"
 #include "RequestData.h"
-#include "Response.h"
+
+#include "DirectoryHandles.h"
 
 #include "MainPage.h"
 #include "SubdatinPage.h"
@@ -83,6 +85,9 @@ int main(int argc, char** argv){
 	else{
 		sql::Driver* driver = sql::mysql::get_driver_instance();
 		
+		WebsiteFramework::setDomain("website.cloud.karagory.com");
+		//WebsiteFramework::setDomain("crehdatin.karagory.com");
+		
 		WebsiteFramework::setThreadStartHandle([driver]()->void*{
 			RequestData* data = new RequestData;
 			
@@ -108,10 +113,6 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::setRequestStartHandle(requestStartHandle);
 		
-		WebsiteFramework::setRequestEndHandle([](FcgiData* fcgi, void* _data){
-			
-		});
-		
 		WebsiteFramework::setError404Handle([](FcgiData* fcgi, void* _data){
 			RequestData* data = (RequestData*)_data;
 			createPageHeader(fcgi, data);
@@ -119,9 +120,13 @@ int main(int argc, char** argv){
 			createPageFooter(fcgi, data);
 		});
 		
-		WebsiteFramework::setExceptionHandle([](void* _data, std::exception* e){
-			std::cout << "std::exception.what()" << e->what() << "\n";
+		WebsiteFramework::setExceptionHandle([](void* _data, std::exception& e){
+			std::cout << "std::exception.what()" << e.what() << "\n";
 		});
+		
+		WebsiteFramework::addDirectoryHandleMap("/d/*", subdatinDirectoryHandle);
+		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*", threadDirectoryHandle);
+		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*/comment/*", commentDirectoryHandle);
 		
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/createAccount", createCreateAccountPageHandle);
@@ -157,8 +162,8 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/reportThread", handleReportThread);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/deleteThread", handleDeleteThread);
-		WebsiteFramework::addPostHandleMap("/d/*/thread/*/reportComment", handleReportComment);
-		WebsiteFramework::addPostHandleMap("/d/*/thread/*/deleteComment", handleDeleteComment);
+		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/reportComment", handleReportComment);
+		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/deleteComment", handleDeleteComment);
 		WebsiteFramework::addPostHandleMap("/d/*/dismissReports", handleDismissReports);
 		
 		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 16);

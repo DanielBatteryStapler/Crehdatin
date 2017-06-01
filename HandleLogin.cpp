@@ -13,13 +13,6 @@ void handleLogin(FcgiData* fcgi, std::vector<std::string> parameters, void* _dat
 		return;
 	}
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createLoginPage(fcgi, data, "Invalid Authentication Token", "");
-		return;
-	}
-	
 	std::string userName;
 	switch(getPostValue(fcgi->cgi, userName, "userName", Config::getMaxNameLength(), InputFlag::AllowStrictOnly)){
 	default:
@@ -79,7 +72,7 @@ void handleLogin(FcgiData* fcgi, std::vector<std::string> parameters, void* _dat
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
 	finishHttpHeader(fcgi->out);
 }
 

@@ -8,7 +8,7 @@ void createLoginPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, 
 	}
 	else{
 		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-		sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/");
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
 		finishHttpHeader(fcgi->out);
 	}
 }
@@ -18,7 +18,7 @@ void createLoginPage(FcgiData* fcgi, RequestData* data, std::string loginError, 
 	
 	fcgi->out << 
 	"<h1>Login:</h1>"
-	"<form method='post' action='https://" << Config::getDomain() << "/login' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/login' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='text' name='userName'>Username<br>"
 	"<input type='password' name='password'>Password<br>"
@@ -35,7 +35,7 @@ void createLoginPage(FcgiData* fcgi, RequestData* data, std::string loginError, 
 	"</button>"
 	"</form>"
 	"<h1>Create Account:</h1>"
-	"<form method='post' action='https://" << Config::getDomain() << "/createAccount' accept-charset='UTF-8'>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/createAccount' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='text' name='userName'>Username<br>"
 	"<input type='password' name='password'>Password<br>"

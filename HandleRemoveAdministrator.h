@@ -9,9 +9,9 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
+#include <WebsiteFramework/InputHandler.h>
 
 #include "LoginPage.h"
-#include "InputHandler.h"
 
 void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void createRemoveAdministratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

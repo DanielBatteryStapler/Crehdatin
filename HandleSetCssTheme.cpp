@@ -13,13 +13,6 @@ void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void
 		return;
 	}
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createSettingsPage(fcgi, data, "Invalid Authentication Token", "");
-		return;
-	}
-	
 	std::string theme;
 	switch(getPostValue(fcgi->cgi, theme, "theme", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly)){
 	default:
@@ -39,6 +32,6 @@ void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + Config::getDomain() + "/settings");
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/settings");
 	finishHttpHeader(fcgi->out);
 }
