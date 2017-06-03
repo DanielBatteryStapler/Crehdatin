@@ -88,6 +88,7 @@ bool Database::createDatabase(){
 	"PRIMARY KEY (id),"
 	"title TEXT NOT NULL,"
 	"name TEXT NOT NULL,"
+	"description TEXT DEFAULT NULL,"
 	"postLocked BOOL NOT NULL DEFAULT FALSE,"
 	"commentLocked BOOL NOT NULL DEFAULT FALSE,"
 	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"

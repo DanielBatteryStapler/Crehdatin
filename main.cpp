@@ -23,21 +23,26 @@
 #include "DirectoryHandles.h"
 
 #include "MainPage.h"
-#include "SubdatinPage.h"
 #include "LoginPage.h"
+#include "CrehdatinControlPanelPage.h"
+
 #include "SettingsPage.h"
+#include "UserPage.h"
+
+#include "SubdatinPage.h"
+#include "SubdatinAboutPage.h"
 #include "NewThreadPage.h"
 #include "ThreadPage.h"
 #include "ReportsPage.h"
-#include "UserPage.h"
 #include "SubdatinControlPanelPage.h"
-#include "CrehdatinControlPanelPage.h"
+
+#include "HandleNewThread.h"
+#include "HandleNewComment.h"
 
 #include "HandleCreateAccount.h"
 #include "HandleLogin.h"
 #include "HandleLogout.h"
-#include "HandleNewThread.h"
-#include "HandleNewComment.h"
+
 #include "HandleSetCssTheme.h"
 #include "HandleChangePassword.h"
 
@@ -52,6 +57,7 @@
 #include "HandleRemoveSubdatinOfficial.h"
 #include "HandleSetSubdatinPostLocked.h"
 #include "HandleSetSubdatinCommentLocked.h"
+#include "HandleSetAboutText.h"
 #include "HandleSetThreadLocked.h"
 #include "HandleSetThreadStickied.h"
 
@@ -136,6 +142,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addGetHandleMap("/settings", createSettingsPageHandle);
 		WebsiteFramework::addGetHandleMap("/controlPanel", createCrehdatinControlPanelPageHandle);
 		WebsiteFramework::addGetHandleMap("/d/*", createSubdatinPage);
+		WebsiteFramework::addGetHandleMap("/d/*/about", createSubdatinAboutPage);
 		WebsiteFramework::addGetHandleMap("/d/*/newThread", createNewThreadPageHandle);
 		WebsiteFramework::addGetHandleMap("/d/*/thread/*", createThreadPage);
 		WebsiteFramework::addGetHandleMap("/d/*/reports", createReportsPage);
@@ -161,6 +168,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatinOfficial", handleRemoveSubdatinOfficial);
 		WebsiteFramework::addPostHandleMap("/d/*/setPostLocked", handleSetSubdatinPostLocked);
 		WebsiteFramework::addPostHandleMap("/d/*/setCommentLocked", handleSetSubdatinCommentLocked);
+		WebsiteFramework::addPostHandleMap("/d/*/setAboutText", handleSetAboutText);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/setThreadLocked", handleSetThreadLocked);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/setThreadStickied", handleSetThreadStickied);
 		

@@ -120,19 +120,27 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'>";
 		printIfSelected(fcgi, selectedTab, PageTab::ThreadList);
 		fcgi->out << "Thread Listing</div></a>";
+		
 		if(selectedTab == PageTab::Thread){
 			fcgi->out << "<div class='selectedTab'>Thread</div>";
 		}
+		
+		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/about'>";
+		printIfSelected(fcgi, selectedTab, PageTab::About);
+		fcgi->out << "About</div></a>";
+		
 		if(data->subdatinId != -1 && (!postLocked || hasModerationPermissions(effectiveUserPosition))){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/newThread'>";
 			printIfSelected(fcgi, selectedTab, PageTab::NewThread);
 			fcgi->out << "New Thread</div></a>";
 		}
+		
 		if(hasModerationPermissions(effectiveUserPosition)){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/reports'>";
 			printIfSelected(fcgi, selectedTab, PageTab::Reports);
 			fcgi->out << "Reports</div></a>";
 		}
+		
 		if(hasSubdatinControlPermissions(effectiveUserPosition)){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/controlPanel'>";
 			printIfSelected(fcgi, selectedTab, PageTab::ControlPanel);
@@ -168,7 +176,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		if(res->getInt64("id") == data->subdatinId){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
 			"<li id='selectedSubdatin'>"
-			"<large>" << res->getString("name") << "</large>"
+			"<large>" << escapeHtml(res->getString("name")) << "</large>"
 			"<small>/" << res->getString("title") << "/</small>"
 			"</li>"
 			"</a>";
@@ -176,7 +184,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		else{
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
 			"<li>"
-			"<large>" << res->getString("name") << "</large>"
+			"<large>" << escapeHtml(res->getString("name")) << "</large>"
 			"<small>/" << res->getString("title") << "/</small>"
 			"</li>"
 			"</a>";

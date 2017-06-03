@@ -35,7 +35,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			"<div class='postInfoElement'><a href=https://'" << WebsiteFramework::getDomain() << "/user/" << percentEncode(userName) << ">";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << 
-				"<div class='bureaucratTag'>" << userName << "[B]</div></a></div>"
+				"<div class='bureaucratTag'>" << escapeHtml(userName) << "[B]</div></a></div>"
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setModerator' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
@@ -44,7 +44,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			}
 			else if(res->getString("userPosition") == "moderator"){
 				fcgi->out << 
-				"<div class='moderatorTag'>" << userName << "[M]</div></a></div>"
+				"<div class='moderatorTag'>" << escapeHtml(userName) << "[M]</div></a></div>"
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setBureaucrat' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
@@ -91,7 +91,16 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 	else{
 		fcgi->out << "<button type='submit' name='locked' value='true'>Lock Comments</button>";
 	}
-	fcgi->out << "</form>";
+	fcgi->out << "</form>"
+	"<h2>Information</h2>"
+	"<p>This is text that is displayed under the 'About' tab to users.</p>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "/setAboutText' accept-charset='UTF-8'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+	"<textarea name='text'></textarea><br>"
+	"<button type='submit'>"
+	"Set About Text"
+	"</button>"
+	"</form>";
 	
 	createPageFooter(fcgi, data);
 }

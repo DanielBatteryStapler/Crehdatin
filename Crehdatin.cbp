@@ -95,6 +95,8 @@
 		<Unit filename="HandleReportComment.h" />
 		<Unit filename="HandleReportThread.cpp" />
 		<Unit filename="HandleReportThread.h" />
+		<Unit filename="HandleSetAboutText.cpp" />
+		<Unit filename="HandleSetAboutText.h" />
 		<Unit filename="HandleSetBureaucrat.cpp" />
 		<Unit filename="HandleSetBureaucrat.h" />
 		<Unit filename="HandleSetCssTheme.cpp" />
@@ -129,6 +131,8 @@
 		<Unit filename="SettingsPage.cpp" />
 		<Unit filename="SettingsPage.h" />
 		<Unit filename="StringHelper.h" />
+		<Unit filename="SubdatinAboutPage.cpp" />
+		<Unit filename="SubdatinAboutPage.h" />
 		<Unit filename="SubdatinControlPanelPage.cpp" />
 		<Unit filename="SubdatinControlPanelPage.h" />
 		<Unit filename="SubdatinData.cpp" />

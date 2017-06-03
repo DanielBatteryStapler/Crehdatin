@@ -22,13 +22,10 @@ void createNewThreadPage(FcgiData* fcgi, RequestData* data, std::string error){
 	"Title: <input type='text' name='title'><br>"
 	"<textarea name='body'></textarea><br>";
 	if(error != ""){
-		fcgi->out << 
-		"<p><div class='errorText'>"
-		<< error <<
-		"</div></p>";
+		fcgi->out << "<p><div class='errorText'>" << error << "</div></p>";
 	}
 	fcgi->out <<
-	"<button type='submit' name='submit_param'>"
+	"<button type='submit'>"
 	"Create Thread"
 	"</button>"
 	"</form>";
