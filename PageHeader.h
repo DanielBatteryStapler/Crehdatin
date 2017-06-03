@@ -9,4 +9,6 @@
 #include "UserData.h"
 #include "UserPermissions.h"
 
-void createPageHeader(FcgiData* fcgi, RequestData* data);
+enum PageTab{None, Main, Login, Settings, SiteControl, Error, ThreadList, Thread, NewThread, Reports, ControlPanel};
+
+void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab);

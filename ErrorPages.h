@@ -11,11 +11,8 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
-#include <WebsiteFramework/InputHandler.h>
-#include <WebsiteFramework/Response.h>
+#include "PageHeader.h"
+#include "PageFooter.h"
 
-#include "RequestData.h"
-#include "UserPermissions.h"
-#include "ErrorPages.h"
-
-void handleSetThreadStickied(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void createGenericErrorPage(FcgiData* fcgi, RequestData* data, std::string message);
+void createInvalidPermissionsErrorPage(FcgiData* fcgi, RequestData* data);

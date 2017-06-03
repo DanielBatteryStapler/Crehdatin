@@ -12,6 +12,7 @@
 
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "ErrorPages.h"
 
 void createCrehdatinControlPanelPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data);

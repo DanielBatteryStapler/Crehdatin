@@ -83,7 +83,7 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 	prepStmt->setInt64(3, data->userId);
 	prepStmt->execute();
 	
-	createPageHeader(fcgi, data);
+	createPageHeader(fcgi, data, PageTab::Settings);
 	fcgi->out << "<p>Successfully changed password!</p><a href='https://" << WebsiteFramework::getDomain() << "/settings'>Back to settings</a>";
 	createPageFooter(fcgi, data);
 }

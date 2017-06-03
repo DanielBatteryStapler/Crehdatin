@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Config.h"
 
 #include <cppconn/driver.h>
@@ -18,4 +16,4 @@
 #include "UserPermissions.h"
 #include "ErrorPages.h"
 
-void handleSetThreadStickied(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void handleRemoveSubdatin(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

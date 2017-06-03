@@ -17,6 +17,6 @@
 #include "UserPermissions.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "ErrorPages.h"
 
 void handleAddModerator(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createAddModeratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

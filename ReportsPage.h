@@ -11,11 +11,13 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
-#include "UserData.h"
+
+#include "UserPermissions.h"
 #include "ThreadPage.h"
 
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "ErrorPages.h"
 
 void createReportsPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId);

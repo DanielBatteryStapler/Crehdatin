@@ -14,7 +14,7 @@ void createLoginPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, 
 }
 
 void createLoginPage(FcgiData* fcgi, RequestData* data, std::string loginError, std::string createAccountError){
-	createPageHeader(fcgi, data);
+	createPageHeader(fcgi, data, PageTab::Login);
 	
 	fcgi->out << 
 	"<h1>Login:</h1>"
@@ -30,7 +30,7 @@ void createLoginPage(FcgiData* fcgi, RequestData* data, std::string loginError, 
 		"</div></p>";
 	}
 	fcgi->out <<
-	"<button type='submit' name='submit_param'>"
+	"<button type='submit'>"
 	"Login"
 	"</button>"
 	"</form>"

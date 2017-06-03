@@ -9,51 +9,51 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	prepStmt->setInt64(1, data->threadId);
 	prepStmt->setInt64(2, data->subdatinId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
-	res->beforeFirst();
+	res->first();
 	
-	if(res->next()){
-		createPageHeader(fcgi, data);
-		std::string title = res->getString("title");
-		std::string body = res->getString("body");
-		std::string anonId;
-		if(!res->isNull("anonId")){
-			anonId = res->getString("anonId");
-		}
-		std::string userName;
-		int userId = -1;
-		if(!res->isNull("userId")){
-			userId = res->getInt("userId");
-			userName = getUserName(data->con, userId);
-		}
-		bool canReply = !res->getBoolean("locked") || hasModerationPermissions(userPosition);
-		
-		body = formatUserPostBody(escapeHtml(body), userPosition);
-		
-		fcgi->out << "<div class='thread'><div class='threadTitle'>"
-			<< escapeHtml(title) << "</div><div class='extraPostInfo'>"
-			"<div class='postInfoElement'>"
-			<< getFormattedPosterString(data->con, anonId, userId, data->subdatinId) << 
-			"</div>";
-		if(canReply){
-			createReplyMenu(fcgi, data, parameters[0]);
-		}
-		createReportMenu(fcgi, data, parameters[0]);
-		if(hasModerationPermissions(userPosition)){
-			createModerationMenu(fcgi, data, parameters[0], userPosition, -1, res->getBoolean("locked"), res->getBoolean("stickied"));
-		}
-		if(res->getBoolean("locked")){
-			fcgi->out << "<div class='postInfoElement'>Locked</div>";
-		}
-		if(res->getBoolean("stickied")){
-			fcgi->out << "<div class='postInfoElement'>Stickied</div>";
-		}
-		fcgi->out << 
-			"</div>"
-			"<div class='threadText'>" << body
-			<< "</div></div>";
-			
-		createCommentLine(fcgi, data, userPosition, canReply, parameters[0]);
+	createPageHeader(fcgi, data, PageTab::Thread);
+	
+	std::string title = res->getString("title");
+	std::string body = res->getString("body");
+	std::string anonId;
+	if(!res->isNull("anonId")){
+		anonId = res->getString("anonId");
 	}
+	std::string userName;
+	int userId = -1;
+	if(!res->isNull("userId")){
+		userId = res->getInt("userId");
+		userName = getUserName(data->con, userId);
+	}
+	bool canReply = !res->getBoolean("locked") || hasModerationPermissions(userPosition);
+	
+	body = formatUserPostBody(escapeHtml(body), userPosition);
+	
+	fcgi->out << "<div class='thread'><div class='threadTitle'>"
+		<< escapeHtml(title) << "</div><div class='extraPostInfo'>"
+		"<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, data->subdatinId) << "</div>"
+		"<div class='postInfoElement'>comments: " << std::to_string(getThreadCommentCount(data->con, data->threadId)) << "</div>";
+	if(canReply){
+		createReplyMenu(fcgi, data, parameters[0]);
+	}
+	createReportMenu(fcgi, data, parameters[0]);
+	if(hasModerationPermissions(userPosition)){
+		createModerationMenu(fcgi, data, parameters[0], userPosition, -1, res->getBoolean("locked"), res->getBoolean("stickied"));
+	}
+	if(res->getBoolean("locked")){
+		fcgi->out << "<div class='postInfoElement'>Locked</div>";
+	}
+	if(res->getBoolean("stickied")){
+		fcgi->out << "<div class='postInfoElement'>Stickied</div>";
+	}
+	fcgi->out << 
+		"</div>"
+		"<div class='threadText'>" << body
+		<< "</div></div>";
+		
+	createCommentLine(fcgi, data, userPosition, canReply, parameters[0]);
+	
+	createPageFooter(fcgi, data);
 }
 
 void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& userPosition, bool canReply, std::string& subdatinTitle, int64_t layer, int64_t parentId){
@@ -93,7 +93,7 @@ void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& userPosit
 		body = formatUserPostBody(escapeHtml(body), getEffectiveUserPosition(data->con, userId, data->subdatinId));
 		
 		fcgi->out << "<a name='" << std::to_string(commentId) << "'></a>"
-		<< (layer%2==0?"<div class='commentEven'>":"<div class='commentOdd'>") << 
+		<< (layer%2==0?"<div class='comment even'>":"<div class='comment odd'>") << 
 		"<div class='extraPostInfo'>";
 		if(canReply){
 			createReplyMenu(fcgi, data, subdatinTitle, commentId);
@@ -183,9 +183,8 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTi
 	else{
 		fcgi->out <<
 			"<li>"
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
 			"<button type='submit' name='reason' value='Illegal' class='link-button'>"
 			"Illegal"
 			"</button>"
@@ -193,9 +192,8 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTi
 			"</li>";
 		fcgi->out <<
 			"<li>"
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
 			"<button type='submit' name='reason' value='Spam' class='link-button'>"
 			"Spam"
 			"</button>"
@@ -203,9 +201,8 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTi
 			"</li>";
 		fcgi->out <<
 			"<li>"
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
 			"<button type='submit' name='reason' value='Copyrighted' class='link-button'>"
 			"Copyrighted"
 			"</button>"
@@ -213,9 +210,8 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTi
 			"</li>";
 		fcgi->out <<
 			"<li>"
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
 			"<button type='submit' name='reason' value='Obscene' class='link-button'>"
 			"Obscene"
 			"</button>"
@@ -223,9 +219,8 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTi
 			"</li>";
 		fcgi->out <<
 			"<li>"
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
 			"<button type='submit' name='reason' value='Inciting Violence' class='link-button'>"
 			"Inciting Violence"
 			"</button>"
@@ -233,9 +228,8 @@ void createReportMenu(FcgiData* fcgi, RequestData* data, std::string& subdatinTi
 			"</li>";
 		fcgi->out <<
 			"<li>"
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
 			"<button type='submit' class='link-button'>"
 			"Other, specify:"
 			"</button>"

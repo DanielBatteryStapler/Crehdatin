@@ -14,9 +14,7 @@
 #include <WebsiteFramework/InputHandler.h>
 
 #include "RequestData.h"
-#include "PageHeader.h"
-#include "PageFooter.h"
-#include "UserData.h"
+#include "UserPermissions.h"
+#include "ErrorPages.h"
 
 void handleDismissReports(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleDismissReportsErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

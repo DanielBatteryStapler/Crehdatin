@@ -43,6 +43,8 @@
 
 #include "HandleAddAdministrator.h"
 #include "HandleRemoveAdministrator.h"
+#include "HandleAddSubdatin.h"
+#include "HandleRemoveSubdatin.h"
 
 #include "HandleAddModerator.h"
 #include "HandleSetModerator.h"
@@ -115,7 +117,7 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::setError404Handle([](FcgiData* fcgi, void* _data){
 			RequestData* data = (RequestData*)_data;
-			createPageHeader(fcgi, data);
+			createPageHeader(fcgi, data, PageTab::Error);
 			fcgi->out << "<div class='errorText'>This Page Does Not Exist</div>";
 			createPageFooter(fcgi, data);
 		});
@@ -138,7 +140,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addGetHandleMap("/d/*/thread/*", createThreadPage);
 		WebsiteFramework::addGetHandleMap("/d/*/reports", createReportsPage);
 		WebsiteFramework::addGetHandleMap("/d/*/controlPanel", createSubdatinControlPanelPageHandle);
-		WebsiteFramework::addGetHandleMap("/user/*", createUserPage);
+		WebsiteFramework::addGetHandleMap("/u/*", createUserPage);
 		
 		WebsiteFramework::addPostHandleMap("/createAccount", handleCreateAccount);
 		WebsiteFramework::addPostHandleMap("/login", handleLogin);
@@ -150,6 +152,8 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addPostHandleMap("/addAdministrator", handleAddAdministrator);
 		WebsiteFramework::addPostHandleMap("/removeAdministrator", handleRemoveAdministrator);
+		WebsiteFramework::addPostHandleMap("/addSubdatin", handleAddSubdatin);
+		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatin", handleRemoveSubdatin);
 		
 		WebsiteFramework::addPostHandleMap("/d/*/addModerator", handleAddModerator);
 		WebsiteFramework::addPostHandleMap("/d/*/setModerator", handleSetModerator);

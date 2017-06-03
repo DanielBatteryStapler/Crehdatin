@@ -13,5 +13,6 @@
 #include <WebsiteFramework/Cryptography.h>
 
 #include "LoginPage.h"
+#include "ErrorPages.h"
 
 void handleLogin(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

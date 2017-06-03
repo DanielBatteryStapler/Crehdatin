@@ -105,11 +105,11 @@ bool BoldFormat::isValidBufferBegin(const std::string& buffer){
 	if(buffer.size() > 2){
 		return false;
 	}
-	return buffer == std::string("^^").substr(0, buffer.size());
+	return buffer == std::string("##").substr(0, buffer.size());
 }
 
 bool BoldFormat::isExactBufferBegin(const std::string& buffer){
-	return buffer == "^^";
+	return buffer == "##";
 }
 
 std::string BoldFormat::startTag(const std::string& buffer){
@@ -120,15 +120,49 @@ bool BoldFormat::isValidBufferEnd(const std::string& buffer){
 	if(buffer.size() > 2){
 		return false;
 	}
-	return buffer == std::string("^^").substr(0, buffer.size());
+	return buffer == std::string("##").substr(0, buffer.size());
 }
 
 bool BoldFormat::isExactBufferEnd(const std::string& buffer){
-	return buffer == "^^";
+	return buffer == "##";
 }
 
 std::string BoldFormat::endTag(const std::string& buffer){
 	return "</b>";
+}
+
+//====
+
+HeaderFormat::HeaderFormat(){exclusive = false;}
+
+bool HeaderFormat::isValidBufferBegin(const std::string& buffer){
+	if(buffer.size() > 2){
+		return false;
+	}
+	return buffer == std::string("^^").substr(0, buffer.size());
+}
+
+bool HeaderFormat::isExactBufferBegin(const std::string& buffer){
+	return buffer == "^^";
+}
+
+std::string HeaderFormat::startTag(const std::string& buffer){
+	return "<h3>";
+}
+
+bool HeaderFormat::isValidBufferEnd(const std::string& buffer){
+	if(buffer.size() > 2){
+		return false;
+	}
+	return buffer == std::string("^^").substr(0, buffer.size());
+}
+
+bool HeaderFormat::isExactBufferEnd(const std::string& buffer){
+	return buffer == "^^";
+}
+
+std::string HeaderFormat::endTag(const std::string& buffer){
+	return "</h3>";
 }
 
 //===
@@ -177,10 +211,11 @@ std::string formatUserPostBody(std::string body, std::string userPosition){
 	GreenTextFormat greenTextFormat;
 	ItalicFormat italicFormat;
 	BoldFormat boldFormat;
+	HeaderFormat headerFormat;
 	HyperLinkFormat hyperLinkFormat;
 	RainbowTextFormat rainbowTextFormat;
 	
-	std::vector<FormatPrimitive*> unusedFormats{&greenTextFormat, &italicFormat, &boldFormat, &hyperLinkFormat};
+	std::vector<FormatPrimitive*> unusedFormats{&greenTextFormat, &italicFormat, &boldFormat, &headerFormat, &hyperLinkFormat};
 	if(hasRainbowTextPermissions(userPosition)){
 		unusedFormats.push_back(&rainbowTextFormat);
 	}

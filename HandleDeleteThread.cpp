@@ -4,7 +4,7 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	RequestData* data = (RequestData*)_data;
 		
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
-		handleDeleteThreadErrorPage(fcgi, data, "You Do Not Have The Correct Permissions To Do This");
+		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}
 	
@@ -12,21 +12,15 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	prepStmtB->setInt64(1, data->threadId);
 	prepStmtB->execute();
 	
-	std::string seeAlso;
-	InputError error = getPostValue(fcgi->cgi, seeAlso, "seeAlso", Config::getUniqueTokenLength(), InputFlag::AllowNonNormal);
+	std::string seeOther;
+	InputError error = getPostValue(fcgi->cgi, seeOther, "seeOther", Config::getUniqueTokenLength(), InputFlag::AllowNonNormal);
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	if(error != InputError::NoError || seeAlso.size() == 0){
+	if(error != InputError::NoError || seeOther.size() == 0){
 		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0]);
 	}
 	else{
-		sendLocationHeader(fcgi->out, seeAlso);
+		sendLocationHeader(fcgi->out, seeOther);
 	}
 	finishHttpHeader(fcgi->out);
-}
-
-void handleDeleteThreadErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
 }

@@ -4,12 +4,7 @@ void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId == -1){
-		createPageHeader(fcgi, data);
-		fcgi->out << 
-		"<p><div class='errorText'>"
-		"You can only do this if you are logged in."
-		"</div></p>";
-		createPageFooter(fcgi, data);
+		createGenericErrorPage(fcgi, data, "You Must Be LoggedIn In Order To Complete This Action");
 		return;
 	}
 	

@@ -10,29 +10,29 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	getSubdatinData(data->con, data->subdatinId, title, name, postLocked, commentLocked);
 	
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId)) && commentLocked){
-		handleNewCommentErrorPage(fcgi, data, "You cannot post a comment in a subdatin with locked comments");
+		createGenericErrorPage(fcgi, data, "You cannot post a comment in a subdatin with locked comments");
 		return;
 	}
 	
 	if((data->userId == -1 && data->currentTime - data->lastPostTime < Config::anonPostingTimeout()) || 
 		(data->userId != -1 && data->currentTime - data->lastPostTime < Config::userPostingTimeout())){
-		handleNewCommentErrorPage(fcgi, data, "You are posting/reporting too much, wait a little longer before trying again");
+		createGenericErrorPage(fcgi, data, "You are posting/reporting too much, wait a little longer before trying again");
 		return;
 	}
 	
 	std::string body;
 	switch(getPostValue(fcgi->cgi, body, "body", Config::getMaxPostLength(), InputFlag::AllowNonNormal | InputFlag::AllowNewLine)){
 	default:
-		handleNewCommentErrorPage(fcgi, data, "Unknown Comment Error");
+		createGenericErrorPage(fcgi, data, "Unknown Comment Error");
 		return;
 	case InputError::IsTooLarge:
-		handleNewCommentErrorPage(fcgi, data, "Comment Too Long");
+		createGenericErrorPage(fcgi, data, "Comment Too Long");
 		return;
 	case InputError::IsEmpty:
-		handleNewCommentErrorPage(fcgi, data, "Comments Cannot Be Blank");
+		createGenericErrorPage(fcgi, data, "Comments Cannot Be Blank");
 		return;
 	case InputError::IsMalformed:
-		handleNewCommentErrorPage(fcgi, data, "Comment Contains Invalid Characters");
+		createGenericErrorPage(fcgi, data, "Comment Contains Invalid Characters");
 		return;
 	case InputError::NoError:
 		break;
@@ -41,13 +41,13 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	std::string authToken;
 	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
 		|| authToken != data->authToken){
-		handleNewCommentErrorPage(fcgi, data, "Invalid Authentication Token");
+		createGenericErrorPage(fcgi, data, "Invalid Authentication Token");
 		return;
 	}
 	
 	std::string parentId;
 	if(getPostValue(fcgi->cgi, parentId, "parentId", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError){
-		handleNewCommentErrorPage(fcgi, data, "Invalid Parent Comment Id");
+		createGenericErrorPage(fcgi, data, "Invalid Parent Comment Id");
 		return;
 	}
 	
@@ -58,13 +58,13 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	res->beforeFirst();
 	
 	if(!res->next()){
-		handleNewCommentErrorPage(fcgi, data, "Cannot Reply In A Thread That Doesn't Exist");
+		createGenericErrorPage(fcgi, data, "Cannot Reply In A Thread That Doesn't Exist");
 		return;
 	}
 	bool threadLocked = res->getBoolean("locked");
 	
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId)) && threadLocked){
-		handleNewCommentErrorPage(fcgi, data, "Cannot Reply In a Thread With Comments Locked");
+		createGenericErrorPage(fcgi, data, "Cannot Reply In a Thread With Comments Locked");
 		return;
 	}
 	
@@ -77,7 +77,7 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 		res->beforeFirst();
 		
 		if(!res->next()){
-			handleNewCommentErrorPage(fcgi, data, "Cannot Reply To A Comment That Doesn't Exist");
+			createGenericErrorPage(fcgi, data, "Cannot Reply To A Comment That Doesn't Exist");
 			return;
 		}
 	}
@@ -117,12 +117,6 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]);
 	finishHttpHeader(fcgi->out);
-}
-
-void handleNewCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
 }
 
 

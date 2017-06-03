@@ -15,3 +15,4 @@
 
 int64_t getSubdatinId(sql::Connection* con, std::string subdatinTitle);
 void getSubdatinData(sql::Connection* con, int64_t id, std::string& title, std::string& name, bool& postLocked, bool& commentLocked);
+int64_t getThreadCommentCount(sql::Connection* con, int64_t threadId);

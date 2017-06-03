@@ -4,23 +4,14 @@ void handleSetBureaucrat(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	RequestData* data = (RequestData*)_data;
 
 		if(!hasSubdatinControlPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
-			createSetBureaucratErrorPage(fcgi, data, "You do not have the correct permissions to do this");
+			createInvalidPermissionsErrorPage(fcgi, data);
 			return;
 		}
 		
 		std::string userName;
 		switch(getPostValue(fcgi->cgi, userName, "userName", Config::getMaxNameLength(), InputFlag::AllowStrictOnly)){
 		default:
-			createSetBureaucratErrorPage(fcgi, data, "Unknown Username Error");
-			return;
-		case InputError::IsTooLarge:
-			createSetBureaucratErrorPage(fcgi, data, "Username Too Long");
-			return;
-		case InputError::IsEmpty:
-			createSetBureaucratErrorPage(fcgi, data, "Username Cannot Be Empty");
-			return;
-		case InputError::ContainsNonNormal: case InputError::ContainsNewLine:
-			createSetBureaucratErrorPage(fcgi, data, "Username Can Only Contain Letters, Numbers, Hyphen, and Underscore");
+			createGenericErrorPage(fcgi, data, "Invalid Username");
 			return;
 		case InputError::NoError:
 			break;
@@ -29,7 +20,7 @@ void handleSetBureaucrat(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		int64_t userId = getUserId(data->con, userName);
 		
 		if(userId == -1){
-			createSetBureaucratErrorPage(fcgi, data, "The specified user does not exist");
+			createGenericErrorPage(fcgi, data, "The specified user does not exist");
 			return;
 		}
 		
@@ -42,13 +33,6 @@ void handleSetBureaucrat(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/controlPanel");
 		finishHttpHeader(fcgi->out);
 }
-
-void createSetBureaucratErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
-}
-
 
 
 

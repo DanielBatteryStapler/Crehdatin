@@ -17,8 +17,16 @@ void handleLogout(FcgiData* fcgi, std::vector<std::string> parameters, void* _da
 	prepStmt->setString(2, data->sessionToken);
 	prepStmt->execute();
 	
+	std::string seeOther;
+	InputError error = getPostValue(fcgi->cgi, seeOther, "seeOther", Config::getUniqueTokenLength() * 2, InputFlag::AllowNonNormal);
+	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
+	if(error != InputError::NoError || seeOther.size() == 0){
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
+	}
+	else{
+		sendLocationHeader(fcgi->out, seeOther);
+	}
 	finishHttpHeader(fcgi->out);
 }
 

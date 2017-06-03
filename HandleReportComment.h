@@ -12,9 +12,7 @@
 #include <WebsiteFramework/InputHandler.h>
 
 #include "RequestData.h"
-#include "PageHeader.h"
-#include "PageFooter.h"
-#include "UserData.h"
+#include "UserPermissions.h"
+#include "ErrorPages.h"
 
 void handleReportComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleReportCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

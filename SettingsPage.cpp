@@ -4,12 +4,7 @@ void createSettingsPageHandle(FcgiData* fcgi, std::vector<std::string> parameter
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId == -1){
-		createPageHeader(fcgi, data);
-		fcgi->out << 
-		"<p><div class='errorText'>"
-		"You can only do this if you are logged in."
-		"</div></p>";
-		createPageFooter(fcgi, data);
+		createGenericErrorPage(fcgi, data, "You Must Be LoggedIn In Order To View This Page");
 		return;
 	}
 	
@@ -17,7 +12,7 @@ void createSettingsPageHandle(FcgiData* fcgi, std::vector<std::string> parameter
 }
 
 void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError, std::string passwordError){
-	createPageHeader(fcgi, data);
+	createPageHeader(fcgi, data, PageTab::Settings);
 	
 	fcgi->out << "<h1>Settings</h1>"
 	"<h3>Username: " << escapeHtml(data->userName) << "</h3>"
@@ -51,7 +46,7 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 	"<option value='anime'>Animu</option>"
 	"<option value='synthwave'>Synthwave</option>"
 	"</select>"
-	"<button type='submit' name='submit_param'>"
+	"<button type='submit'>"
 	"Change Theme"
 	"</button>"
 	"</form>";
@@ -61,13 +56,13 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 		<< cssError <<
 		"</div></p>";
 	}
-	fcgi->out << "<h3>Change Password</h3>"
+	fcgi->out << "<h2>Change Password</h2>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/changePassword' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='password' name='oldPassword'>Old Password<br>"
 	"<input type='password' name='newPassword'>New Password<br>"
 	"<input type='password' name='repeatNewPassword'>Repeat New Password<br>"
-	"<button type='submit' name='submit_param'>"
+	"<button type='submit'>"
 	"Change Password"
 	"</button>"
 	"</form>";

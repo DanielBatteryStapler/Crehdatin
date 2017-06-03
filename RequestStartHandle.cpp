@@ -59,9 +59,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 		std::string authToken;
 		if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
 			|| authToken != data->authToken){
-			createPageHeader(fcgi, data);
-			fcgi->out << "<div class='errorText'>Invalid Authentication Token. Do You Have Cookies Enabled?</div>";
-			createPageFooter(fcgi, data);
+			createGenericErrorPage(fcgi, data, "Invalid Authentication Token. Do You Have Cookies Enabled?");
 			return false;
 		}
 	}

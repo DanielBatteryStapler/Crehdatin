@@ -6,7 +6,7 @@ bool subdatinDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters
 	data->subdatinId = getSubdatinId(data->con, parameters[0]);
 	
 	if(data->subdatinId == -1){
-		createPageHeader(fcgi, data);
+		createPageHeader(fcgi, data, PageTab::Error);
 		fcgi->out << "<div class='errorText'>This Subdatin Does Not Exist</div>";
 		createPageFooter(fcgi, data);
 		return false;
@@ -30,7 +30,7 @@ bool threadDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, 
 		data->threadId = res->getInt64("id");
 	}
 	else{
-		createPageHeader(fcgi, data);
+		createPageHeader(fcgi, data, PageTab::Error);
 		fcgi->out << "<div class='errorText'>This Thread Does Not Exist</div>";
 		createPageFooter(fcgi, data);
 		return false;
@@ -55,7 +55,7 @@ bool commentDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters,
 		data->commentId = res->getInt64("id");
 	}
 	else{
-		createPageHeader(fcgi, data);
+		createPageHeader(fcgi, data, PageTab::Error);
 		fcgi->out << "<div class='errorText'>This Comment Does Not Exist</div>";
 		createPageFooter(fcgi, data);
 		return false;

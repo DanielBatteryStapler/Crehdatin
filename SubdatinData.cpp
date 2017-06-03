@@ -18,11 +18,19 @@ void getSubdatinData(sql::Connection* con, int64_t id, std::string& title, std::
 	prepStmt->setInt64(1, id);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	
-	res->beforeFirst();
-	if(res->next()){
-		title = res->getString("title");
-		name = res->getString("name");
-		postLocked = res->getBoolean("postLocked");
-		commentLocked = res->getBoolean("commentLocked");
-	}
+	res->first();
+	title = res->getString("title");
+	name = res->getString("name");
+	postLocked = res->getBoolean("postLocked");
+	commentLocked = res->getBoolean("commentLocked");
+}
+
+int64_t getThreadCommentCount(sql::Connection* con, int64_t threadId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT COUNT(*) as count FROM comments WHERE threadId = ?"));
+	prepStmt->setInt64(1, threadId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	
+	res->first();
+	
+	return res->getInt64("count");
 }

@@ -66,6 +66,17 @@ public:
 	virtual std::string endTag(const std::string& buffer);
 };
 
+class HeaderFormat: public FormatPrimitive{
+public:
+	HeaderFormat();
+	virtual bool isValidBufferBegin(const std::string& buffer);
+	virtual bool isExactBufferBegin(const std::string& buffer);
+	virtual std::string startTag(const std::string& buffer);
+	virtual bool isValidBufferEnd(const std::string& buffer);
+	virtual bool isExactBufferEnd(const std::string& buffer);
+	virtual std::string endTag(const std::string& buffer);
+};
+
 class HyperLinkFormat: public FormatPrimitive{
 public:
 	HyperLinkFormat();

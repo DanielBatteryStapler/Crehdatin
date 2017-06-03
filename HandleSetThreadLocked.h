@@ -15,10 +15,7 @@
 #include <WebsiteFramework/Response.h>
 
 #include "RequestData.h"
-#include "UserData.h"
 #include "UserPermissions.h"
-#include "PageHeader.h"
-#include "PageFooter.h"
+#include "ErrorPages.h"
 
 void handleSetThreadLocked(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void handleSetThreadLockedErrorPage(FcgiData* fcgi, RequestData* data, std::string error);

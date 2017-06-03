@@ -3,8 +3,9 @@
 void createMainPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	createPageHeader(fcgi, data);
+	createPageHeader(fcgi, data, PageTab::Main);
 	
+	/*
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, name, postLocked, commentLocked FROM subdatins"));
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	
@@ -28,6 +29,11 @@ void createMainPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 			fcgi->out << "</div></div>";
 		}while(res->next());
 	}
+	*/
+	fcgi->out << "<h1>Creh-Datin</h1>"
+	"<h2>What is this?</h2>"
+	"<p>This is a website dedicated to revealing the truth about how black people from Africa were the real Kangs, not some white boys from Europe.</p>"
+	"<p>Also, this page will probably just be a new thread listing in the future.</p>";
 	
 	createPageFooter(fcgi, data);
 }

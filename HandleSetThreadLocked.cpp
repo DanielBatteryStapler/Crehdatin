@@ -4,13 +4,13 @@ void handleSetThreadLocked(FcgiData* fcgi, std::vector<std::string> parameters, 
 	RequestData* data = (RequestData*)_data;
 		
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
-		handleSetThreadLockedErrorPage(fcgi, data, "You Do Not Have The Correct Permissions To Do This");
+		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}
 	
 	std::string locked;
 	if(getPostValue(fcgi->cgi, locked, "locked", 10, InputFlag::AllowStrictOnly) != InputError::NoError){
-		handleSetThreadLockedErrorPage(fcgi, data, "Invalid 'Locked' Valid");
+		createGenericErrorPage(fcgi, data, "Invalid 'locked' Valid");
 		return;
 	}
 	
@@ -22,7 +22,7 @@ void handleSetThreadLocked(FcgiData* fcgi, std::vector<std::string> parameters, 
 		lockedBool = false;
 	}
 	else{
-		handleSetThreadLockedErrorPage(fcgi, data, "Invalid 'Locked' Valid");
+		createGenericErrorPage(fcgi, data, "Invalid 'locked' Valid");
 		return;
 	}
 	
@@ -34,10 +34,4 @@ void handleSetThreadLocked(FcgiData* fcgi, std::vector<std::string> parameters, 
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]);
 	finishHttpHeader(fcgi->out);
-}
-
-void handleSetThreadLockedErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
 }

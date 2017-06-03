@@ -6,7 +6,8 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 	std::string userName = percentDecode(parameters[0]);
 	int64_t userId = getUserId(data->con, userName);
 	
-	createPageHeader(fcgi, data);
+	/*
+	createPageHeader(fcgi, data, Page);
 	if(userId == -1){
 		fcgi->out << "<div class='errorText'>This user does not exist...</div>";
 	}
@@ -14,4 +15,5 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 		
 	}
 	createPageFooter(fcgi, data);
+	*/
 }

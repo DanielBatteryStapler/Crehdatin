@@ -17,6 +17,7 @@
 #include "RequestData.h"
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "ErrorPages.h"
 
 bool requestStartHandle(FcgiData* fcgi, void* _data);
 bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionToken);

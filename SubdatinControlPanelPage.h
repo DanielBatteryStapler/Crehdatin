@@ -12,6 +12,7 @@
 
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "ErrorPages.h"
 
 void createSubdatinControlPanelPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::string subdatinTitle);

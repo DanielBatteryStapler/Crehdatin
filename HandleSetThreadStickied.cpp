@@ -4,13 +4,13 @@ void handleSetThreadStickied(FcgiData* fcgi, std::vector<std::string> parameters
 	RequestData* data = (RequestData*)_data;
 	
 	if(!hasSubdatinControlPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
-		handleSetThreadStickiedErrorPage(fcgi, data, "You Do Not Have The Correct Permissions To Do This");
+		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}
 	
 	std::string stickied;
 	if(getPostValue(fcgi->cgi, stickied, "stickied", 10, InputFlag::AllowStrictOnly) != InputError::NoError){
-		handleSetThreadStickiedErrorPage(fcgi, data, "Invalid 'stickied' Valid");
+		createGenericErrorPage(fcgi, data, "Invalid 'stickied' Valid");
 		return;
 	}
 	
@@ -22,7 +22,7 @@ void handleSetThreadStickied(FcgiData* fcgi, std::vector<std::string> parameters
 		stickiedBool = false;
 	}
 	else{
-		handleSetThreadStickiedErrorPage(fcgi, data, "Invalid 'stickied' Valid");
+		createGenericErrorPage(fcgi, data, "Invalid 'stickied' Valid");
 		return;
 	}
 	
@@ -34,10 +34,4 @@ void handleSetThreadStickied(FcgiData* fcgi, std::vector<std::string> parameters
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]);
 	finishHttpHeader(fcgi->out);
-}
-
-void handleSetThreadStickiedErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
 }

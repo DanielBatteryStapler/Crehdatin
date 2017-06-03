@@ -4,23 +4,14 @@ void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> paramete
 	RequestData* data = (RequestData*)_data;
 	
 	if(!hasAdministrationControlPermissions(getEffectiveUserPosition(data->con, data->userId))){
-		createRemoveAdministratorErrorPage(fcgi, data, "You do not have the correct permissions to do this");
+		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}
 	
 	std::string userName;
 	switch(getPostValue(fcgi->cgi, userName, "userName", Config::getMaxNameLength(), InputFlag::AllowStrictOnly)){
 	default:
-		createRemoveAdministratorErrorPage(fcgi, data, "Unknown Username Error");
-		return;
-	case InputError::IsTooLarge:
-		createRemoveAdministratorErrorPage(fcgi, data, "Username Too Long");
-		return;
-	case InputError::IsEmpty:
-		createRemoveAdministratorErrorPage(fcgi, data, "Username Cannot Be Empty");
-		return;
-	case InputError::ContainsNonNormal: case InputError::ContainsNewLine:
-		createRemoveAdministratorErrorPage(fcgi, data, "Username Can Only Contain Letters, Numbers, Hyphen, and Underscore");
+		createGenericErrorPage(fcgi, data, "Invalid Username");
 		return;
 	case InputError::NoError:
 		break;
@@ -29,7 +20,7 @@ void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> paramete
 	int64_t userId = getUserId(data->con, userName);
 	
 	if(userId == -1){
-		createRemoveAdministratorErrorPage(fcgi, data, "The specified user does not exist");
+		createGenericErrorPage(fcgi, data, "The specified user does not exist");
 		return;
 	}
 	
@@ -40,12 +31,6 @@ void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> paramete
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/controlPanel");
 	finishHttpHeader(fcgi->out);
-}
-
-void createRemoveAdministratorErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
 }
 
 

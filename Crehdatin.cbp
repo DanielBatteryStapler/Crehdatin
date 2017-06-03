@@ -57,12 +57,16 @@
 		<Unit filename="Database.h" />
 		<Unit filename="DirectoryHandles.cpp" />
 		<Unit filename="DirectoryHandles.h" />
+		<Unit filename="ErrorPages.cpp" />
+		<Unit filename="ErrorPages.h" />
 		<Unit filename="FormatPost.cpp" />
 		<Unit filename="FormatPost.h" />
 		<Unit filename="HandleAddAdministrator.cpp" />
 		<Unit filename="HandleAddAdministrator.h" />
 		<Unit filename="HandleAddModerator.cpp" />
 		<Unit filename="HandleAddModerator.h" />
+		<Unit filename="HandleAddSubdatin.cpp" />
+		<Unit filename="HandleAddSubdatin.h" />
 		<Unit filename="HandleChangePassword.cpp" />
 		<Unit filename="HandleChangePassword.h" />
 		<Unit filename="HandleCreateAccount.cpp" />
@@ -83,6 +87,8 @@
 		<Unit filename="HandleNewThread.h" />
 		<Unit filename="HandleRemoveAdministrator.cpp" />
 		<Unit filename="HandleRemoveAdministrator.h" />
+		<Unit filename="HandleRemoveSubdatin.cpp" />
+		<Unit filename="HandleRemoveSubdatin.h" />
 		<Unit filename="HandleRemoveSubdatinOfficial.cpp" />
 		<Unit filename="HandleRemoveSubdatinOfficial.h" />
 		<Unit filename="HandleReportComment.cpp" />

@@ -4,13 +4,13 @@ void handleSetSubdatinCommentLocked(FcgiData* fcgi, std::vector<std::string> par
 	RequestData* data = (RequestData*)_data;
 	
 	if(!hasSubdatinControlPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
-		createSetSubdatinCommentLockedErrorPage(fcgi, data, "You do not have the correct permissions to do this");
+		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}
 	
 	std::string locked;
 	if(getPostValue(fcgi->cgi, locked, "locked", 10, InputFlag::AllowStrictOnly) != InputError::NoError){
-		createSetSubdatinCommentLockedErrorPage(fcgi, data, "Invalid 'Locked' Valid");
+		createGenericErrorPage(fcgi, data, "Invalid 'locked' Value");
 		return;
 	}
 	
@@ -22,7 +22,7 @@ void handleSetSubdatinCommentLocked(FcgiData* fcgi, std::vector<std::string> par
 		lockedBool = false;
 	}
 	else{
-		createSetSubdatinCommentLockedErrorPage(fcgi, data, "Invalid 'Locked' Valid");
+		createGenericErrorPage(fcgi, data, "Invalid 'locked' Valid");
 		return;
 	}
 	
@@ -34,12 +34,6 @@ void handleSetSubdatinCommentLocked(FcgiData* fcgi, std::vector<std::string> par
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/controlPanel");
 	finishHttpHeader(fcgi->out);
-}
-
-void createSetSubdatinCommentLockedErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
-	createPageFooter(fcgi, data);
 }
 
 

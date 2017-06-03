@@ -5,23 +5,23 @@ void handleReportComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	
 	if((data->userId == -1 && data->currentTime - data->lastPostTime < Config::anonReportingTimeout()) || 
 		(data->userId != -1 && data->currentTime - data->lastPostTime < Config::userReportingTimeout())){
-		handleReportCommentErrorPage(fcgi, data, "You are posting/reporting too much, wait a little longer before trying again");
+		createGenericErrorPage(fcgi, data, "You are posting/reporting too much, wait a little longer before trying again");
 		return;
 	}
 	
 	std::string reason;
 	switch(getPostValue(fcgi->cgi, reason, "reason", Config::getMaxReportLength(), InputFlag::AllowNonNormal)){
 	default:
-		handleReportCommentErrorPage(fcgi, data, "Unknown Report Error");
+		createGenericErrorPage(fcgi, data, "Unknown Report Error");
 		return;
 	case InputError::IsTooLarge:
-		handleReportCommentErrorPage(fcgi, data, "Report Too Long");
+		createGenericErrorPage(fcgi, data, "Report Too Long");
 		return;
 	case InputError::IsEmpty:
-		handleReportCommentErrorPage(fcgi, data, "Report Cannot Be Empty");
+		createGenericErrorPage(fcgi, data, "Report Cannot Be Empty");
 		return;
 	case InputError::ContainsNewLine:
-		handleReportCommentErrorPage(fcgi, data, "Report Cannot Contain Newlines");
+		createGenericErrorPage(fcgi, data, "Report Cannot Contain Newlines");
 		return;
 	case InputError::NoError:
 		break;
@@ -44,13 +44,7 @@ void handleReportComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	
 	setLastPostTime(fcgi, data);
 	
-	createPageHeader(fcgi, data);
+	createPageHeader(fcgi, data, PageTab::None);
 	fcgi->out << "Thank You For the Report! <a href='https://" << WebsiteFramework::getDomain() << "/d/" << parameters[0] << "/thread/" << parameters[1] << "#" << parameters[2] << "'>Back to the Comment</a>";
-	createPageFooter(fcgi, data);
-}
-
-void handleReportCommentErrorPage(FcgiData* fcgi, RequestData* data, std::string error){
-	createPageHeader(fcgi, data);
-	fcgi->out << "<div class='errorText'>" << error << "</div>";
 	createPageFooter(fcgi, data);
 }

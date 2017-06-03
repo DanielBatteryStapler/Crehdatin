@@ -4,12 +4,7 @@ void handleLogin(FcgiData* fcgi, std::vector<std::string> parameters, void* _dat
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId != -1){
-		createPageHeader(fcgi, data);
-		fcgi->out << 
-		"<p><div class='errorText'>"
-		"You are already logged in."
-		"</div></p>";
-		createPageFooter(fcgi, data);
+		createGenericErrorPage(fcgi, data, "You Are Already Logged In");
 		return;
 	}
 	
