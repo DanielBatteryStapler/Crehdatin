@@ -16,3 +16,4 @@
 bool subdatinDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 bool threadDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 bool commentDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+bool userDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

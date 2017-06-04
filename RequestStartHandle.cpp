@@ -20,6 +20,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	data->subdatinId = -1;
 	data->threadId = -1;
 	data->commentId = -1;
+	data->userPageId = -1;
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT " 
 	"blocked, UNIX_TIMESTAMP(lastPostTime) "

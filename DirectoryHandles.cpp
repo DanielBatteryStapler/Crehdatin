@@ -63,3 +63,21 @@ bool commentDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters,
 	
 	return true;
 }
+
+bool userDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
+	RequestData* data = (RequestData*)_data;
+	
+	data->userPageId = getUserId(data->con, parameters[0]);
+	
+	if(data->userPageId == -1){
+		createPageHeader(fcgi, data, PageTab::Error);
+		fcgi->out << "<div class='errorText'>This User Does Not Exist</div>";
+		createPageFooter(fcgi, data);
+		return false;
+	}
+	
+	return true;
+}
+
+
+

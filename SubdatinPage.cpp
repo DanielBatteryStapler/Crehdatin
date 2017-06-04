@@ -29,10 +29,10 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 			}
 			
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << parameters[0] << "/thread/" << std::to_string(threadId) << "'>"
-			"<div class='thread'><div class='threadTitle'>"
-			<< escapeHtml(title) << "</div>"
+			"<div class='thread'>"
+			"<div class='threadTitle'>" << escapeHtml(title) << "</div>"
 			"<div class='extraPostInfo'>"
-			"<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, data->subdatinId) << "</div>"
+			"<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, data->subdatinId, false) << "</div>"
 			"<div class='postInfoElement'>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</div>";
 			
 			if(res->getBoolean("stickied")){
@@ -41,7 +41,9 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 			if(res->getBoolean("locked")){
 				fcgi->out << "<div class='postInfoElement'>Locked</div>";
 			}
-			fcgi->out << "</div></div></a>";
+			fcgi->out << "</div>"
+			"</div>"
+			"</a>";
 			
 		}while(res->next());
 	}

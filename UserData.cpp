@@ -42,13 +42,15 @@ void setLastPostTime(FcgiData* fcgi, RequestData* data){
 	}
 }
 
-std::string getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId){
+std::string getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId,  bool putUserLink){
 	if(userId != -1){
 		std::string userName = getUserName(con, userId);
 		std::string userPosition = getEffectiveUserPosition(con, userId, subdatinId);
 		std::string output;
 		
-		output = "<a href='https://" + WebsiteFramework::getDomain() + "/u/" + percentEncode(userName) + "'>";
+		if(putUserLink){
+			output = "<a href='https://" + WebsiteFramework::getDomain() + "/u/" + percentEncode(userName) + "'>";
+		}
 		
 		if(userPosition == "senate"){
 			output += "user: <div class='senateTag'>" + escapeHtml(userName) + "[S]</div>";
@@ -66,7 +68,9 @@ std::string getFormattedPosterString(sql::Connection* con, std::string anonId, i
 			output += "user: " + escapeHtml(userName);
 		}
 		
-		output += "</a>";
+		if(putUserLink){
+			output += "</a>";
+		}
 		
 		return output;
 	}

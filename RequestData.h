@@ -31,4 +31,5 @@ struct RequestData{
 	int64_t subdatinId;
 	int64_t threadId;
 	int64_t commentId;
+	int64_t userPageId;
 };

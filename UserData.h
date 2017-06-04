@@ -20,5 +20,5 @@
 std::string getUserName(sql::Connection* con, int64_t userId);
 int64_t getUserId(sql::Connection* con, std::string userName);
 void setLastPostTime(FcgiData* fcgi, RequestData* data);
-std::string getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId = -1);
+std::string getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId = -1, bool putUserLink = true);
 std::string getEffectiveUserPosition(sql::Connection* con, int64_t userId, int64_t subdatinId = -1);

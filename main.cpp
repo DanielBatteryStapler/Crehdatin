@@ -136,6 +136,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addDirectoryHandleMap("/d/*", subdatinDirectoryHandle);
 		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*", threadDirectoryHandle);
 		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*/comment/*", commentDirectoryHandle);
+		WebsiteFramework::addDirectoryHandleMap("/u/*", userDirectoryHandle);
 		
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/createAccount", createCreateAccountPageHandle);
