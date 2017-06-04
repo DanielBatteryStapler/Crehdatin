@@ -25,7 +25,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
-			"<a href=https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
+			"<a href=https://" << WebsiteFramework::getDomain() << "/u/" << res->getString("title") << "'>"
 			<< escapeHtml(res->getString("name")) <<
 			"</a><br>";
 		}while(res->next());
@@ -55,7 +55,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 			"<input type='hidden' name='userName' value='" << escapeHtml(res->getString("userName")) << "'>"
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
-			"<a href=https://'" << WebsiteFramework::getDomain() << "/user/" << percentEncode(res->getString("userName")) << ">"
+			"<a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(res->getString("userName")) << ">"
 			<< escapeHtml(res->getString("userName")) <<
 			"</a><br>";
 		}while(res->next());

@@ -46,22 +46,29 @@ std::string getFormattedPosterString(sql::Connection* con, std::string anonId, i
 	if(userId != -1){
 		std::string userName = getUserName(con, userId);
 		std::string userPosition = getEffectiveUserPosition(con, userId, subdatinId);
+		std::string output;
+		
+		output = "<a href='https://" + WebsiteFramework::getDomain() + "/u/" + percentEncode(userName) + "'>";
 		
 		if(userPosition == "senate"){
-			return "user: <div class='senateTag'>" + escapeHtml(userName) + "[S]</div>";
+			output += "user: <div class='senateTag'>" + escapeHtml(userName) + "[S]</div>";
 		}
 		else if(userPosition == "administrator"){
-			return "user:  <div class='administratorTag'>" + escapeHtml(userName) + "[A]</div>";
+			output += "user:  <div class='administratorTag'>" + escapeHtml(userName) + "[A]</div>";
 		}
 		else if(userPosition == "bureaucrat"){
-			return "user:  <div class='bureaucratTag'>" + escapeHtml(userName) + "[B]</div>";
+			output += "user:  <div class='bureaucratTag'>" + escapeHtml(userName) + "[B]</div>";
 		}
 		else if(userPosition == "moderator"){
-			return "user: <div class='moderatorTag'>" + escapeHtml(userName) + "[M]</div>";
+			output += "user: <div class='moderatorTag'>" + escapeHtml(userName) + "[M]</div>";
 		}
 		else{
-			return "user: " + escapeHtml(userName);
+			output += "user: " + escapeHtml(userName);
 		}
+		
+		output += "</a>";
+		
+		return output;
 	}
 	else{
 		return "id: " + anonId;

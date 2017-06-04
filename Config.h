@@ -19,5 +19,6 @@ public:
 	static int64_t anonReportingTimeout();
 	static int64_t userReportingTimeout();
 	static std::size_t getMaxReportLength();
+	static std::size_t getMinUserNameLength();
 };
 

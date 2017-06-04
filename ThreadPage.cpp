@@ -5,29 +5,29 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	
 	std::string userPosition = getEffectiveUserPosition(data->con, data->userId, data->subdatinId);
 	
-	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, body, anonId, userId, locked, stickied FROM threads WHERE id = ? AND subdatinId = ?"));
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, body, anonId, userId, locked, stickied FROM threads WHERE id = ?"));
 	prepStmt->setInt64(1, data->threadId);
-	prepStmt->setInt64(2, data->subdatinId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->first();
 	
 	createPageHeader(fcgi, data, PageTab::Thread);
 	
 	std::string title = res->getString("title");
-	std::string body = res->getString("body");
+	std::string body = formatUserPostBody(escapeHtml(res->getString("body")), userPosition);
 	std::string anonId;
 	if(!res->isNull("anonId")){
 		anonId = res->getString("anonId");
 	}
-	std::string userName;
 	int userId = -1;
 	if(!res->isNull("userId")){
 		userId = res->getInt("userId");
-		userName = getUserName(data->con, userId);
 	}
-	bool canReply = !res->getBoolean("locked") || hasModerationPermissions(userPosition);
 	
-	body = formatUserPostBody(escapeHtml(body), userPosition);
+	bool postLocked;
+	bool commentLocked;
+	getSubdatinLockedData(data->con, data->subdatinId, postLocked, commentLocked);
+	
+	bool canReply = (!res->getBoolean("locked") && !commentLocked) || hasModerationPermissions(userPosition);
 	
 	fcgi->out << "<div class='thread'><div class='threadTitle'>"
 		<< escapeHtml(title) << "</div><div class='extraPostInfo'>"
@@ -61,55 +61,68 @@ void createCommentLine(FcgiData* fcgi, RequestData* data, std::string& userPosit
 		
 	if(parentId == -1){
 		prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement(
-			"SELECT id, body, anonId, userId FROM comments WHERE parentId IS NULL AND threadId = ? AND subdatinId = ? ORDER BY createdTime DESC"));
+			"SELECT id, body, anonId, userId FROM comments WHERE parentId IS NULL AND threadId = ? ORDER BY createdTime DESC"));
 		prepStmt->setInt64(1, data->threadId);
-		prepStmt->setInt64(2, data->subdatinId);
 	}
 	else{
 		prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement(
-			"SELECT id, body, anonId, userId FROM comments WHERE parentId = ? AND threadId = ? AND subdatinId = ? ORDER BY createdTime DESC"));
+			"SELECT id, body, anonId, userId FROM comments WHERE parentId = ? AND threadId = ? ORDER BY createdTime DESC"));
 		prepStmt->setInt64(1, parentId);
 		prepStmt->setInt64(2, data->threadId);
-		prepStmt->setInt64(3, data->subdatinId);
 	}
 	
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
-	
-	while(res->next()){
-		int64_t commentId = res->getInt64("id");
-		std::string body = res->getString("body");
-		std::string anonId;
-		if(!res->isNull("anonId")){
-			anonId = res->getString("anonId");
+	if(res->next()){
+		if(layer >= 10){
+			fcgi->out << (layer%2==0?"<div class='comment even'>":"<div class='comment odd'>")
+			<< "<div class='commentText'>"
+			"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(parentId) << "'>"
+			"View Replies"
+			"</a>"
+			"</div>";
 		}
-		std::string userName;
-		int64_t userId = -1;
-		if(!res->isNull("userId")){
-			userId = res->getInt64("userId");
-			userName = getUserName(data->con, userId);
-		}
-		
-		body = formatUserPostBody(escapeHtml(body), getEffectiveUserPosition(data->con, userId, data->subdatinId));
-		
-		fcgi->out << "<a name='" << std::to_string(commentId) << "'></a>"
-		<< (layer%2==0?"<div class='comment even'>":"<div class='comment odd'>") << 
-		"<div class='extraPostInfo'>";
-		if(canReply){
-			createReplyMenu(fcgi, data, subdatinTitle, commentId);
-		}
-		createReportMenu(fcgi, data, subdatinTitle, commentId);
-		if(hasModerationPermissions(userPosition)){
-			createModerationMenu(fcgi, data, subdatinTitle, userPosition, commentId);
-		}
-			
-		fcgi->out << getFormattedPosterString(data->con, anonId, userId, data->subdatinId)
-			<< "</div><div class='commentText'>"
-			<< body << "</div>";
+		else{
+			do{
+				int64_t commentId = res->getInt64("id");
+				std::string body = res->getString("body");
+				std::string anonId;
+				if(!res->isNull("anonId")){
+					anonId = res->getString("anonId");
+				}
+				std::string userName;
+				int64_t userId = -1;
+				if(!res->isNull("userId")){
+					userId = res->getInt64("userId");
+					userName = getUserName(data->con, userId);
+				}
 				
-		createCommentLine(fcgi, data, userPosition, canReply, subdatinTitle, layer + 1, commentId);
-		
-		fcgi->out << "</div>";
+				body = formatUserPostBody(escapeHtml(body), getEffectiveUserPosition(data->con, userId, data->subdatinId));
+				
+				fcgi->out << "<a name='" << std::to_string(commentId) << "'></a>"
+				<< (layer%2==0?"<div class='comment even'>":"<div class='comment odd'>") << 
+				"<div class='extraPostInfo'>"
+				"<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, data->subdatinId) << "</div>";
+				if(canReply){
+					createReplyMenu(fcgi, data, subdatinTitle, commentId);
+				}
+				createReportMenu(fcgi, data, subdatinTitle, commentId);
+				if(hasModerationPermissions(userPosition)){
+					createModerationMenu(fcgi, data, subdatinTitle, userPosition, commentId);
+				}
+				
+				fcgi->out << 
+				"<div class='postInfoElement'>"
+				"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "'>Permalink</a>"
+				"</div>"
+				"</div>"
+				"<div class='commentText'>" << body << "</div>";
+						
+				createCommentLine(fcgi, data, userPosition, canReply, subdatinTitle, layer + 1, commentId);
+				
+				fcgi->out << "</div>";
+			}while(res->next());
+		}
 	}
 }
 

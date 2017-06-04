@@ -33,6 +33,11 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		break;
 	}
 	
+	if(userName.size() < Config::getMinUserNameLength()){
+		createLoginPage(fcgi, data, "", "Username Cannot Be Shorter Than 3 Characters");
+		return;
+	}
+	
 	std::string password;
 	switch(getPostValue(fcgi->cgi, password, "password", Config::getMaxPasswordLength(), InputFlag::DontCheckInputContents)){
 	default:

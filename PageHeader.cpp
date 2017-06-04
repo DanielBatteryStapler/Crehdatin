@@ -29,6 +29,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	"<head>"
 	"<link rel='stylesheet' type='text/css' href='https://" << WebsiteFramework::getDomain() << "/static/" << data->cssTheme << ".css'>"
 	"<meta charset='UTF-8'>"
+	"<meta name='viewport' content='width=device-width,initial-scale=1' />"
 	"<title>"
 	"Creh-Datin"
 	"</title>"
@@ -100,6 +101,11 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/'>";
 			printIfSelected(fcgi, selectedTab, PageTab::Main);
 			fcgi->out << "Crehdatin</div></a>";
+			
+			if(selectedTab == PageTab::User){
+				fcgi->out << "<div class='selectedTab'>User</div>";
+			}
+			
 			if(data->userId == -1){
 				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/login'>";
 				printIfSelected(fcgi, selectedTab, PageTab::Login);
@@ -110,6 +116,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 				printIfSelected(fcgi, selectedTab, PageTab::Settings);
 				fcgi->out << "Settings</div></a>";
 			}
+			
 			if(hasAdministrationControlPermissions(effectiveUserPosition)){
 				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/controlPanel'>";
 				printIfSelected(fcgi, selectedTab, PageTab::SiteControl);
@@ -123,6 +130,10 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		
 		if(selectedTab == PageTab::Thread){
 			fcgi->out << "<div class='selectedTab'>Thread</div>";
+		}
+		
+		if(selectedTab == PageTab::Comment){
+			fcgi->out << "<div class='selectedTab'>Comment</div>";
 		}
 		
 		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/about'>";

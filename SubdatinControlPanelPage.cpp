@@ -32,7 +32,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			std::string userName = getUserName(data->con, res->getInt64("userId"));
 			fcgi->out << 
 			
-			"<div class='postInfoElement'><a href=https://'" << WebsiteFramework::getDomain() << "/user/" << percentEncode(userName) << ">";
+			"<div class='postInfoElement'><a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << ">";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << 
 				"<div class='bureaucratTag'>" << escapeHtml(userName) << "[B]</div></a></div>"

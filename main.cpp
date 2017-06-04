@@ -33,6 +33,7 @@
 #include "SubdatinAboutPage.h"
 #include "NewThreadPage.h"
 #include "ThreadPage.h"
+#include "CommentPage.h"
 #include "ReportsPage.h"
 #include "SubdatinControlPanelPage.h"
 
@@ -145,6 +146,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addGetHandleMap("/d/*/about", createSubdatinAboutPage);
 		WebsiteFramework::addGetHandleMap("/d/*/newThread", createNewThreadPageHandle);
 		WebsiteFramework::addGetHandleMap("/d/*/thread/*", createThreadPage);
+		WebsiteFramework::addGetHandleMap("/d/*/thread/*/comment/*", createCommentPage);
 		WebsiteFramework::addGetHandleMap("/d/*/reports", createReportsPage);
 		WebsiteFramework::addGetHandleMap("/d/*/controlPanel", createSubdatinControlPanelPageHandle);
 		WebsiteFramework::addGetHandleMap("/u/*", createUserPage);

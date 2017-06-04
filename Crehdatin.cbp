@@ -49,6 +49,8 @@
 			<Add option="-lcurl" />
 			<Add option="-lcurlpp" />
 		</Linker>
+		<Unit filename="CommentPage.cpp" />
+		<Unit filename="CommentPage.h" />
 		<Unit filename="Config.cpp" />
 		<Unit filename="Config.h" />
 		<Unit filename="CrehdatinControlPanelPage.cpp" />

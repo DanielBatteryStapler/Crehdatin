@@ -3,11 +3,9 @@
 void handleNewThread(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	std::string subdatinTitle;
-	std::string subdatinName;
 	bool postLocked;
 	bool commentLocked;
-	getSubdatinData(data->con, data->subdatinId, subdatinTitle, subdatinName, postLocked, commentLocked);
+	getSubdatinLockedData(data->con, data->subdatinId, postLocked, commentLocked);
 	
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId)) && postLocked){
 		createNewThreadPage(fcgi, data, "You cannot post in a subdatin with posts locked.");

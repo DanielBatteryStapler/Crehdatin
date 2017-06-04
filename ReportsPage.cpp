@@ -113,13 +113,12 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 			
 		fcgi->out << "</ul></div></div><div class='postInfoElement'>";
 		if(userId != -1){
-			fcgi->out << "<div class='postInfoElement'>user: " << userName << "</div>";
+			fcgi->out << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, "", userId, data->subdatinId) << "</div>";
 		}
 		
 		fcgi->out << "ip: " << posterIp << 
 			"</div></div>"
-			"<div class='threadText'>" << body <<
-			"</div>";
+			"<div class='threadText'>" << body << "</div>";
 	}
 	else{
 		fcgi->out << "<div class='thread'><div class='threadText'><div class='errorText'>"
@@ -159,7 +158,7 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 		body = escapeHtml(body);
 		body = formatUserPostBody(body, getEffectiveUserPosition(data->con, userId, subdatinId));
 		
-		fcgi->out << "<div class='comment even'><div class='extraPostInfo'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "thread/" << std::to_string(threadId) << "#" << std::to_string(commentId) << "'>comment</a>, "
+		fcgi->out << "<div class='comment even'><div class='extraPostInfo'><div class='postInfoElement'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "'>comment</a></div>"
 			"<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='seeOther' value='https://" << WebsiteFramework::getDomain() << "/reports'>"

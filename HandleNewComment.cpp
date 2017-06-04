@@ -3,11 +3,9 @@
 void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	std::string title;
-	std::string name;
 	bool postLocked;
 	bool commentLocked;
-	getSubdatinData(data->con, data->subdatinId, title, name, postLocked, commentLocked);
+	getSubdatinLockedData(data->con, data->subdatinId, postLocked, commentLocked);
 	
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId)) && commentLocked){
 		createGenericErrorPage(fcgi, data, "You cannot post a comment in a subdatin with locked comments");
@@ -106,6 +104,12 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	
 	prepStmt->execute();
 	
+	res = std::unique_ptr<sql::ResultSet>(data->stmt->executeQuery("SELECT LAST_INSERT_ID()"));
+	
+	res->first();
+	
+	int64_t newCommentId = res->getInt64(1);
+	
 	if(parentId == "-1"){//if we should bump the thread
 		prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("UPDATE threads SET lastBumpTime = CURRENT_TIMESTAMP WHERE id = ?"));
 		prepStmt->setInt64(1, data->threadId);
@@ -115,7 +119,7 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	setLastPostTime(fcgi, data);
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]);
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1] + "/comment/" + std::to_string(newCommentId));
 	finishHttpHeader(fcgi->out);
 }
 

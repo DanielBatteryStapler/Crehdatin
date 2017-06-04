@@ -55,3 +55,7 @@ int64_t Config::userReportingTimeout(){
 std::size_t Config::getMaxReportLength(){
 	return 100;
 }
+
+std::size_t Config::getMinUserNameLength(){
+	return 3;
+}
