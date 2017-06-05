@@ -35,6 +35,15 @@ void getSubdatinLockedData(sql::Connection* con, int64_t id, bool& postLocked, b
 	commentLocked = res->getBoolean("commentLocked");
 }
 
+std::string getSubdatinTitle(sql::Connection* con, int64_t subdatinId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT title FROM subdatins WHERE id = ?"));
+	prepStmt->setInt64(1, subdatinId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	
+	res->first();
+	return res->getString("title");
+}
+
 int64_t getThreadCommentCount(sql::Connection* con, int64_t threadId){
 	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT COUNT(*) as count FROM comments WHERE threadId = ?"));
 	prepStmt->setInt64(1, threadId);

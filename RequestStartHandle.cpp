@@ -39,7 +39,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 		sendStatusHeader(fcgi->out, StatusCode::Ok);
 		sendHtmlContentTypeHeader(fcgi->out);
 		finishHttpHeader(fcgi->out);
-		fcgi->out << "<html><body>You are blocked</body></html>";
+		fcgi->out << "<!DOCTYPE html><html><body>You are blocked</body></html>";
 		return false;
 	}
 	

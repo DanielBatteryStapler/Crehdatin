@@ -28,7 +28,7 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 				userName = getUserName(data->con, userId);
 			}
 			
-			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << parameters[0] << "/thread/" << std::to_string(threadId) << "'>"
+			fcgi->out << "<a style='display:block' href='https://" << WebsiteFramework::getDomain() << "/d/" << parameters[0] << "/thread/" << std::to_string(threadId) << "'>"
 			"<div class='thread'>"
 			"<div class='threadTitle'>" << escapeHtml(title) << "</div>"
 			"<div class='extraPostInfo'>"

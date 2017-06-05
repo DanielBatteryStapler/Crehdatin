@@ -25,6 +25,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	}
 	
 	fcgi->out << 
+	"<!DOCTYPE html>"
 	"<html>"
 	"<head>"
 	"<link rel='stylesheet' type='text/css' href='https://" << WebsiteFramework::getDomain() << "/static/" << data->cssTheme << ".css'>"

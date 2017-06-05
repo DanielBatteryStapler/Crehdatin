@@ -16,7 +16,7 @@ void createNewThreadPage(FcgiData* fcgi, RequestData* data, std::string error){
 	
 	createPageHeader(fcgi, data, PageTab::NewThread);
 	fcgi->out << "<h1>New Thread</h1>"
-	"<h3>Posting To " << escapeHtml(name) << " with " << getFormattedPosterString(data->con, data->shownId, data->userId) << "</h3>"
+	"Posting To " << escapeHtml(name) << " with " << getFormattedPosterString(data->con, data->shownId, data->userId, data->subdatinId, false) << "<br>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "/newThread' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"Title: <input type='text' name='title'><br>"
