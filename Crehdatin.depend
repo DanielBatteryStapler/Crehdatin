@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1496540955 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
+1496869375 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
 	<iostream>
 	<thread>
 	<vector>
@@ -18,6 +18,7 @@
 	"Database.h"
 	"RequestData.h"
 	"DirectoryHandles.h"
+	"BackgroundHandle.h"
 	"MainPage.h"
 	"LoginPage.h"
 	"CrehdatinControlPanelPage.h"
@@ -58,7 +59,7 @@
 	"RequestStartHandle.h"
 	"Recaptcha.h"
 
-1496335376 /home/daniel/Projects/codeblocks//WebsiteFramework/WebsiteFramework.h
+1496865248 /home/daniel/Projects/codeblocks//WebsiteFramework/WebsiteFramework.h
 	<thread>
 	<functional>
 	<tuple>
@@ -66,6 +67,9 @@
 	<vector>
 	<fcgio.h>
 	<exception>
+	<mutex>
+	<condition_variable>
+	<atomic>
 	<sys/socket.h>
 	<csignal>
 	<iostream>
@@ -640,7 +644,7 @@
 	"PageHeader.h"
 	"PageFooter.h"
 
-1496605951 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinPage.cpp
+1496638208 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinPage.cpp
 	"SubdatinPage.h"
 
 1496627141 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinData.cpp
@@ -1086,4 +1090,12 @@
 	"PageHeader.h"
 	"PageFooter.h"
 	"ThreadPage.h"
+
+1496869364 /home/daniel/Projects/codeblocks/Crehdatin/BackgroundHandle.h
+	<WebsiteFramework/WebsiteFramework.h>
+	<chrono>
+	"RequestData.h"
+
+1496869351 source:/home/daniel/Projects/codeblocks/Crehdatin/BackgroundHandle.cpp
+	"BackgroundHandle.h"
 

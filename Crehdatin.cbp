@@ -49,6 +49,8 @@
 			<Add option="-lcurl" />
 			<Add option="-lcurlpp" />
 		</Linker>
+		<Unit filename="BackgroundHandle.cpp" />
+		<Unit filename="BackgroundHandle.h" />
 		<Unit filename="CommentPage.cpp" />
 		<Unit filename="CommentPage.h" />
 		<Unit filename="Config.cpp" />

@@ -21,6 +21,7 @@
 #include "RequestData.h"
 
 #include "DirectoryHandles.h"
+#include "BackgroundHandle.h"
 
 #include "MainPage.h"
 #include "LoginPage.h"
@@ -94,8 +95,8 @@ int main(int argc, char** argv){
 	else{
 		sql::Driver* driver = sql::mysql::get_driver_instance();
 		
-		WebsiteFramework::setDomain("website.cloud.karagory.com");
-		//WebsiteFramework::setDomain("crehdatin.karagory.com");
+		//WebsiteFramework::setDomain("website.cloud.karagory.com");
+		WebsiteFramework::setDomain("crehdatin.karagory.com");
 		
 		WebsiteFramework::setThreadStartHandle([driver]()->void*{
 			RequestData* data = new RequestData;
@@ -106,6 +107,8 @@ int main(int argc, char** argv){
 			
 			data->con->setSchema(Config::getSqlDatabaseName());								
 			data->stmt->execute("SET NAMES utf8mb4");
+			
+			resquestDataReferencePool.push_back(data);
 			
 			return (void*)data;
 		});
@@ -181,7 +184,8 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/deleteComment", handleDeleteComment);
 		WebsiteFramework::addPostHandleMap("/d/*/dismissReports", handleDismissReports);
 		
-		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 16);
+		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 16, backgroundHandle);
+		resquestDataReferencePool.clear();
 		
 		std::cout << "Shutting down...\n";
 	}
