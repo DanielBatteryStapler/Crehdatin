@@ -14,7 +14,7 @@ void backgroundHandle(std::condition_variable* backgroundCondition, std::mutex* 
 		for(std::size_t i = 0; i < std::thread::hardware_concurrency() * 16; i++){
 			std::cout << "\tStarting mysql request for thread " << std::to_string(i) << " \n";
 			WebsiteFramework::mutexPool[i]->lock();
-			resquestDataReferencePool[i]->stmt->execute("SELECT UNIX_TIMESTAMP(CURRENT_TIMESTAMP)");//just make some dummy request to keep the connection alive
+			delete resquestDataReferencePool[i]->stmt->executeQuery("SELECT UNIX_TIMESTAMP(CURRENT_TIMESTAMP)");//just make some dummy request to keep the connection alive
 			WebsiteFramework::mutexPool[i]->unlock();
 			std::cout << "\tDone with mysql request for thread " << std::to_string(i) << " \n";
 		}
