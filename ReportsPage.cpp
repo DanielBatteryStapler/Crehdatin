@@ -96,7 +96,6 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 		
 		fcgi->out << "<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/deleteThread' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='seeOther' value='https://" << WebsiteFramework::getDomain() << "/reports'>"
 			"<button type='submit' class='link-button'>"
 			"Delete"
 			"</button>"
@@ -161,7 +160,6 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 		fcgi->out << "<div class='comment even'><div class='extraPostInfo'><div class='postInfoElement'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "'>comment</a></div>"
 			"<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='seeOther' value='https://" << WebsiteFramework::getDomain() << "/reports'>"
 			"<button type='submit' class='link-button'>"
 			"Delete"
 			"</button>"

@@ -43,6 +43,6 @@ void handleReportThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 		setLastPostTime(fcgi, data);
 		
 		createPageHeader(fcgi, data, PageTab::None);
-		fcgi->out << "Thank You For the Report! <a href='https://" << WebsiteFramework::getDomain() << "/d/" << parameters[0] << "/thread/" << parameters[1] << "'>Back to the Thread</a>";
+		fcgi->out << "Thank You For the Report! <a href='" << fcgi->env->getReferrer() << "'>Back to the Thread</a>";
 		createPageFooter(fcgi, data);
 }

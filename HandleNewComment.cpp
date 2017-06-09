@@ -119,7 +119,7 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	setLastPostTime(fcgi, data);
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1] + "/comment/" + std::to_string(newCommentId));
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer() + "#" + std::to_string(newCommentId));
 	finishHttpHeader(fcgi->out);
 }
 

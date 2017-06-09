@@ -52,7 +52,6 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		"</div>"
 		"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/logout' class='logout'>"
 		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-		"<input type='hidden' name='seeOther' value='https://" << WebsiteFramework::getDomain() << fcgi->env->getQueryString() << "'>"
 		"<button type='submit' name='submit_param' class='logout-button'>"
 		"Logout"
 		"</button>"

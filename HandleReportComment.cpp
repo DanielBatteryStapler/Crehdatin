@@ -45,6 +45,6 @@ void handleReportComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	setLastPostTime(fcgi, data);
 	
 	createPageHeader(fcgi, data, PageTab::None);
-	fcgi->out << "Thank You For the Report! <a href='https://" << WebsiteFramework::getDomain() << "/d/" << parameters[0] << "/thread/" << parameters[1] << "#" << parameters[2] << "'>Back to the Comment</a>";
+	fcgi->out << "Thank You For the Report! <a href='" << fcgi->env->getReferrer() << "#" << parameters[2] << "'>Back to the Comment</a>";
 	createPageFooter(fcgi, data);
 }

@@ -12,15 +12,6 @@ void handleDeleteComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	prepStmt->setInt64(1, data->commentId);
 	prepStmt->execute();
 	
-	std::string seeOther;
-	InputError error = getPostValue(fcgi->cgi, seeOther, "seeOther", Config::getUniqueTokenLength(), InputFlag::AllowNonNormal);
-	
-	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	if(error != InputError::NoError || seeOther.size() == 0){
-		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]);
-	}
-	else{
-		sendLocationHeader(fcgi->out, seeOther);
-	}
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 	finishHttpHeader(fcgi->out);
 }

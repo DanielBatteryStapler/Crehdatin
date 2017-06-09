@@ -27,6 +27,6 @@ void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/settings");
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 	finishHttpHeader(fcgi->out);
 }

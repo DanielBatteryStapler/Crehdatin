@@ -12,15 +12,6 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	prepStmtB->setInt64(1, data->threadId);
 	prepStmtB->execute();
 	
-	std::string seeOther;
-	InputError error = getPostValue(fcgi->cgi, seeOther, "seeOther", Config::getUniqueTokenLength(), InputFlag::AllowNonNormal);
-	
-	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	if(error != InputError::NoError || seeOther.size() == 0){
-		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0]);
-	}
-	else{
-		sendLocationHeader(fcgi->out, seeOther);
-	}
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 	finishHttpHeader(fcgi->out);
 }

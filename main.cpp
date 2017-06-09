@@ -95,8 +95,8 @@ int main(int argc, char** argv){
 	else{
 		sql::Driver* driver = sql::mysql::get_driver_instance();
 		
-		//WebsiteFramework::setDomain("website.cloud.karagory.com");
-		WebsiteFramework::setDomain("crehdatin.karagory.com");
+		WebsiteFramework::setDomain("website.cloud.karagory.com");
+		//WebsiteFramework::setDomain("crehdatin.karagory.com");
 		
 		WebsiteFramework::setThreadStartHandle([driver]()->void*{
 			RequestData* data = new RequestData;
@@ -188,6 +188,8 @@ int main(int argc, char** argv){
 		resquestDataReferencePool.clear();
 		
 		std::cout << "Shutting down...\n";
+		//TODO: make it so commenting sends to the same page that you made the comment on, instead of sending you to a permalink.
+		//also, do the same thing to reporting
 	}
 	
     return 0;

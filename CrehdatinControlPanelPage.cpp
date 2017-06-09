@@ -42,6 +42,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 	"name: "
 	"<div class='postInfoElement'><input type='text' name='name'></div>"
 	"<button type='submit'>Add New</button>"
+	"</form>"
 	
 	"<h2>Administrators</h2>";
 	prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("SELECT userName FROM users WHERE userPosition = 'administrator'"));

@@ -30,7 +30,7 @@ void handleSetBureaucrat(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		prepStmt->execute();
 		
 		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/controlPanel");
+		sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 		finishHttpHeader(fcgi->out);
 }
 

@@ -29,7 +29,7 @@ void handleRemoveAdministrator(FcgiData* fcgi, std::vector<std::string> paramete
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/controlPanel");
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 	finishHttpHeader(fcgi->out);
 }
 

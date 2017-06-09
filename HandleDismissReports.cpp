@@ -35,6 +35,6 @@ void handleDismissReports(FcgiData* fcgi, std::vector<std::string> parameters, v
 	}
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/reports");
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 	finishHttpHeader(fcgi->out);
 }

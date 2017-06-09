@@ -65,6 +65,6 @@ void handleAddSubdatin(FcgiData* fcgi, std::vector<std::string> parameters, void
 	}
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/controlPanel");
+	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
 	finishHttpHeader(fcgi->out);
 }
