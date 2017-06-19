@@ -14,5 +14,6 @@
 
 #include "LoginPage.h"
 #include "ErrorPages.h"
+#include "Captcha.h"
 
 void handleLogin(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

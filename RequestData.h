@@ -10,13 +10,17 @@
 
 #include <WebsiteFramework/WebsiteFramework.h>
 
+#include <random>
+
 struct RequestData{
 	sql::Connection* con;
 	sql::Statement* stmt;
 	
-	//user data
+	//session/user data
 	
 	std::string sessionToken;
+	std::string captchaCode;
+	int64_t captchaSeed;
 	std::string userName;
 	int64_t userId;
 	std::string authToken;

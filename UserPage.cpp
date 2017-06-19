@@ -60,29 +60,11 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 			int64_t subdatinId = res->getInt64("subdatinId");
 			std::string subdatinTitle = getSubdatinTitle(data->con, subdatinId);
 			if(!res->isNull("threadId")){
-				int64_t threadId = res->getInt64("threadId");
-				std::unique_ptr<sql::PreparedStatement> prepStmtB(data->con->prepareStatement("SELECT title FROM threads WHERE id = ?"));
-				prepStmtB->setInt64(1, threadId);
-				std::unique_ptr<sql::ResultSet> resB(prepStmtB->executeQuery());
-				resB->first();
-				fcgi->out << "<a style='display:block' href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "'>"
-				"<div class='thread'><div class='threadTitle'>" << escapeHtml(resB->getString("title")) << "</div>"
-				"<div class='extraPostInfo'><div class='postInfoElement'>Posted To /" << escapeHtml(subdatinTitle) << "/</div></div></div></a>";
-				
+				renderThread(fcgi->out, data, subdatinId, subdatinTitle, res->getInt64("threadId"), true, false, false, true);
 			}
 			else if(!res->isNull("commentId")){
-				int64_t commentId = res->getInt64("commentId");
-				std::unique_ptr<sql::PreparedStatement> prepStmtB(data->con->prepareStatement("SELECT body, threadId FROM comments WHERE id = ?"));
-				prepStmtB->setInt64(1, commentId);
-				std::unique_ptr<sql::ResultSet> resB(prepStmtB->executeQuery());
-				resB->first();
-				fcgi->out << "<div class='comment even'><div class='extraPostInfo'>"
-				"<div class='postInfoElement'>"
-				"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(resB->getInt64("threadId")) << "/comment/" << std::to_string(commentId) << "'>Permalink</a></div>"
-				"<div class='postInfoElement'>Posted to /" << escapeHtml(subdatinTitle) << "/</div>"
-				"</div><div class='commentText'>"
-				<< formatUserPostBody(escapeHtml(resB->getString("body")), getEffectiveUserPosition(data->con, data->userPageId, subdatinId)) << 
-				"</div></div>";
+				renderComment(fcgi->out, data, subdatinId, subdatinTitle, res->getInt64("commentId"), false, true, false, true, false, false, true);
+				fcgi->out << "</div>";
 			}
 			else{
 				fcgi->out << "An Error Occured While Loading This Post";

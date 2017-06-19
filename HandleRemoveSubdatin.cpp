@@ -8,9 +8,7 @@ void handleRemoveSubdatin(FcgiData* fcgi, std::vector<std::string> parameters, v
 		return;
 	}
 	
-	std::unique_ptr<sql::PreparedStatement>prepStmt(data->con->prepareStatement("DELETE FROM subdatins WHERE id = ?"));
-	prepStmt->setInt64(1, data->subdatinId);
-	prepStmt->execute();
+	deleteSubdatin(data->con, data->subdatinId);
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());

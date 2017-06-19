@@ -23,6 +23,8 @@
 #include "DirectoryHandles.h"
 #include "BackgroundHandle.h"
 
+#include "Captcha.h"
+
 #include "MainPage.h"
 #include "LoginPage.h"
 #include "CrehdatinControlPanelPage.h"
@@ -71,9 +73,9 @@
 
 #include "RequestStartHandle.h"
 
-#include "Recaptcha.h"
-
 int main(int argc, char** argv){
+	
+	Magick::InitializeMagick(nullptr);
 	
 	if(argc > 1){
 		if(argc == 2){
@@ -142,6 +144,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addDirectoryHandleMap("/u/*", userDirectoryHandle);
 		
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
+		WebsiteFramework::addGetHandleMap("/captcha/*", createCaptchaHandle);
 		WebsiteFramework::addGetHandleMap("/createAccount", createCreateAccountPageHandle);
 		WebsiteFramework::addGetHandleMap("/login", createLoginPageHandle);
 		WebsiteFramework::addGetHandleMap("/settings", createSettingsPageHandle);
@@ -188,8 +191,6 @@ int main(int argc, char** argv){
 		resquestDataReferencePool.clear();
 		
 		std::cout << "Shutting down...\n";
-		//TODO: make it so commenting sends to the same page that you made the comment on, instead of sending you to a permalink.
-		//also, do the same thing to reporting
 	}
 	
     return 0;

@@ -89,7 +89,7 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 			userName = getUserName(data->con, userId);
 		}
 		
-		body = formatUserPostBody(escapeHtml(body), getEffectiveUserPosition(data->con, userId, subdatinId));
+		body = formatUserPostBody(escapeHtml(body), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)));
 		
 		fcgi->out << "<div class='thread'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "'>"
 			<< escapeHtml(title) << "</a><br><div class='extraPostInfo'>";
@@ -155,7 +155,7 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 		}
 		
 		body = escapeHtml(body);
-		body = formatUserPostBody(body, getEffectiveUserPosition(data->con, userId, subdatinId));
+		body = formatUserPostBody(body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)));
 		
 		fcgi->out << "<div class='comment even'><div class='extraPostInfo'><div class='postInfoElement'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "'>comment</a></div>"
 			"<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"

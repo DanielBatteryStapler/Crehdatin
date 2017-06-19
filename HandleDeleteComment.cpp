@@ -8,10 +8,14 @@ void handleDeleteComment(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		return;
 	}
 	
-	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("DELETE FROM comments WHERE id = ?"));
-	prepStmt->setInt64(1, data->commentId);
-	prepStmt->execute();
+	deleteComment(data->con, data->commentId);
 	
-	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
+	if(fcgi->env->getReferrer() == "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1] + "/comments/" + parameters[2]){
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]);
+	}
+	else{
+		sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
+	}
+	
 	finishHttpHeader(fcgi->out);
 }

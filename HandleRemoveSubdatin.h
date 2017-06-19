@@ -16,4 +16,6 @@
 #include "UserPermissions.h"
 #include "ErrorPages.h"
 
+#include "DeletionHandles.h"
+
 void handleRemoveSubdatin(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

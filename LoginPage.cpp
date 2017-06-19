@@ -22,7 +22,9 @@ void createLoginPage(FcgiData* fcgi, RequestData* data, std::string loginError, 
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='text' name='userName'>Username<br>"
 	"<input type='password' name='password'>Password<br>"
-	;
+	"<img src='https://" << WebsiteFramework::getDomain() << "/captcha/" << std::to_string(data->captchaSeed) << ".png' alt='Captcha Image'><br>"
+	"<input type='text' name='captcha'><br>"
+	"<div class='subjectInput'><input type='text' name='subject'></div>";
 	if(loginError != ""){
 		fcgi->out << 
 		"<p><div class='errorText'>"
@@ -40,9 +42,9 @@ void createLoginPage(FcgiData* fcgi, RequestData* data, std::string loginError, 
 	"<input type='text' name='userName'>Username<br>"
 	"<input type='password' name='password'>Password<br>"
 	"<input type='password' name='repeatPassword'>Repeat Password<br>"
-	"<script src='https://www.google.com/recaptcha/api.js'></script>"
-	"<div class='g-recaptcha' data-sitekey='6LeYjR4UAAAAAExPuz3j60KPeea5jZ3zvd9KKR8b'></div>"
-	;
+	"<img src='https://" << WebsiteFramework::getDomain() << "/captcha/" << std::to_string(data->captchaSeed) << ".png' alt='Captcha Image'><br>"
+	"<input type='text' name='captcha'><br>"
+	"<div class='subjectInput'><input type='text' name='subject'></div>";
 	if(createAccountError != ""){
 		fcgi->out << 
 		"<p><div class='errorText'>"

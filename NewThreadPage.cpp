@@ -20,7 +20,8 @@ void createNewThreadPage(FcgiData* fcgi, RequestData* data, std::string error){
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "/newThread' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"Title: <input type='text' name='title'><br>"
-	"<textarea name='body'></textarea><br>";
+	"<textarea name='body'></textarea><br>"
+	"<div class='subjectInput'><input type='text' name='subject'></div>";
 	if(error != ""){
 		fcgi->out << "<p><div class='errorText'>" << error << "</div></p>";
 	}

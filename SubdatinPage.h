@@ -13,5 +13,6 @@
 
 #include "PageHeader.h"
 #include "PageFooter.h"
+#include "ThreadPage.h"
 
 void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

@@ -111,9 +111,11 @@ bool Database::createDatabase(){
 	"PRIMARY KEY (id),"
 	"sessionToken TEXT(" + std::to_string(Config::getUniqueTokenLength()) + ") NOT NULL,"
 	"INDEX (sessionToken(" + std::to_string(Config::getUniqueTokenLength()) + ")),"
+	"captchaCode TEXT NOT NULL,"
+	"captchaSeed BIGINT NOT NULL,"
 	"authToken TEXT(" + std::to_string(Config::getUniqueTokenLength()) + ") NOT NULL,"
 	"userId BIGINT DEFAULT NULL,"
-	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE SET NULL,"
 	"shownId TEXT(12) DEFAULT NULL,"
 	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
 	") ENGINE = InnoDB");
@@ -125,6 +127,7 @@ bool Database::createDatabase(){
 	"body TEXT NOT NULL,"
 	"anonId TEXT DEFAULT NULL,"
 	"userId BIGINT DEFAULT NULL,"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE SET NULL,"
 	"stickied BOOL NOT NULL DEFAULT FALSE,"
 	"locked BOOL NOT NULL DEFAULT FALSE,"
 	"posterIp TEXT NOT NULL,"
@@ -141,6 +144,7 @@ bool Database::createDatabase(){
 	"body TEXT NOT NULL,"
 	"anonId TEXT DEFAULT NULL,"
 	"userId BIGINT DEFAULT NULL,"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE SET NULL,"
 	"posterIp TEXT NOT NULL,"
 	"subdatinId BIGINT NOT NULL,"
 	"INDEX (subdatinId),"
@@ -152,6 +156,20 @@ bool Database::createDatabase(){
 	"INDEX (parentId),"
 	"FOREIGN KEY (parentId) REFERENCES comments(id) ON DELETE CASCADE,"
 	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+	") ENGINE = InnoDB");
+	
+	stmt->execute("CREATE TABLE images("
+	"id BIGINT NOT NULL AUTO_INCREMENT,"
+	"PRIMARY KEY (id),"
+	"fileId TEXT NOT NULL,"
+	"extension TEXT NOT NULL,"
+	"originalName TEXT NOT NULL,"
+	"threadId BIGINT DEFAULT NULL,"
+	"INDEX (threadId),"
+	"FOREIGN KEY (threadId) REFERENCES threads(id) ON DELETE CASCADE,"
+	"commentId BIGINT DEFAULT NULL,"
+	"INDEX (commentId),"
+	"FOREIGN KEY (commentId) REFERENCES comments(id) ON DELETE CASCADE"
 	") ENGINE = InnoDB");
 	
 	/*
@@ -187,7 +205,7 @@ bool Database::createDatabase(){
 	"FOREIGN KEY (commentId) REFERENCES comments(id) ON DELETE CASCADE,"
 	"ip TEXT NOT NULL,"
 	"userId BIGINT DEFAULT NULL,"
-	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE SET NULL,"
 	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
 	") ENGINE = InnoDB");
 	

@@ -17,4 +17,6 @@
 #include "UserPermissions.h"
 #include "ErrorPages.h"
 
+#include "DeletionHandles.h"
+
 void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

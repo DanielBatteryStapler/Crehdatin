@@ -8,13 +8,6 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		return;
 	}
 	
-	std::string captcha;
-	if(getPostValue(fcgi->cgi, captcha, "g-recaptcha-response", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| !validateRecaptcha(captcha, fcgi->env->getRemoteAddr())){
-		createLoginPage(fcgi, data, "", "Incorrect Captcha");
-		return;
-	}
-	
 	std::string userName;
 	switch(getPostValue(fcgi->cgi, userName, "userName", Config::getMaxNameLength(), InputFlag::AllowStrictOnly)){
 	default:
@@ -72,6 +65,22 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		createLoginPage(fcgi, data, "", "Passwords Do Not Match");
 		return;
 	}
+	
+	std::string captcha;
+	switch(getPostValue(fcgi->cgi, captcha, "captcha", captchaLength, InputFlag::AllowStrictOnly)){
+	default:
+		createLoginPage(fcgi, data, "", "Incorrect Captcha");
+		return;
+	case InputError::NoError:
+		break;
+	}
+	std::transform(captcha.begin(), captcha.end(), captcha.begin(), ::toupper);
+	if(data->captchaCode != captcha){
+		createLoginPage(fcgi, data, "", "Incorrect Captcha");
+		createNewCaptchaSession(data);//regenerate captcha if they got it wrong
+		return;
+	}
+	createNewCaptchaSession(data);//regenerate captcha if they got it right
 	
 	std::string salt = generateRandomToken();
 	std::string hash = generateSecureHash(password, salt);

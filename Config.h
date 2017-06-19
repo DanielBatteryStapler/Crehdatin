@@ -9,6 +9,7 @@ public:
 	static std::string getSqlUserName();
 	static std::string getSqlPassword();
 	static std::string getSqlDatabaseName();
+	static std::string getCrehdatinDataDirectory();
 	static std::size_t getUniqueTokenLength();
 	static std::size_t getMaxNameLength();
 	static std::size_t getMaxPasswordLength();

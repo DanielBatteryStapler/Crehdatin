@@ -11,7 +11,7 @@ void printIfSelected(FcgiData* fcgi, PageTab selected, PageTab correct){
 
 void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	sendStatusHeader(fcgi->out, StatusCode::Ok);
-	sendHtmlContentTypeHeader(fcgi->out);
+	sendContentTypeHeader(fcgi->out, ContentType::Html);
 	finishHttpHeader(fcgi->out);
 	
 	std::string effectiveUserPosition = getEffectiveUserPosition(data->con, data->userId, data->subdatinId);

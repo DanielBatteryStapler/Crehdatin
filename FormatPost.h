@@ -91,5 +91,5 @@ public:
 	std::string endTag;
 };
 
-std::string formatUserPostBody(std::string body, std::string userPosition);
+std::string formatUserPostBody(std::string body, bool canRainbow);
 

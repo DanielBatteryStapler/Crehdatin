@@ -16,6 +16,10 @@ std::string Config::getSqlDatabaseName(){
 	return "Crehdatin";
 }
 
+std::string Config::getCrehdatinDataDirectory(){
+	return "/home/Projects/crehdatinData";
+}
+
 std::size_t Config::getUniqueTokenLength(){
 	return 512;
 }

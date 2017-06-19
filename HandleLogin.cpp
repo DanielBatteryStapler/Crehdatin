@@ -41,6 +41,22 @@ void handleLogin(FcgiData* fcgi, std::vector<std::string> parameters, void* _dat
 		break;
 	}
 	
+	std::string captcha;
+	switch(getPostValue(fcgi->cgi, captcha, "captcha", captchaLength, InputFlag::AllowStrictOnly)){
+	default:
+		createLoginPage(fcgi, data, "", "Incorrect Captcha");
+		return;
+	case InputError::NoError:
+		break;
+	}
+	std::transform(captcha.begin(), captcha.end(), captcha.begin(), ::toupper);
+	if(data->captchaCode != captcha){
+		createLoginPage(fcgi, data, "", "Incorrect Captcha");
+		createNewCaptchaSession(data);//regenerate captcha if they got it wrong
+		return;
+	}
+	createNewCaptchaSession(data);//regenerate captcha if they got it right
+	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT passwordHash, passwordSalt, id FROM users WHERE userName = ?"));
 	prepStmt->setString(1, userName);
 	

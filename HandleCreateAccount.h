@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <algorithm>
 
 #include "Config.h"
 
@@ -15,7 +16,7 @@
 #include <WebsiteFramework/Cryptography.h>
 
 #include "LoginPage.h"
-#include "Recaptcha.h"
+#include "Captcha.h"
 
 void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void createCreateAccountPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

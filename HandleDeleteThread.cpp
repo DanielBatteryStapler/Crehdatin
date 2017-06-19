@@ -8,10 +8,13 @@ void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, voi
 		return;
 	}
 	
-	std::unique_ptr<sql::PreparedStatement> prepStmtB(data->con->prepareStatement("DELETE FROM threads WHERE id = ?"));
-	prepStmtB->setInt64(1, data->threadId);
-	prepStmtB->execute();
+	deleteThread(data->con, data->threadId);
 	
-	sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
+	if(fcgi->env->getReferrer() == "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0] + "/thread/" + parameters[1]){
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + parameters[0]);
+	}
+	else{
+		sendLocationHeader(fcgi->out, fcgi->env->getReferrer());
+	}
 	finishHttpHeader(fcgi->out);
 }

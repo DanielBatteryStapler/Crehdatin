@@ -8,6 +8,8 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	res->first();
 	
 	data->sessionToken = "";
+	data->captchaCode = "";
+	data->captchaSeed = -1;
 	data->userName = "";
 	data->userId = -1;
 	data->authToken = "";
@@ -37,7 +39,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	
 	if(data->blocked){
 		sendStatusHeader(fcgi->out, StatusCode::Ok);
-		sendHtmlContentTypeHeader(fcgi->out);
+		sendContentTypeHeader(fcgi->out, ContentType::Html);
 		finishHttpHeader(fcgi->out);
 		fcgi->out << "<!DOCTYPE html><html><body>You are blocked</body></html>";
 		return false;
@@ -52,7 +54,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 		}
 	}
 	
-	if(getUserRequestData(fcgi, data, sessionToken) == false){
+	if(getSessionData(fcgi, data, sessionToken) == false){
 		return false;
 	}
 	
@@ -63,14 +65,19 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 			createGenericErrorPage(fcgi, data, "Invalid Authentication Token. Do You Have Cookies Enabled?");
 			return false;
 		}
+		std::string honeyPot;//just to stop web crawlers from spamming
+		if(getPostValue(fcgi->cgi, honeyPot, "subject", 256, InputFlag::DontCheckInputContents) != InputError::IsEmpty || honeyPot != ""){
+			createGenericErrorPage(fcgi, data, "Never Fill Out Subject Lines");
+			return false;
+		}
 	}
 	
 	return true;
 }
 
-bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionToken){
+bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken){
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT " 
-	"id, userId, authToken, shownId "
+	"captchaCode, captchaSeed, userId, authToken, shownId "
 	"FROM sessions "
 	"WHERE sessionToken = ?"));
 	prepStmt->setString(1, sessionToken);
@@ -78,6 +85,8 @@ bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionTo
 	res->beforeFirst();
 	if(res->next()){
 		data->sessionToken = sessionToken;
+		data->captchaCode = res->getString("captchaCode");
+		data->captchaSeed = res->getInt64("captchaSeed");
 		if(!res->isNull("userId")){
 			data->userId = res->getInt64("userId");
 			
@@ -105,7 +114,7 @@ bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionTo
 			}
 			else{
 				sendStatusHeader(fcgi->out, StatusCode::Ok);
-				sendHtmlContentTypeHeader(fcgi->out);
+				sendContentTypeHeader(fcgi->out, ContentType::Html);
 				sendDeleteCookieHeader(fcgi->out, "sessionToken");
 				finishHttpHeader(fcgi->out);
 				fcgi->out << "<html><body>An unknown, internal server error occurred</body></html>";
@@ -125,20 +134,24 @@ bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionTo
 }
 
 void createNewSession(RequestData* data){
+	data->stmt->execute("BEGIN");
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("INSERT INTO sessions "
 	"(sessionToken, authToken, shownId) SELECT ?, ?, ? FROM DUAL WHERE NOT EXISTS "
 	"(SELECT id FROM sessions WHERE sessionToken=? OR authToken=? OR shownId=?)"));
 	
 	int64_t rowCount;
 	
-	do{
+	while(true){
 		data->sessionToken = generateRandomToken();
 		data->authToken = generateRandomToken();
 		data->shownId = generateRandomToken().substr(0, 12);
+		data->captchaCode = generateCaptchaText();
+		data->captchaSeed = generateCaptchaSeed();
 		
 		prepStmt->setString(1, data->sessionToken);
 		prepStmt->setString(2, data->authToken);
 		prepStmt->setString(3, data->shownId);
+		
 		prepStmt->setString(4, data->sessionToken);
 		prepStmt->setString(5, data->authToken);
 		prepStmt->setString(6, data->shownId);
@@ -149,6 +162,15 @@ void createNewSession(RequestData* data){
 		res->first();
 		
 		rowCount = res->getInt64(1);
-		
-	}while(rowCount == 0);
+		if(rowCount == 0){
+			data->stmt->execute("ROLLBACK");
+			continue;
+		}
+		else{
+			data->stmt->execute("COMMIT");
+			break;
+		}
+	}
+	
+	createNewCaptchaSession(data);
 }

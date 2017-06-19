@@ -45,11 +45,123 @@ std::string getSubdatinTitle(sql::Connection* con, int64_t subdatinId){
 }
 
 int64_t getThreadCommentCount(sql::Connection* con, int64_t threadId){
-	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT COUNT(*) as count FROM comments WHERE threadId = ?"));
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT COUNT(*) AS count FROM comments WHERE threadId = ?"));
 	prepStmt->setInt64(1, threadId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	
 	res->first();
 	
 	return res->getInt64("count");
+}
+
+std::string getFormattedThreadPostTime(sql::Connection* con, int64_t threadId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT TIME_TO_SEC(TIMEDIFF(NOW(), createdTime)) AS time FROM threads WHERE id = ?"));
+	prepStmt->setInt64(1, threadId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->first();
+	int64_t time = res->getInt64("time");
+	
+	if(time < 0){
+		return "Posted Error Ago";
+	}
+	else if(time / 60 == 0){
+		return "Posted Less Than A Minute Ago";
+	}
+	else if(time / 60 == 1){
+		return "Posted A Minute Ago";
+	}
+	else if(time / 60 < 60){
+		return "Posted " + std::to_string(time / 60) + " Minutes Ago";
+	}
+	else if(time / 60 / 60 == 1){
+		return "Posted An Hour Ago";
+	}
+	else if(time / 60 / 60 < 24){
+		return "Posted " + std::to_string(time / 60 / 60) + " Hours Ago";
+	}
+	else if(time / 60 / 60 / 24 == 1){
+		return "Posted A Day Ago";
+	}
+	else{
+		return "Posted " + std::to_string(time / 60 / 60 / 24) + " Days Ago";
+	}
+}
+
+std::string getFormattedThreadBumpTime(sql::Connection* con, int64_t threadId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT TIME_TO_SEC(TIMEDIFF(NOW(), lastBumpTime)) AS time FROM threads WHERE id = ?"));
+	prepStmt->setInt64(1, threadId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->first();
+	int64_t time = res->getInt64("time");
+	
+	if(time < 0){
+		return "Bumped Error Ago";
+	}
+	else if(time / 60 == 0){
+		return "Bumped Less Than A Minute Ago";
+	}
+	else if(time / 60 == 1){
+		return "Bumped A Minute Ago";
+	}
+	else if(time / 60 < 60){
+		return "Bumped " + std::to_string(time / 60) + " Minutes Ago";
+	}
+	else if(time / 60 / 60 == 1){
+		return "Bumped An Hour Ago";
+	}
+	else if(time / 60 / 60 < 24){
+		return "Bumped " + std::to_string(time / 60 / 60) + " Hours Ago";
+	}
+	else if(time / 60 / 60 / 24 == 1){
+		return "Bumped A Day Ago";
+	}
+	else{
+		return "Bumped " + std::to_string(time / 60 / 60 / 24) + " Days Ago";
+	}
+}
+
+std::string getFormattedCommentPostTime(sql::Connection* con, int64_t commentId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT TIME_TO_SEC(TIMEDIFF(NOW(), createdTime)) AS time FROM comments WHERE id = ?"));
+	prepStmt->setInt64(1, commentId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->first();
+	int64_t time = res->getInt64("time");
+	
+	if(time < 0){
+		return "Posted Error Ago";
+	}
+	else if(time / 60 == 0){
+		return "Posted Less Than A Minute Ago";
+	}
+	else if(time / 60 == 1){
+		return "Posted A Minute Ago";
+	}
+	else if(time / 60 < 60){
+		return "Posted " + std::to_string(time / 60) + " Minutes Ago";
+	}
+	else if(time / 60 / 60 == 1){
+		return "Posted An Hour Ago";
+	}
+	else if(time / 60 / 60 < 24){
+		return "Posted " + std::to_string(time / 60 / 60) + " Hours Ago";
+	}
+	else if(time / 60 / 60 / 24 == 1){
+		return "Posted A Day Ago";
+	}
+	else{
+		return "Posted " + std::to_string(time / 60 / 60 / 24) + " Days Ago";
+	}
+}
+
+int64_t getParentComment(sql::Connection* con, int64_t commentId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT parentId FROM comments WHERE id = ?"));
+	prepStmt->setInt64(1, commentId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->first();
+	if(res->isNull("parentId")){
+		return -1;
+	}
+	else{
+		return res->getInt64("parentId");
+	}
 }

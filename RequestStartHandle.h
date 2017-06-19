@@ -19,6 +19,8 @@
 #include "PageFooter.h"
 #include "ErrorPages.h"
 
+#include "Captcha.h"
+
 bool requestStartHandle(FcgiData* fcgi, void* _data);
-bool getUserRequestData(FcgiData* fcgi, RequestData* data, std::string sessionToken);
+bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken);
 void createNewSession(RequestData* data);

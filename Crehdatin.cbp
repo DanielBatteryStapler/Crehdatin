@@ -25,6 +25,7 @@
 				<Option compiler="clang" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="$\(GraphicsMagick++-config --cppflags --cxxflags\)" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -46,11 +47,12 @@
 			<Add option="-lcrypto++" />
 			<Add option="-lcgicc" />
 			<Add option="-lmysqlcppconn" />
-			<Add option="-lcurl" />
-			<Add option="-lcurlpp" />
+			<Add option="$\(GraphicsMagick++-config --ldflags --libs\)" />
 		</Linker>
 		<Unit filename="BackgroundHandle.cpp" />
 		<Unit filename="BackgroundHandle.h" />
+		<Unit filename="Captcha.cpp" />
+		<Unit filename="Captcha.h" />
 		<Unit filename="CommentPage.cpp" />
 		<Unit filename="CommentPage.h" />
 		<Unit filename="Config.cpp" />
@@ -59,6 +61,8 @@
 		<Unit filename="CrehdatinControlPanelPage.h" />
 		<Unit filename="Database.cpp" />
 		<Unit filename="Database.h" />
+		<Unit filename="DeletionHandles.cpp" />
+		<Unit filename="DeletionHandles.h" />
 		<Unit filename="DirectoryHandles.cpp" />
 		<Unit filename="DirectoryHandles.h" />
 		<Unit filename="ErrorPages.cpp" />
@@ -125,8 +129,6 @@
 		<Unit filename="PageFooter.h" />
 		<Unit filename="PageHeader.cpp" />
 		<Unit filename="PageHeader.h" />
-		<Unit filename="Recaptcha.cpp" />
-		<Unit filename="Recaptcha.h" />
 		<Unit filename="ReportsPage.cpp" />
 		<Unit filename="ReportsPage.h" />
 		<Unit filename="RequestData.h" />

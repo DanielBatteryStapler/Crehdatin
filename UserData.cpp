@@ -75,7 +75,12 @@ std::string getFormattedPosterString(sql::Connection* con, std::string anonId, i
 		return output;
 	}
 	else{
-		return "id: " + anonId;
+		if(anonId.size() == 0){
+			return "user: <removed>";
+		}
+		else{
+			return "id: " + anonId;
+		}
 	}
 }
 
