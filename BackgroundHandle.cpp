@@ -11,9 +11,8 @@ void backgroundHandle(std::condition_variable* backgroundCondition, std::mutex* 
 			}
 		}
 		for(std::size_t i = 0; i < std::thread::hardware_concurrency() * 16; i++){
-			WebsiteFramework::mutexPool[i]->lock();
+			std::unique_lock<std::mutex> lock(*WebsiteFramework::mutexPool[i]);
 			delete resquestDataReferencePool[i]->stmt->executeQuery("SELECT UNIX_TIMESTAMP(CURRENT_TIMESTAMP)");//just make some dummy request to keep the connection alive
-			WebsiteFramework::mutexPool[i]->unlock();
 		}
 	}
 }

@@ -66,7 +66,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	else{
 		fcgi->out <<
 		"<div class='toolbarEntry'>"
-		"Welcome back, <a href='https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(data->userName) << "'>" << escapeHtml(data->userName) << "</a>!"
+		"Welcome back, <a href='https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(data->userName) << "'>" << data->userName << "</a>!"
 		"</div>";
 	}
 	fcgi->out << "</div>";
@@ -80,7 +80,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	else{
 		fcgi->out <<
 		"<div id='headerText'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'>"
-		<< escapeHtml(subdatinName) <<
+		<< subdatinName <<
 		"</a></div>";
 		if(commentLocked){
 			fcgi->out <<
@@ -187,7 +187,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		if(res->getInt64("id") == data->subdatinId){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
 			"<li id='selectedSubdatin'>"
-			"<large>" << escapeHtml(res->getString("name")) << "</large>"
+			"<large>" << res->getString("name") << "</large>"
 			"<small>/" << res->getString("title") << "/</small>"
 			"</li>"
 			"</a>";
@@ -195,7 +195,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		else{
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
 			"<li>"
-			"<large>" << escapeHtml(res->getString("name")) << "</large>"
+			"<large>" << res->getString("name") << "</large>"
 			"<small>/" << res->getString("title") << "/</small>"
 			"</li>"
 			"</a>";

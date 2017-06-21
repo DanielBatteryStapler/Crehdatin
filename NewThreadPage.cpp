@@ -7,16 +7,11 @@ void createNewThreadPageHandle(FcgiData* fcgi, std::vector<std::string> paramete
 }
 
 void createNewThreadPage(FcgiData* fcgi, RequestData* data, std::string error){
-	std::string title;
-	std::string name;
-	bool postLocked;
-	bool commentLocked;
-	
-	getSubdatinData(data->con, data->subdatinId, title, name, postLocked, commentLocked);
+	std::string title = getSubdatinTitle(data->con, data->subdatinId);
 	
 	createPageHeader(fcgi, data, PageTab::NewThread);
 	fcgi->out << "<h1>New Thread</h1>"
-	"Posting To " << escapeHtml(name) << " with " << getFormattedPosterString(data->con, data->shownId, data->userId, data->subdatinId, false) << "<br>"
+	"Posting To /" << title << "/ with " << getFormattedPosterString(data->con, data->shownId, data->userId, data->subdatinId, false) << "<br>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "/newThread' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"Title: <input type='text' name='title'><br>"

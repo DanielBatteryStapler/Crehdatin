@@ -18,10 +18,8 @@ bool subdatinDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters
 bool threadDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	std::string threadId = percentDecode(parameters[1]);
-	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id FROM threads WHERE id = ? AND subdatinId = ?"));
-	prepStmt->setString(1, threadId);
+	prepStmt->setString(1, parameters[1]);
 	prepStmt->setInt64(2, data->subdatinId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
@@ -42,10 +40,8 @@ bool threadDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, 
 bool commentDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	std::string commentId = percentDecode(parameters[2]);
-	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id FROM comments WHERE id = ? AND threadId = ? AND subdatinId = ?"));
-	prepStmt->setString(1, commentId);
+	prepStmt->setString(1, parameters[2]);
 	prepStmt->setInt64(2, data->threadId);
 	prepStmt->setInt64(3, data->subdatinId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());

@@ -91,5 +91,5 @@ public:
 	std::string endTag;
 };
 
-std::string formatUserPostBody(std::string body, bool canRainbow);
+MarkupString formatUserPostBody(std::string body, bool canRainbow);
 

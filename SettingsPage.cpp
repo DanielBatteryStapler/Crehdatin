@@ -15,7 +15,7 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 	createPageHeader(fcgi, data, PageTab::Settings);
 	
 	fcgi->out << "<h1>Settings</h1>"
-	"<h3>Username: " << escapeHtml(data->userName) << "</h3>"
+	"<h3>Username: " << data->userName << "</h3>"
 	"<h3>Current Theme: ";
 	if(data->cssTheme == "dark"){
 		fcgi->out << "Dark";

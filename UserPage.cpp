@@ -9,13 +9,13 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 	std::string userName = getUserName(data->con, data->userPageId);
 	
 	if(globalUserPosition == "senate"){
-		fcgi->out << "<h2><div class='senateTag'>" << escapeHtml(userName) << "[S]</div></h2>";
+		fcgi->out << "<h2><div class='senateTag'>" << userName << "[S]</div></h2>";
 	}
 	else if(globalUserPosition == "administrator"){
-		fcgi->out << "<h2><div class='administratorTag'>" << escapeHtml(userName) << "[A]</div></h2>";
+		fcgi->out << "<h2><div class='administratorTag'>" << userName << "[A]</div></h2>";
 	}
 	else if(globalUserPosition == ""){
-		fcgi->out << "<h2>" << escapeHtml(userName) << "</h2>";
+		fcgi->out << "<h2>" << userName << "</h2>";
 	}
 	else{
 		fcgi->out << "<h2>An Error Occurred</h2>";
@@ -29,7 +29,7 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 		fcgi->out << "<ul id='positionList'><div id='positionListTitle'>Subdatin Positions:</div></h3>";
 		do{
 			std::string title = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
-			fcgi->out << "<li><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "'>/" << escapeHtml(title) << "/</a> : ";
+			fcgi->out << "<li><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "'>/" << title << "/</a> : ";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << "Bureaucrat";
 			}

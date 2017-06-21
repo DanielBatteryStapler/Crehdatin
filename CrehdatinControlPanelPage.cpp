@@ -26,7 +26,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
 			"<a href=https://" << WebsiteFramework::getDomain() << "/u/" << res->getString("title") << "'>"
-			<< escapeHtml(res->getString("name")) <<
+			<< res->getString("name") <<
 			"</a><br>";
 		}while(res->next());
 	}
@@ -53,11 +53,11 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data){
 			fcgi->out << 
 			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/removeAdministrator' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='userName' value='" << escapeHtml(res->getString("userName")) << "'>"
+			"<input type='hidden' name='userName' value='" << res->getString("userName") << "'>"
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
 			"<a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(res->getString("userName")) << ">"
-			<< escapeHtml(res->getString("userName")) <<
+			<< res->getString("userName") <<
 			"</a><br>";
 		}while(res->next());
 	}

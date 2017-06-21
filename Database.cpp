@@ -117,7 +117,8 @@ bool Database::createDatabase(){
 	"userId BIGINT DEFAULT NULL,"
 	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE SET NULL,"
 	"shownId TEXT(12) DEFAULT NULL,"
-	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+	"ip TEXT NOT NULL"
 	") ENGINE = InnoDB");
 	
 	stmt->execute("CREATE TABLE threads("

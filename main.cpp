@@ -130,7 +130,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::setError404Handle([](FcgiData* fcgi, void* _data){
 			RequestData* data = (RequestData*)_data;
 			createPageHeader(fcgi, data, PageTab::Error);
-			fcgi->out << "<div class='errorText'>This Page Does Not Exist</div>";
+			fcgi->out << "<div class='errorText'>This Page Does Not Exist</div>"_m;
 			createPageFooter(fcgi, data);
 		});
 		

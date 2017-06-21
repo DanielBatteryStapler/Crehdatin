@@ -19,10 +19,10 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 			
 			"<a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << ">";
 			if(res->getString("userPosition") == "bureaucrat"){
-				fcgi->out << "<div class='bureaucratTag'>" << escapeHtml(userName) << "[B]</div>";
+				fcgi->out << "<div class='bureaucratTag'>" << userName << "[B]</div>";
 			}
 			else if(res->getString("userPosition") == "moderator"){
-				fcgi->out << "<div class='moderatorTag'>" << escapeHtml(userName) << "[M]</div>";
+				fcgi->out << "<div class='moderatorTag'>" << userName << "[M]</div>";
 			}
 			else{
 				fcgi->out << "<div class='errorText'>an unknown error occurred!</div>";
@@ -40,7 +40,7 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 	res->first();
 	if(!res->isNull("description")){
 		fcgi->out << "<h2>Infomation</h2>";
-		fcgi->out << formatUserPostBody(escapeHtml(res->getString("description")),  "bureaucrat");
+		fcgi->out << formatUserPostBody(res->getString("description"),  true);
 	}
 	
 	createPageFooter(fcgi, data);

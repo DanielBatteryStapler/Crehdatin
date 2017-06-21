@@ -23,4 +23,4 @@
 
 bool requestStartHandle(FcgiData* fcgi, void* _data);
 bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken);
-void createNewSession(RequestData* data);
+void createNewSession(FcgiData* fcgi, RequestData* data);

@@ -68,20 +68,11 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 	res->beforeFirst();
 	
 	if(res->next()){
-		std::string title = res->getString("title");
-		std::string body = res->getString("body");
 		int64_t userId = -1;
 		if(!res->isNull("userId")){
 			userId = res->getInt64("userId");
 		}
-		std::string posterIp = res->getString("posterIp");
-		int64_t subdatinId = res->getInt64("subdatinId");
-		std::string subdatinTitle;
-		std::string subdatinName;
-		bool postLocked;
-		bool commentLocked;
-		
-		getSubdatinData(data->con, subdatinId, subdatinTitle, subdatinName, postLocked, commentLocked);
+		std::string subdatinTitle = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
 		
 		std::string userName;
 		
@@ -89,10 +80,8 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 			userName = getUserName(data->con, userId);
 		}
 		
-		body = formatUserPostBody(escapeHtml(body), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)));
-		
 		fcgi->out << "<div class='thread'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "'>"
-			<< escapeHtml(title) << "</a><br><div class='extraPostInfo'>";
+			<< res->getString("title") << "</a><br><div class='extraPostInfo'>";
 		
 		fcgi->out << "<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/deleteThread' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
@@ -112,12 +101,12 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 			
 		fcgi->out << "</ul></div></div><div class='postInfoElement'>";
 		if(userId != -1){
-			fcgi->out << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, "", userId, data->subdatinId) << "</div>";
+			fcgi->out << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, "", userId, res->getInt64("subdatinId")) << "</div>";
 		}
 		
-		fcgi->out << "ip: " << posterIp << 
+		fcgi->out << "ip: " << res->getString("posterIp") << 
 			"</div></div>"
-			"<div class='threadText'>" << body << "</div>";
+			"<div class='threadText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, res->getInt64("subdatinId")))) << "</div>";
 	}
 	else{
 		fcgi->out << "<div class='thread'><div class='threadText'><div class='errorText'>"
@@ -134,19 +123,11 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 	res->beforeFirst();
 	
 	if(res->next()){
-		std::string body = res->getString("body");
 		int64_t userId = -1;
 		if(!res->isNull("userId")){
 			userId = res->getInt64("userId");
 		}
-		std::string posterIp = res->getString("posterIp");
-		int64_t subdatinId = res->getInt64("subdatinId");
-		std::string subdatinTitle;
-		std::string subdatinName;
-		bool postLocked;
-		bool commentLocked;
-		
-		getSubdatinData(data->con, subdatinId, subdatinTitle, subdatinName, postLocked, commentLocked);
+		std::string subdatinTitle = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
 		
 		std::string userName;
 		
@@ -154,11 +135,8 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 			userName = getUserName(data->con, userId);
 		}
 		
-		body = escapeHtml(body);
-		body = formatUserPostBody(body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)));
-		
 		fcgi->out << "<div class='comment even'><div class='extraPostInfo'><div class='postInfoElement'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "'>comment</a></div>"
-			"<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << threadId << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
+			"<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<button type='submit' class='link-button'>"
 			"Delete"
@@ -179,9 +157,9 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 			fcgi->out << "user: " << userName << ", ";
 		}
 		
-		fcgi->out << "ip: " << posterIp << 
+		fcgi->out << "ip: " << res->getString("posterIp") << 
 			"</div></div>"
-			"<div class='commentText'>" << body <<
+			"<div class='commentText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, res->getInt64("subdatinId")))) <<
 			"</div>";
 	}
 	else{

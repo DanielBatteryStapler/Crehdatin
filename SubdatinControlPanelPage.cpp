@@ -35,19 +35,19 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			"<div class='postInfoElement'><a href=https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << "'>";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << 
-				"<div class='bureaucratTag'>" << escapeHtml(userName) << "[B]</div></a></div>"
+				"<div class='bureaucratTag'>" << userName << "[B]</div></a></div>"
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setModerator' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-				"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
+				"<input type='hidden' name='userName' value='" << userName << "'>"
 				"<div class='postInfoElement'><button type='submit'>Set Moderator</button></div>"
 				"</form>";
 			}
 			else if(res->getString("userPosition") == "moderator"){
 				fcgi->out << 
-				"<div class='moderatorTag'>" << escapeHtml(userName) << "[M]</div></a></div>"
+				"<div class='moderatorTag'>" << userName << "[M]</div></a></div>"
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setBureaucrat' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-				"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
+				"<input type='hidden' name='userName' value='" << userName << "'>"
 				"<div class='postInfoElement'><button type='submit'>Set Bureaucrat</button></div>"
 				"</form>";
 			}
@@ -57,7 +57,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			fcgi->out << 
 			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/removeSubdatinOfficial' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<input type='hidden' name='userName' value='" << escapeHtml(userName) << "'>"
+			"<input type='hidden' name='userName' value='" << userName << "'>"
 			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
 			"</form>"
 			"<br>";

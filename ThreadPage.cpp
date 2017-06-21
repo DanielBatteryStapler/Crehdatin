@@ -17,7 +17,7 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	createPageFooter(fcgi, data);
 }
 
-void createCommentLine(std::ostream& fcgiOut, RequestData* data, bool canModerate, bool canReply, std::string& subdatinTitle, int64_t layer, int64_t parentId){
+void createCommentLine(MarkupOutStream& fcgiOut, RequestData* data, bool canModerate, bool canReply, std::string& subdatinTitle, int64_t layer, int64_t parentId){
 	std::unique_ptr<sql::PreparedStatement> prepStmt;
 		
 	if(parentId == -1){
@@ -56,7 +56,7 @@ void createCommentLine(std::ostream& fcgiOut, RequestData* data, bool canModerat
 }
 
 
-bool renderThread(std::ostream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t threadId, bool isPreview, bool canModerate, bool canControl, bool showSubdatin){
+bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t threadId, bool isPreview, bool canModerate, bool canControl, bool showSubdatin){
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, body, anonId, userId, locked, stickied FROM threads WHERE id = ?"));
 	prepStmt->setInt64(1, threadId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
@@ -81,10 +81,10 @@ bool renderThread(std::ostream& fcgiOut, RequestData* data, std::int64_t subdati
 		fcgiOut << 
 		"<a style='display:block' href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(threadId) << "'>"
 		"<div class='thread'>"
-			"<div class='threadTitle'>" << escapeHtml(res->getString("title")) << "</div>"
+			"<div class='threadTitle'>" << res->getString("title") << "</div>"
 			"<div class='extraPostInfo'>";
 				if(showSubdatin){
-					fcgiOut << "<div class='postInfoElement'>/" << escapeHtml(subdatinTitle) << "/</div>";
+					fcgiOut << "<div class='postInfoElement'>/" << subdatinTitle << "/</div>";
 				}
 				fcgiOut << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId, false) << "</div>"
 				"<div class='postInfoElement'>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</div>"
@@ -102,10 +102,10 @@ bool renderThread(std::ostream& fcgiOut, RequestData* data, std::int64_t subdati
 	}
 	else{
 		fcgiOut << "<div class='thread'>"
-			"<div class='threadTitle'>" << escapeHtml(res->getString("title")) << "</div>"
+			"<div class='threadTitle'>" << res->getString("title") << "</div>"
 			"<div class='extraPostInfo'>";
 				if(showSubdatin){
-					fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << escapeHtml(subdatinTitle) << "'><div class='postInfoElement'>/" << escapeHtml(subdatinTitle) << "/</div></a>";
+					fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'><div class='postInfoElement'>/" << subdatinTitle << "/</div></a>";
 				}
 				fcgiOut << 
 				"<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</div>"
@@ -126,14 +126,14 @@ bool renderThread(std::ostream& fcgiOut, RequestData* data, std::int64_t subdati
 					fcgiOut << "<div class='postInfoElement'>Stickied</div>";
 				}
 			fcgiOut << "</div>"
-			"<div class='threadText'>" << formatUserPostBody(escapeHtml(res->getString("body")), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, data->subdatinId))) << "</div>"
+			"<div class='threadText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, data->subdatinId))) << "</div>"
 		"</div>";
 	}
 	
 	return canReply;
 }
 
-void renderComment(std::ostream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t commentId, bool isEven, bool isPreview, bool showPoster, bool showPermaLink, bool canReply, bool canModerate, bool showSubdatin){
+void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t commentId, bool isEven, bool isPreview, bool showPoster, bool showPermaLink, bool canReply, bool canModerate, bool showSubdatin){
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT threadId, body, anonId, userId FROM comments WHERE id = ?"));
 	prepStmt->setInt64(1, commentId);
 	
@@ -155,7 +155,7 @@ void renderComment(std::ostream& fcgiOut, RequestData* data, std::int64_t subdat
 	<< (isEven?"<div class='comment even'>":"<div class='comment odd'>") << 
 	"<div class='extraPostInfo'>";
 	if(showSubdatin){
-		fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << escapeHtml(subdatinTitle) << "'><div class='postInfoElement'>/" << escapeHtml(subdatinTitle) << "/</div></a>";
+		fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'><div class='postInfoElement'>/" << subdatinTitle << "/</div></a>";
 	}
 	if(showPoster){
 		fcgiOut << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</div>";
@@ -177,10 +177,10 @@ void renderComment(std::ostream& fcgiOut, RequestData* data, std::int64_t subdat
 	
 	fcgiOut << "<div class='postInfoElement'>" << getFormattedCommentPostTime(data->con, commentId) << "</div>" 
 	"</div>"
-	"<div class='commentText'>" << formatUserPostBody(escapeHtml(body), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>";
+	"<div class='commentText'>" << formatUserPostBody(body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>";
 }
 
-void createReportMenu(std::ostream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
+void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
 	fcgiOut <<
 		"<div class='postInfoElement'>"
 		"<div class='dropDown'>"
@@ -223,7 +223,7 @@ void createReportMenu(std::ostream& fcgiOut, RequestData* data, std::string& sub
 	
 }
 
-void createReplyMenu(std::ostream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
+void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
 	fcgiOut << "<div class='postInfoElement'>"
 	"<div class='dropDown'>"
 	"<div class='dropBtn'>"
@@ -246,7 +246,7 @@ void createReplyMenu(std::ostream& fcgiOut, RequestData* data, std::string& subd
 	"</div>";
 }
 
-void createThreadModerationMenu(std::ostream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, bool canControl, bool locked, bool stickied){
+void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, bool canControl, bool locked, bool stickied){
 	fcgiOut << "<div class='postInfoElement'>"
 	"<div class='dropDown'>"
 	"<div class='dropBtn'>"
@@ -301,7 +301,7 @@ void createThreadModerationMenu(std::ostream& fcgiOut, RequestData* data, std::s
 	"</div>";
 }
 
-void createCommentModerationMenu(std::ostream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId){
+void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId){
 	fcgiOut << "<div class='postInfoElement'>"
 	"<div class='dropDown'>"
 	"<div class='dropBtn'>"

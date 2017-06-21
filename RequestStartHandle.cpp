@@ -127,16 +127,16 @@ bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken)
 		}
 	}
 	else{
-		createNewSession(data);
+		createNewSession(fcgi, data);
 		sendCookieHeader(fcgi->out, "sessionToken", data->sessionToken);
 	}
 	return true;
 }
 
-void createNewSession(RequestData* data){
+void createNewSession(FcgiData* fcgi, RequestData* data){
 	data->stmt->execute("BEGIN");
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("INSERT INTO sessions "
-	"(sessionToken, authToken, shownId) SELECT ?, ?, ? FROM DUAL WHERE NOT EXISTS "
+	"(sessionToken, authToken, shownId, ip) SELECT ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS "
 	"(SELECT id FROM sessions WHERE sessionToken=? OR authToken=? OR shownId=?)"));
 	
 	int64_t rowCount;
@@ -152,9 +152,11 @@ void createNewSession(RequestData* data){
 		prepStmt->setString(2, data->authToken);
 		prepStmt->setString(3, data->shownId);
 		
-		prepStmt->setString(4, data->sessionToken);
-		prepStmt->setString(5, data->authToken);
-		prepStmt->setString(6, data->shownId);
+		prepStmt->setString(4, fcgi->env->getRemoteAddr());
+		
+		prepStmt->setString(5, data->sessionToken);
+		prepStmt->setString(6, data->authToken);
+		prepStmt->setString(7, data->shownId);
 		prepStmt->execute();
 		
 		std::unique_ptr<sql::ResultSet> res(data->stmt->executeQuery("SELECT ROW_COUNT()"));

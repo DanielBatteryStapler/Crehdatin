@@ -57,7 +57,7 @@ std::string generateCaptchaText(){
 	std::string text;
 	randomLock.lock();
 	for(int i = 0; i < captchaLength; i++){
-		text += "ABCDEFGHIJKLMNPRTSUVWXY3457"[generator.GenerateByte() % 26];
+		text += "ABDEFHIJKLMNPRTSUVWXY3457"[generator.GenerateByte() % 24];
 	}
 	randomLock.unlock();
 	return text;

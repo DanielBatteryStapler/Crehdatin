@@ -42,34 +42,34 @@ void setLastPostTime(FcgiData* fcgi, RequestData* data){
 	}
 }
 
-std::string getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId,  bool putUserLink){
+MarkupString getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId,  bool putUserLink){
 	if(userId != -1){
 		std::string userName = getUserName(con, userId);
 		std::string userPosition = getEffectiveUserPosition(con, userId, subdatinId);
-		std::string output;
+		MarkupString output;
 		
 		if(putUserLink){
-			output = "<a href='https://" + WebsiteFramework::getDomain() + "/u/" + percentEncode(userName) + "'>";
+			output = "<a href='https://"_m + WebsiteFramework::getDomain() + "/u/"_m + percentEncode(userName) + "'>"_m;
 		}
 		
 		if(userPosition == "senate"){
-			output += "user: <div class='senateTag'>" + escapeHtml(userName) + "[S]</div>";
+			output += "user: <div class='senateTag'>"_m + userName + "[S]</div>"_m;
 		}
 		else if(userPosition == "administrator"){
-			output += "user:  <div class='administratorTag'>" + escapeHtml(userName) + "[A]</div>";
+			output += "user:  <div class='administratorTag'>"_m + userName + "[A]</div>"_m;
 		}
 		else if(userPosition == "bureaucrat"){
-			output += "user:  <div class='bureaucratTag'>" + escapeHtml(userName) + "[B]</div>";
+			output += "user:  <div class='bureaucratTag'>"_m + userName + "[B]</div>"_m;
 		}
 		else if(userPosition == "moderator"){
-			output += "user: <div class='moderatorTag'>" + escapeHtml(userName) + "[M]</div>";
+			output += "user: <div class='moderatorTag'>"_m + userName + "[M]</div>"_m;
 		}
 		else{
-			output += "user: " + escapeHtml(userName);
+			output += "user: "_m + userName;
 		}
 		
 		if(putUserLink){
-			output += "</a>";
+			output += "</a>"_m;
 		}
 		
 		return output;

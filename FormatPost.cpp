@@ -205,7 +205,8 @@ void HyperLinkFormat::gotEndTag(const std::string& buffer){
 
 //===
 
-std::string formatUserPostBody(std::string body, bool canRainbow){
+MarkupString formatUserPostBody(std::string body, bool canRainbow){
+	body = escapeHtml(body);
 	replaceAll(body, "\r", "");
 	
 	GreenTextFormat greenTextFormat;
@@ -316,7 +317,7 @@ std::string formatUserPostBody(std::string body, bool canRainbow){
 	replaceAll(output, "\n", "<br>");
 	trimString(output);
 	
-	return output;
+	return allowMarkup(output);
 }
 
 
