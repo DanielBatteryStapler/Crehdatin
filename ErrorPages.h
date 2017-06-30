@@ -16,4 +16,4 @@
 
 void createGenericErrorPage(FcgiData* fcgi, RequestData* data, std::string message);
 void createInvalidPermissionsErrorPage(FcgiData* fcgi, RequestData* data);
-void createMustBeLoggedInErrorPage(Fcgi* fcgi, RequestData* data);
+void createMustBeLoggedInErrorPage(FcgiData* fcgi, RequestData* data);

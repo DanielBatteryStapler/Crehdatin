@@ -1,13 +1,5 @@
 #include "HandleCreateAccount.h"
 
-
-void createCreateAccountPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
-	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/login");
-	finishHttpHeader(fcgi->out);
-}
-
-
 void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	

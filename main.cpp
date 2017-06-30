@@ -75,6 +75,14 @@
 
 #include "RequestStartHandle.h"
 
+std::function<void(FcgiData*, std::vector<std::string>, void*)> createRedirectPageHandle(std::string url){
+	return [url](FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
+		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/" + url);
+		finishHttpHeader(fcgi->out);
+	};
+}
+
 int main(int argc, char** argv){
 	
 	Magick::InitializeMagick(nullptr);
@@ -153,7 +161,7 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/captcha/*", createCaptchaHandle);
-		WebsiteFramework::addGetHandleMap("/createAccount", createCreateAccountPageHandle);
+		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("login"));
 		WebsiteFramework::addGetHandleMap("/login", createLoginPageHandle);
 		WebsiteFramework::addGetHandleMap("/settings", createSettingsPageHandle);
 		WebsiteFramework::addGetHandleMap("/controlPanel", createCrehdatinControlPanelPageHandle);
