@@ -16,8 +16,9 @@ std::string Config::getSqlDatabaseName(){
 	return "Crehdatin";
 }
 
-std::string Config::getCrehdatinDataDirectory(){
-	return "/home/Projects/crehdatinData";
+boost::filesystem::path Config::getCrehdatinDataDirectory(){
+	//return boost::filesystem::path("/home/server/webServer/crehdatinData");
+	return boost::filesystem::path("/home/daniel/Projects/crehdatinData");
 }
 
 std::size_t Config::getUniqueTokenLength(){

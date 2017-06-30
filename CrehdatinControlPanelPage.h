@@ -15,4 +15,4 @@
 #include "ErrorPages.h"
 
 void createCrehdatinControlPanelPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data);
+void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::string subdatinListError = "");

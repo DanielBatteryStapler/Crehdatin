@@ -162,8 +162,9 @@ bool Database::createDatabase(){
 	stmt->execute("CREATE TABLE images("
 	"id BIGINT NOT NULL AUTO_INCREMENT,"
 	"PRIMARY KEY (id),"
-	"fileId TEXT NOT NULL,"
-	"extension TEXT NOT NULL,"
+	"fileName TEXT NOT NULL,"
+	"magickType TEXT NOT NULL,"
+	"thumbnailHidden BOOL NOT NULL,"
 	"originalName TEXT NOT NULL,"
 	"threadId BIGINT DEFAULT NULL,"
 	"INDEX (threadId),"
@@ -172,19 +173,6 @@ bool Database::createDatabase(){
 	"INDEX (commentId),"
 	"FOREIGN KEY (commentId) REFERENCES comments(id) ON DELETE CASCADE"
 	") ENGINE = InnoDB");
-	
-	/*
-	stmt->execute("CREATE TABLE watchers("
-	"id BIGINT NOT NULL AUTO_INCREMENT,"
-	"PRIMARY KEY (id),"
-	"threadId BIGINT DEFAULT NULL,"
-	"FOREIGN KEY (threadId) REFERENCES thread(id) ON DELETE CASECADE,"
-	"commentId BIGINT DEFAULT NULL,"
-	"FOREIGN KEY (commentId) REFERENCES comments(id) ON DELETE CASCADE,"
-	"userId BIGINT DEFAULT NULL,"
-	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE"
-	") ENGINE = InnoDB");
-	*/
 	
 	stmt->execute("CREATE TABLE ips("
 	"ip TEXT NOT NULL,"
@@ -210,12 +198,31 @@ bool Database::createDatabase(){
 	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
 	") ENGINE = InnoDB");
 	
+	stmt->execute("CREATE TABLE subdatinListings("
+	"id BIGINT NOT NULL AUTO_INCREMENT,"
+	"PRIMARY KEY (id),"
+	"subdatinId BIGINT NOT NULL,"
+	"FOREIGN KEY (subdatinId) REFERENCES subdatins(id) ON DELETE CASCADE,"
+	"listNumber BIGINT NOT NULL,"
+	"userId BIGINT,"
+	"INDEX (userId, subdatinId),"
+	"CONSTRAINT UNIQUE (userId, subdatinId),"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
+	"isDefault BOOL DEFAULT NULL,"//is default must always either be NULL or TRUE, it should not be checked against. Rather, check is userId is NULL to find defaults
+	"CONSTRAINT UNIQUE (isDefault, subdatinId)"
+	") ENGINE = InnoDB");
+	
 	stmt->execute("GRANT ALL ON " + Config::getSqlDatabaseName() + ".* TO '" + Config::getSqlUserName() + "'@'localhost'");
 	
 	stmt->execute("FLUSH PRIVILEGES");
 	
 	delete stmt;
 	delete con;
+	
+	//create data directory
+	boost::filesystem::create_directory(Config::getCrehdatinDataDirectory());
+	boost::filesystem::create_directory(Config::getCrehdatinDataDirectory() / "postImages");
+	boost::filesystem::create_directory(Config::getCrehdatinDataDirectory() / "postImageThumbnails");
 	
 	return true;
 }
@@ -290,6 +297,41 @@ bool Database::deleteDatabase(){
 	
 	delete stmt;
 	delete con;
+	
+	//delete data directory
+	boost::filesystem::remove_all(Config::getCrehdatinDataDirectory());
+	
+	return true;
+}
+
+bool Database::checkDatabase(){
+	{
+		sql::Driver* driver = get_driver_instance();
+		std::unique_ptr<sql::Connection> con(driver->connect(Config::getSqlAddress(), Config::getSqlUserName(), Config::getSqlPassword()));
+		
+		std::unique_ptr<sql::PreparedStatement> prepstmt(con->prepareStatement("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?"));
+		prepstmt->setString(1, Config::getSqlDatabaseName());
+		std::unique_ptr<sql::ResultSet> res(prepstmt->executeQuery());
+		if(res->rowsCount() == 0){
+			std::cout << "Database doesn't exist, you must install Crehdatin first.\n";
+			return false;
+		}
+	}
+	
+	if(!boost::filesystem::is_directory(Config::getCrehdatinDataDirectory())){
+		std::cout << "Crehdatin Data Directory \"" << Config::getCrehdatinDataDirectory().string() << "\" either does not exist or is not a directory.\n";
+		return false;
+	}
+	
+	if(!boost::filesystem::is_directory(Config::getCrehdatinDataDirectory() / "postImages")){
+		std::cout << "Crehdatin Data Directory \"" << Config::getCrehdatinDataDirectory().string() << "/postImages\" either does not exist or is not a directory.\n";
+		return false;
+	}
+	
+	if(!boost::filesystem::is_directory(Config::getCrehdatinDataDirectory() / "postImageThumbnails")){
+		std::cout << "Crehdatin Data Directory \"" << Config::getCrehdatinDataDirectory().string() << "/postImageThumbnails\" either does not exist or is not a directory.\n";
+		return false;
+	}
 	
 	return true;
 }

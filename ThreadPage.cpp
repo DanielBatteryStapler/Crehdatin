@@ -66,7 +66,7 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 	bool commentLocked;
 	getSubdatinLockedData(data->con, subdatinId, postLocked, commentLocked);
 	
-	bool canReply = !res->getBoolean("locked") && !commentLocked || canModerate;
+	bool canReply = (!res->getBoolean("locked") && !commentLocked) || canModerate;
 	
 	std::string anonId;
 	if(!res->isNull("anonId")){
@@ -126,7 +126,7 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 					fcgiOut << "<div class='postInfoElement'>Stickied</div>";
 				}
 			fcgiOut << "</div>"
-			"<div class='threadText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, data->subdatinId))) << "</div>"
+			"<div class='threadText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>"
 		"</div>";
 	}
 	

@@ -49,11 +49,13 @@
 
 #include "HandleSetCssTheme.h"
 #include "HandleChangePassword.h"
+#include "HandleSetSubdatinListing.h"
 
 #include "HandleAddAdministrator.h"
 #include "HandleRemoveAdministrator.h"
 #include "HandleAddSubdatin.h"
 #include "HandleRemoveSubdatin.h"
+#include "HandleSetDefaultSubdatinListing.h"
 
 #include "HandleAddModerator.h"
 #include "HandleSetModerator.h"
@@ -95,6 +97,12 @@ int main(int argc, char** argv){
 		return 0;
 	}
 	else{
+		
+		if(!Database::checkDatabase()){
+			std::cout << "Database Check Failed, Aborting Website Launch...\n";
+			return 0;
+		}
+		
 		sql::Driver* driver = sql::mysql::get_driver_instance();
 		
 		WebsiteFramework::setDomain("website.cloud.karagory.com");
@@ -163,6 +171,8 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/logout", handleLogout);
 		WebsiteFramework::addPostHandleMap("/setCssTheme", handleSetCssTheme);
 		WebsiteFramework::addPostHandleMap("/changePassword", handleChangePassword);
+		WebsiteFramework::addPostHandleMap("/setSubdatinListing", handleSetSubdatinListing);
+		
 		WebsiteFramework::addPostHandleMap("/d/*/newThread", handleNewThread);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/newComment", handleNewComment);
 		
@@ -170,6 +180,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/removeAdministrator", handleRemoveAdministrator);
 		WebsiteFramework::addPostHandleMap("/addSubdatin", handleAddSubdatin);
 		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatin", handleRemoveSubdatin);
+		WebsiteFramework::addPostHandleMap("/setDefaultSubdatinListing", handleSetDefaultSubdatinListing);
 		
 		WebsiteFramework::addPostHandleMap("/d/*/addModerator", handleAddModerator);
 		WebsiteFramework::addPostHandleMap("/d/*/setModerator", handleSetModerator);

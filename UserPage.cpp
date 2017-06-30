@@ -26,7 +26,7 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
 	if(res->next()){
-		fcgi->out << "<ul id='positionList'><div id='positionListTitle'>Subdatin Positions:</div></h3>";
+		fcgi->out << "<ul><title>Subdatin Positions:</title></h3>";
 		do{
 			std::string title = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
 			fcgi->out << "<li><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "'>/" << title << "/</a> : ";

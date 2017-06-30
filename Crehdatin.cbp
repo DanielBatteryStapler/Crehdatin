@@ -25,7 +25,6 @@
 				<Option compiler="clang" />
 				<Compiler>
 					<Add option="-O2" />
-					<Add option="$\(GraphicsMagick++-config --cppflags --cxxflags\)" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -36,6 +35,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=c++14" />
+			<Add option="$\(GraphicsMagick++-config --cppflags --cxxflags\)" />
 			<Add directory="/home/daniel/Projects/codeblocks/" />
 		</Compiler>
 		<Linker>
@@ -109,10 +109,14 @@
 		<Unit filename="HandleSetBureaucrat.h" />
 		<Unit filename="HandleSetCssTheme.cpp" />
 		<Unit filename="HandleSetCssTheme.h" />
+		<Unit filename="HandleSetDefaultSubdatinListing.cpp" />
+		<Unit filename="HandleSetDefaultSubdatinListing.h" />
 		<Unit filename="HandleSetModerator.cpp" />
 		<Unit filename="HandleSetModerator.h" />
 		<Unit filename="HandleSetSubdatinCommentLocked.cpp" />
 		<Unit filename="HandleSetSubdatinCommentLocked.h" />
+		<Unit filename="HandleSetSubdatinListing.cpp" />
+		<Unit filename="HandleSetSubdatinListing.h" />
 		<Unit filename="HandleSetSubdatinPostLocked.cpp" />
 		<Unit filename="HandleSetSubdatinPostLocked.h" />
 		<Unit filename="HandleSetThreadLocked.cpp" />

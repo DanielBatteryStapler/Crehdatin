@@ -105,15 +105,21 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 		return;
 	}
 	
-	res = std::unique_ptr<sql::ResultSet>(data->stmt->executeQuery("SELECT LAST_INSERT_ID()"));
+	res.reset(data->stmt->executeQuery("SELECT LAST_INSERT_ID()"));
 	
 	res->first();
 	
 	int64_t userId = res->getInt64(1);
 	
-	prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("UPDATE sessions SET userId=?, shownId=NULL WHERE sessionToken=?"));
+	prepStmt.reset(data->con->prepareStatement("UPDATE sessions SET userId=?, shownId=NULL WHERE sessionToken=?"));
 	prepStmt->setInt64(1, userId);
 	prepStmt->setString(2, data->sessionToken);
+	prepStmt->execute();
+	
+	//copy over subdatin listings from the default into the new user
+	prepStmt.reset(data->con->prepareStatement("INSERT INTO subdatinListings (subdatinId, listNumber, userId) "
+		"SELECT subdatinId, listNumber, ? AS userId FROM subdatinListings WHERE userId IS NULL"));
+	prepStmt->setInt64(1, userId);
 	prepStmt->execute();
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);

@@ -8,7 +8,7 @@ void deleteSubdatin(sql::Connection* con, std::size_t id){
 	while(res->next()){
 		deleteThread(con, res->getInt64("id"));
 	}
-	prepStmt = std::unique_ptr<sql::PreparedStatement>(con->prepareStatement("DELETE FROM subdatin WHERE id = ?"));
+	prepStmt = std::unique_ptr<sql::PreparedStatement>(con->prepareStatement("DELETE FROM subdatins WHERE id = ?"));
 	prepStmt->setInt64(1, id);
 	prepStmt->execute();
 }
@@ -64,6 +64,7 @@ void deleteImages(sql::Connection* con, std::size_t threadId, std::size_t commen
 
 void deleteImage(sql::Connection* con, std::size_t id){
 	//make this actually delete the image file and thumbnail file
+	
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("DELETE FROM images WHERE id = ?"));
 	prepStmt->setInt64(1, id);

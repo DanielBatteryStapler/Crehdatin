@@ -9,10 +9,13 @@
 #include <cppconn/prepared_statement.h>
 
 #include <iostream>
+#include <memory>
+#include <boost/filesystem.hpp>
 
 class Database{
 public:
 	Database() = delete;
 	static bool createDatabase();
 	static bool deleteDatabase();
+	static bool checkDatabase();
 };

@@ -168,18 +168,77 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	if(data->subdatinId == -1){
 		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/'>"
 		"<li id='selectedSubdatin'>"
-		"<large>Creh-Datin</large>"
+		"<title>Creh-Datin</title>"
 		"<small></small>"
 		"</li></a>";
 	}
 	else{
 		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/'>"
 		"<li>"
-		"<large>Creh-Datin</large>"
+		"<title>Creh-Datin</title>"
 		"<small></small>"
 		"</li></a>";
 	}
 	
+	
+	{
+		std::unique_ptr<sql::PreparedStatement> prepStmt;
+		if(data->userId == -1){
+			prepStmt.reset(data->con->prepareStatement("SELECT subdatinId FROM subdatinListings WHERE userId IS NULL ORDER BY listNumber ASC"));
+		}
+		else{
+			prepStmt.reset(data->con->prepareStatement("SELECT subdatinId FROM subdatinListings WHERE userId = ? ORDER BY listNumber ASC"));
+			prepStmt->setInt64(1, data->userId);
+		}
+		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+		
+		if(data->subdatinId != -1){
+			bool inList = false;
+			
+			res->beforeFirst();
+			while(res->next()){
+				if(data->subdatinId == res->getInt64("subdatinId")){
+					inList = true;
+				}
+			}
+			
+			if(!inList){
+				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'>"
+				"<li id='selectedSubdatin'>"
+				"<title>" << subdatinName << "</title>"
+				"<small>/" << subdatinTitle << "/</small>"
+				"</li>"
+				"</a>";
+			}
+		}
+		
+		res->beforeFirst();
+		while(res->next()){
+			std::string title;
+			std::string name;
+			getSubdatinData(data->con, res->getInt64("subdatinId"), title, name);
+		
+			if(res->getInt64("subdatinId") == data->subdatinId){
+				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << title << "'>"
+				"<li id='selectedSubdatin'>"
+				"<title>" << name << "</title>"
+				"<small>/" << title << "/</small>"
+				"</li>"
+				"</a>";
+			}
+			else{
+				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << title << "'>"
+				"<li>"
+				"<title>" << name << "</title>"
+				"<small>/" << title << "/</small>"
+				"</li>"
+				"</a>";
+			}
+		}
+	}
+	
+	
+	/*
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT name, title, id FROM subdatins"));
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
@@ -187,7 +246,7 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		if(res->getInt64("id") == data->subdatinId){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
 			"<li id='selectedSubdatin'>"
-			"<large>" << res->getString("name") << "</large>"
+			"<title>" << res->getString("name") << "</title>"
 			"<small>/" << res->getString("title") << "/</small>"
 			"</li>"
 			"</a>";
@@ -195,12 +254,13 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		else{
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
 			"<li>"
-			"<large>" << res->getString("name") << "</large>"
+			"<title>" << res->getString("name") << "</title>"
 			"<small>/" << res->getString("title") << "/</small>"
 			"</li>"
 			"</a>";
 		}
 	}
+	*/
 	
 	fcgi->out << "</ul>"
 	"<main>";

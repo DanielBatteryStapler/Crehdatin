@@ -4,14 +4,14 @@ void createSettingsPageHandle(FcgiData* fcgi, std::vector<std::string> parameter
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId == -1){
-		createGenericErrorPage(fcgi, data, "You Must Be LoggedIn In Order To View This Page");
+		createGenericErrorPage(fcgi, data, "You Must Be Logged In In Order To View This Page");
 		return;
 	}
 	
-	createSettingsPage(fcgi, data, "", "");
+	createSettingsPage(fcgi, data);
 }
 
-void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError, std::string passwordError){
+void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError, std::string passwordError, std::string subdatinListError){
 	createPageHeader(fcgi, data, PageTab::Settings);
 	
 	fcgi->out << "<h1>Settings</h1>"
@@ -56,6 +56,58 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 		<< cssError <<
 		"</div></p>";
 	}
+	
+	
+	fcgi->out << "<br><ul>"
+	"<title>Your Subdatins</title>";
+	std::size_t numberOfSubdatins = 0;
+	{
+		std::size_t num = 0;
+		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT subdatinId FROM subdatinListings WHERE userId = ? ORDER BY listNumber ASC"));
+		prepStmt->setInt64(1, data->userId);
+		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+		numberOfSubdatins = res->rowsCount();
+		res->beforeFirst();
+		if(res->next()){
+			do{
+				num++;
+				std::string title = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
+				fcgi->out << "<li>"
+				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setSubdatinListing' accept-charset='UTF-8'>"
+				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+				"<input type='hidden' name='listNumber' value='0'>"
+				"<input type='hidden' name='title' value='" << title << "'>"
+				"<button type='submit'>Remove</button>"
+				"</form>";
+				if(num != 1){
+					fcgi->out << "<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setSubdatinListing' accept-charset='UTF-8'>"
+					"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+					"<input type='hidden' name='listNumber' value='" << std::to_string(num - 1) << "'>"
+					"<input type='hidden' name='title' value='" << title << "'>"
+					"<button type='submit'>Up</button>"
+					"</form>";
+				}
+				fcgi->out << "/" << title << "/</li>";
+			}while(res->next());
+		}
+		else{
+			fcgi->out << "<li><i>You have no subdatins...</i></li>";
+		}
+	}
+	fcgi->out << "<li>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setSubdatinListing' accept-charset='UTF-8'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+	"<input type='hidden' name='listNumber' value='" << std::to_string(numberOfSubdatins + 1) << "'>"
+	"<input type='text' name='title'>"
+	"<button type='submit'>Add New</button>"
+	"</form>"
+	"</li>"
+	"</ul>";
+	if(subdatinListError != ""){
+		fcgi->out << "<p><div class='errorText'>" << subdatinListError << "</div></p>";
+	}
+	
+	
 	fcgi->out << "<h2>Change Password</h2>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/changePassword' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
@@ -67,10 +119,7 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 	"</button>"
 	"</form>";
 	if(passwordError != ""){
-		fcgi->out << 
-		"<p><div class='errorText'>"
-		<< passwordError <<
-		"</div></p>";
+		fcgi->out << "<p><div class='errorText'>" << passwordError << "</div></p>";
 	}
 	
 	createPageFooter(fcgi, data);

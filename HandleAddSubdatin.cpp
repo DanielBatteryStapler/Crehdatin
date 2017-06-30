@@ -44,7 +44,7 @@ void handleAddSubdatin(FcgiData* fcgi, std::vector<std::string> parameters, void
 		break;
 	}
 	
-	std::unique_ptr<sql::PreparedStatement>prepStmt(data->con->prepareStatement("INSERT INTO subdatins "
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("INSERT INTO subdatins "
 				"(title, name) SELECT ?, ? FROM DUAL WHERE NOT EXISTS "
 				"(SELECT id FROM subdatins WHERE title=? OR name=?)"));
 	prepStmt->setString(1, title);
