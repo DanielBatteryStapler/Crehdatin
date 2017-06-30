@@ -18,5 +18,5 @@
 #include "LoginPage.h"
 #include "Captcha.h"
 
-void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 void createCreateAccountPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

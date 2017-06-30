@@ -205,10 +205,11 @@ bool Database::createDatabase(){
 	"FOREIGN KEY (subdatinId) REFERENCES subdatins(id) ON DELETE CASCADE,"
 	"listNumber BIGINT NOT NULL,"
 	"userId BIGINT,"
-	"INDEX (userId, subdatinId),"
+	"INDEX (userId),"
 	"CONSTRAINT UNIQUE (userId, subdatinId),"
 	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
-	"isDefault BOOL DEFAULT NULL,"//is default must always either be NULL or TRUE, it should not be checked against. Rather, check is userId is NULL to find defaults
+	"isDefault BOOL DEFAULT NULL,"//is default must always either be NULL or TRUE, and it should not be checked against.
+	//Rather, check is userId is NULL to find defaults subdatins
 	"CONSTRAINT UNIQUE (isDefault, subdatinId)"
 	") ENGINE = InnoDB");
 	

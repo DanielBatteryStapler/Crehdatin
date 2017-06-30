@@ -8,6 +8,12 @@ void createGenericErrorPage(FcgiData* fcgi, RequestData* data, std::string messa
 
 void createInvalidPermissionsErrorPage(FcgiData* fcgi, RequestData* data){
 	createPageHeader(fcgi, data, PageTab::Error);
-	fcgi->out << "<div class='errorText'>You do not have the valid permissions to view this page/complete this action.</div>";
+	fcgi->out << "<div class='errorText'>You do not have the valid permissions to complete this action or view this page.</div>";
+	createPageFooter(fcgi, data);
+}
+
+void createMustBeLoggedInErrorPage(Fcgi* fcgi, RequestData* data){
+	createPageHeader(fcgi, data, PageTab::Error);
+	fcgi->out << "<div class='errorText'>You must be logged in to complete this action or view this page.</div>";
 	createPageFooter(fcgi, data);
 }

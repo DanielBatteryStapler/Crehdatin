@@ -3,61 +3,61 @@
 void createReportsPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-		if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
-			createInvalidPermissionsErrorPage(fcgi, data);
-			return;
-		}
-		
-		createPageHeader(fcgi, data, PageTab::Reports);
-		
-		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id, reason, commentId, threadId, ip, userId FROM reports WHERE subdatinId = ? ORDER BY threadId, commentId"));
-		prepStmt->setInt64(1, data->subdatinId);
-		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
-		
-		res->beforeFirst();
-		
-		int64_t lastCommentId = -1;
-		int64_t lastThreadId = -1;
-		
-		if(res->next()){
-			do{
-				int64_t reportId = res->getInt64("id");
-				std::string reason = res->getString("reason");
-				int64_t commentId = -1;
-				if(!res->isNull("commentId")){
-					commentId = res->getInt64("commentId");
-				}
-				int64_t threadId = res->getInt64("threadId");
-				std::string ip = res->getString("ip");
-				int64_t userId = -1;
-				if(!res->isNull("userId")){
-					userId = res->getInt64("userId");
-				}
-				
-				if(lastCommentId != commentId || lastThreadId != threadId){
-					if(lastThreadId != -1){
-						fcgi->out << "</div>";
-					}
-					
-					if(commentId == -1){
-						createReportedThread(fcgi, data, threadId);
-					}
-					else{
-						createReportedComment(fcgi, data, threadId, commentId);
-					}
+	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
+		createInvalidPermissionsErrorPage(fcgi, data);
+		return;
+	}
+	
+	createPageHeader(fcgi, data, PageTab::Reports);
+	
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id, reason, commentId, threadId, ip, userId FROM reports WHERE subdatinId = ? ORDER BY threadId, commentId"));
+	prepStmt->setInt64(1, data->subdatinId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	
+	res->beforeFirst();
+	
+	int64_t lastCommentId = -1;
+	int64_t lastThreadId = -1;
+	
+	if(res->next()){
+		do{
+			int64_t reportId = res->getInt64("id");
+			std::string reason = res->getString("reason");
+			int64_t commentId = -1;
+			if(!res->isNull("commentId")){
+				commentId = res->getInt64("commentId");
+			}
+			int64_t threadId = res->getInt64("threadId");
+			std::string ip = res->getString("ip");
+			int64_t userId = -1;
+			if(!res->isNull("userId")){
+				userId = res->getInt64("userId");
+			}
+			
+			if(lastCommentId != commentId || lastThreadId != threadId){
+				if(lastThreadId != -1){
+					fcgi->out << "</div>";
 				}
 				
-				createReport(fcgi, data, reason, ip, userId);
-				
-				lastCommentId = commentId;
-				lastThreadId = threadId;
-			}while(res->next());
-		}
-		else{
-			fcgi->out << "There are no pending reports.";
-		}
-		
-		createPageFooter(fcgi, data);
+				if(commentId == -1){
+					createReportedThread(fcgi, data, threadId);
+				}
+				else{
+					createReportedComment(fcgi, data, threadId, commentId);
+				}
+			}
+			
+			createReport(fcgi, data, reason, ip, userId);
+			
+			lastCommentId = commentId;
+			lastThreadId = threadId;
+		}while(res->next());
+	}
+	else{
+		fcgi->out << "There are no pending reports.";
+	}
+	
+	createPageFooter(fcgi, data);
 }
 
 void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){

@@ -3,11 +3,6 @@
 void handleSetDefaultSubdatinListing(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
-	if(data->userId == -1){
-		createGenericErrorPage(fcgi, data, "You Must Be Logged In In Order To Complete This Action");
-		return;
-	}
-	
 	if(!hasAdministrationControlPermissions(getEffectiveUserPosition(data->con, data->userId))){
 		createInvalidPermissionsErrorPage(fcgi, data);
 		return;

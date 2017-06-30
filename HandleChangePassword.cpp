@@ -4,7 +4,7 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId == -1){
-		createGenericErrorPage(fcgi, data, "You Must Be Logged In In Order To Complete This Action");
+		createMustBeLoggedInErrorPage(fcgi, data);
 		return;
 	}
 	

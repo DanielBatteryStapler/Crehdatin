@@ -4,7 +4,7 @@ void createSettingsPageHandle(FcgiData* fcgi, std::vector<std::string> parameter
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId == -1){
-		createGenericErrorPage(fcgi, data, "You Must Be Logged In In Order To View This Page");
+		createMustBeLoggedInErrorPage(fcgi, data);
 		return;
 	}
 	

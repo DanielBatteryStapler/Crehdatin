@@ -3,7 +3,7 @@
 void handleDismissReports(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 		
-	if(hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
+	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
 		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}

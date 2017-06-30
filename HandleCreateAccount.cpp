@@ -1,10 +1,18 @@
 #include "HandleCreateAccount.h"
 
+
+void createCreateAccountPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
+	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
+	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/login");
+	finishHttpHeader(fcgi->out);
+}
+
+
 void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
 	if(data->userId != -1){
-		createLoginPage(fcgi, data, "", "You Are Already Logged In");
+		createGenericErrorPage(fcgi, data, "You Are Already Logged In");
 		return;
 	}
 	
@@ -27,7 +35,7 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	}
 	
 	if(userName.size() < Config::getMinUserNameLength()){
-		createLoginPage(fcgi, data, "", "Username Cannot Be Shorter Than 3 Characters");
+		createLoginPage(fcgi, data, "", "Username Cannot Be Shorter Than " + std::to_string(Config::getMinUserNameLength()) + " Characters");
 		return;
 	}
 	
@@ -126,14 +134,6 @@ void handleCreateAccount(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/");
 	finishHttpHeader(fcgi->out);
 }
-
-void createCreateAccountPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
-	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/login");
-	finishHttpHeader(fcgi->out);
-}
-
-
 
 
 

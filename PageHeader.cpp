@@ -237,31 +237,6 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 		}
 	}
 	
-	
-	/*
-	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT name, title, id FROM subdatins"));
-	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
-	res->beforeFirst();
-	while(res->next()){
-		if(res->getInt64("id") == data->subdatinId){
-			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
-			"<li id='selectedSubdatin'>"
-			"<title>" << res->getString("name") << "</title>"
-			"<small>/" << res->getString("title") << "/</small>"
-			"</li>"
-			"</a>";
-		}
-		else{
-			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "'>"
-			"<li>"
-			"<title>" << res->getString("name") << "</title>"
-			"<small>/" << res->getString("title") << "/</small>"
-			"</li>"
-			"</a>";
-		}
-	}
-	*/
-	
 	fcgi->out << "</ul>"
 	"<main>";
 }

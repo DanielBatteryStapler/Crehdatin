@@ -53,12 +53,8 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	prepStmt->setInt64(1, data->threadId);
 	prepStmt->setInt64(2, data->subdatinId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
-	res->beforeFirst();
+	res->first();
 	
-	if(!res->next()){
-		createGenericErrorPage(fcgi, data, "Cannot Reply In A Thread That Doesn't Exist");
-		return;
-	}
 	bool threadLocked = res->getBoolean("locked");
 	
 	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId)) && threadLocked){
