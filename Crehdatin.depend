@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1498769682 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
+1498864684 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
 	<iostream>
 	<thread>
 	<vector>
@@ -91,16 +91,17 @@
 	<string>
 	<boost/filesystem.hpp>
 
-1498852304 source:/home/daniel/Projects/codeblocks/Crehdatin/Database.cpp
+1498950164 source:/home/daniel/Projects/codeblocks/Crehdatin/Database.cpp
 	"Database.h"
 
-1498537640 /home/daniel/Projects/codeblocks/Crehdatin/Database.h
+1498950473 /home/daniel/Projects/codeblocks/Crehdatin/Database.h
 	"Config.h"
 	<cppconn/driver.h>
 	<cppconn/exception.h>
 	<cppconn/resultset.h>
 	<cppconn/statement.h>
 	<cppconn/prepared_statement.h>
+	<mysql_driver.h>
 	<iostream>
 	<memory>
 	<boost/filesystem.hpp>
@@ -160,7 +161,7 @@
 	<fcgio.h>
 	"Config.h"
 
-1498787726 source:/home/daniel/Projects/codeblocks/Crehdatin/PageHeader.cpp
+1498854210 source:/home/daniel/Projects/codeblocks/Crehdatin/PageHeader.cpp
 	"PageHeader.h"
 
 1494558971 source:/home/daniel/Projects/codeblocks/Crehdatin/Response.cpp
@@ -439,7 +440,7 @@
 	"ErrorPages.h"
 	"DeletionHandles.h"
 
-1498005126 source:/home/daniel/Projects/codeblocks/Crehdatin/ReportsPage.cpp
+1498861727 source:/home/daniel/Projects/codeblocks/Crehdatin/ReportsPage.cpp
 	"ReportsPage.h"
 
 1496439785 /home/daniel/Projects/codeblocks/Crehdatin/ReportsPage.h
@@ -500,7 +501,7 @@
 	"PageFooter.h"
 	"ErrorPages.h"
 
-1498768803 source:/home/daniel/Projects/codeblocks/Crehdatin/SettingsPage.cpp
+1498861687 source:/home/daniel/Projects/codeblocks/Crehdatin/SettingsPage.cpp
 	"SettingsPage.h"
 
 1498861726 source:/home/daniel/Projects/codeblocks/Crehdatin/HandleSetCssTheme.cpp

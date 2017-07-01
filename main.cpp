@@ -15,7 +15,7 @@
 #include <cppconn/resultset.h>
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
-#include "mysql_driver.h" 
+#include <mysql_driver.h>
 
 #include "Database.h"
 #include "RequestData.h"
@@ -161,10 +161,13 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/captcha/*", createCaptchaHandle);
-		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("login"));
 		WebsiteFramework::addGetHandleMap("/login", createLoginPageHandle);
+		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("login"));
+		
+		WebsiteFramework::addGetHandleMap("/u/*", createUserPage);
 		WebsiteFramework::addGetHandleMap("/settings", createSettingsPageHandle);
 		WebsiteFramework::addGetHandleMap("/controlPanel", createCrehdatinControlPanelPageHandle);
+		
 		WebsiteFramework::addGetHandleMap("/d/*", createSubdatinPage);
 		WebsiteFramework::addGetHandleMap("/d/*/about", createSubdatinAboutPage);
 		WebsiteFramework::addGetHandleMap("/d/*/newThread", createNewThreadPageHandle);
@@ -172,7 +175,6 @@ int main(int argc, char** argv){
 		WebsiteFramework::addGetHandleMap("/d/*/thread/*/comment/*", createCommentPage);
 		WebsiteFramework::addGetHandleMap("/d/*/reports", createReportsPage);
 		WebsiteFramework::addGetHandleMap("/d/*/controlPanel", createSubdatinControlPanelPageHandle);
-		WebsiteFramework::addGetHandleMap("/u/*", createUserPage);
 		
 		WebsiteFramework::addPostHandleMap("/createAccount", handleCreateAccount);
 		WebsiteFramework::addPostHandleMap("/login", handleLogin);

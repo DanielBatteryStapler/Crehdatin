@@ -30,7 +30,7 @@ bool Database::createDatabase(){
 	sql::Statement* stmt = nullptr;
 	sql::ResultSet* res = nullptr;
 	
-	driver = get_driver_instance();
+	driver = sql::mysql::get_driver_instance();
 	{
 		std::string username;
 		std::string password;
@@ -258,7 +258,7 @@ bool Database::deleteDatabase(){
 	sql::Statement* stmt = nullptr;
 	sql::ResultSet* res = nullptr;
 
-	driver = get_driver_instance();
+	driver = sql::mysql::get_driver_instance();
 	{
 		std::string username;
 		std::string password;
@@ -307,7 +307,7 @@ bool Database::deleteDatabase(){
 
 bool Database::checkDatabase(){
 	{
-		sql::Driver* driver = get_driver_instance();
+		sql::Driver* driver = sql::mysql::get_driver_instance();
 		std::unique_ptr<sql::Connection> con(driver->connect(Config::getSqlAddress(), Config::getSqlUserName(), Config::getSqlPassword()));
 		
 		std::unique_ptr<sql::PreparedStatement> prepstmt(con->prepareStatement("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = ?"));
