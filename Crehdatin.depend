@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1498864684 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
+1500165617 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
 	<iostream>
 	<thread>
 	<vector>
@@ -14,7 +14,7 @@
 	<cppconn/resultset.h>
 	<cppconn/statement.h>
 	<cppconn/prepared_statement.h>
-	"mysql_driver.h"
+	<mysql_driver.h>
 	"Database.h"
 	"RequestData.h"
 	"DirectoryHandles.h"
@@ -84,7 +84,7 @@
 	"MarkupString.h"
 	"Response.h"
 
-1498541653 source:/home/daniel/Projects/codeblocks/Crehdatin/Config.cpp
+1500165628 source:/home/daniel/Projects/codeblocks/Crehdatin/Config.cpp
 	"Config.h"
 
 1498537884 /home/daniel/Projects/codeblocks/Crehdatin/Config.h
@@ -334,7 +334,7 @@
 	<string>
 	<mutex>
 
-1498540593 source:/home/daniel/Projects/codeblocks/Crehdatin/ThreadPage.cpp
+1499931837 source:/home/daniel/Projects/codeblocks/Crehdatin/ThreadPage.cpp
 	"ThreadPage.h"
 
 1497921590 /home/daniel/Projects/codeblocks/Crehdatin/UserData.h
@@ -351,7 +351,7 @@
 	"UserPermissions.h"
 	"RequestData.h"
 
-1497921738 source:/home/daniel/Projects/codeblocks/Crehdatin/UserData.cpp
+1499304634 source:/home/daniel/Projects/codeblocks/Crehdatin/UserData.cpp
 	"UserData.h"
 
 1498856993 source:/home/daniel/Projects/codeblocks/Crehdatin/HandleNewComment.cpp
@@ -748,10 +748,10 @@
 	"PageFooter.h"
 	"ErrorPages.h"
 
-1498769815 source:/home/daniel/Projects/codeblocks/Crehdatin/CrehdatinControlPanelPage.cpp
+1499932070 source:/home/daniel/Projects/codeblocks/Crehdatin/CrehdatinControlPanelPage.cpp
 	"CrehdatinControlPanelPage.h"
 
-1498005609 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinControlPanelPage.cpp
+1499932110 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinControlPanelPage.cpp
 	"SubdatinControlPanelPage.h"
 
 1496981179 source:/home/daniel/Projects/codeblocks/Crehdatin/HandleAddAdministrator.cpp

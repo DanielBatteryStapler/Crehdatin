@@ -1,7 +1,7 @@
 #include "UserData.h"
 
 std::string getUserName(sql::Connection* con, int64_t userId){
-	std::string userName = "<removed>";
+	std::string userName = "<nonexistent>";
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT userName FROM users WHERE id = ?"));
 	prepStmt->setInt64(1, userId);

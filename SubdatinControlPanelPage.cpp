@@ -32,14 +32,14 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			std::string userName = getUserName(data->con, res->getInt64("userId"));
 			fcgi->out << 
 			
-			"<div class='postInfoElement'><a href=https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << "'>";
+			"<div class='spacer'><a href=https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << "'>";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << 
 				"<div class='bureaucratTag'>" << userName << "[B]</div></a></div>"
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setModerator' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << userName << "'>"
-				"<div class='postInfoElement'><button type='submit'>Set Moderator</button></div>"
+				"<div class='spacer'><button type='submit'>Set Moderator</button></div>"
 				"</form>";
 			}
 			else if(res->getString("userPosition") == "moderator"){
@@ -48,7 +48,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setBureaucrat' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << userName << "'>"
-				"<div class='postInfoElement'><button type='submit'>Set Bureaucrat</button></div>"
+				"<div class='spacer'><button type='submit'>Set Bureaucrat</button></div>"
 				"</form>";
 			}
 			else{
@@ -58,7 +58,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/removeSubdatinOfficial' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='userName' value='" << userName << "'>"
-			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
+			"<div class='spacer'><button type='submit'>Remove</button></div>"
 			"</form>"
 			"<br>";
 		}while(res->next());
@@ -70,7 +70,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 	fcgi->out << 
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/addModerator' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-	"<div class='postInfoElement'><input type='text' name='userName'></div>"
+	"<div class='spacer'><input type='text' name='userName'></div>"
 	"<button type='submit'>Add New</button>"
 	"</form>"
 	"<h2>Settings</h2>"

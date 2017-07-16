@@ -72,7 +72,7 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 	if(!res->isNull("anonId")){
 		anonId = res->getString("anonId");
 	}
-	int64_t userId;
+	int64_t userId = -1;
 	if(!res->isNull("userId")){
 		userId = res->getInt64("userId");
 	}
@@ -84,17 +84,17 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 			"<div class='threadTitle'>" << res->getString("title") << "</div>"
 			"<div class='extraPostInfo'>";
 				if(showSubdatin){
-					fcgiOut << "<div class='postInfoElement'>/" << subdatinTitle << "/</div>";
+					fcgiOut << "<li>/" << subdatinTitle << "/</li>";
 				}
-				fcgiOut << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId, false) << "</div>"
-				"<div class='postInfoElement'>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</div>"
-				"<div class='postInfoElement'>" << getFormattedThreadPostTime(data->con, threadId) << "</div>"
-				"<div class='postInfoElement'>" << getFormattedThreadBumpTime(data->con, threadId) << "</div>";
+				fcgiOut << "<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId, false) << "</li>"
+				"<li>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</li>"
+				"<li>" << getFormattedThreadPostTime(data->con, threadId) << "</li>"
+				"<li>" << getFormattedThreadBumpTime(data->con, threadId) << "</li>";
 				if(res->getBoolean("stickied")){
-					fcgiOut << "<div class='postInfoElement'>Stickied</div>";
+					fcgiOut << "<li>Stickied</li>";
 				}
 				if(res->getBoolean("locked")){
-					fcgiOut << "<div class='postInfoElement'>Locked</div>";
+					fcgiOut << "<li>Locked</li>";
 				}
 			fcgiOut << "</div>"
 			"</div>"
@@ -105,11 +105,11 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 			"<div class='threadTitle'>" << res->getString("title") << "</div>"
 			"<div class='extraPostInfo'>";
 				if(showSubdatin){
-					fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'><div class='postInfoElement'>/" << subdatinTitle << "/</div></a>";
+					fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'><li>/" << subdatinTitle << "/</li></a>";
 				}
 				fcgiOut << 
-				"<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</div>"
-				"<div class='postInfoElement'>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</div>";
+				"<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</li>"
+				"<li>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</li>";
 				if(canReply){
 					createReplyMenu(fcgiOut, data, subdatinTitle);
 				}
@@ -117,13 +117,13 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 				if(canModerate){
 					createThreadModerationMenu(fcgiOut, data, subdatinTitle, threadId, canControl, res->getBoolean("locked"), res->getBoolean("stickied"));
 				}
-				fcgiOut << "<div class='postInfoElement'>" << getFormattedThreadPostTime(data->con, threadId) << "</div>"
-				"<div class='postInfoElement'>" << getFormattedThreadBumpTime(data->con, threadId) << "</div>";
+				fcgiOut << "<li>" << getFormattedThreadPostTime(data->con, threadId) << "</li>"
+				"<li>" << getFormattedThreadBumpTime(data->con, threadId) << "</li>";
 				if(res->getBoolean("locked")){
-					fcgiOut << "<div class='postInfoElement'>Locked</div>";
+					fcgiOut << "<li>Locked</li>";
 				}
 				if(res->getBoolean("stickied")){
-					fcgiOut << "<div class='postInfoElement'>Stickied</div>";
+					fcgiOut << "<li>Stickied</li>";
 				}
 			fcgiOut << "</div>"
 			"<div class='threadText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>"
@@ -155,10 +155,10 @@ void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t sub
 	<< (isEven?"<div class='comment even'>":"<div class='comment odd'>") << 
 	"<div class='extraPostInfo'>";
 	if(showSubdatin){
-		fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'><div class='postInfoElement'>/" << subdatinTitle << "/</div></a>";
+		fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'><li>/" << subdatinTitle << "/</li></a>";
 	}
 	if(showPoster){
-		fcgiOut << "<div class='postInfoElement'>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</div>";
+		fcgiOut << "<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</li>";
 	}
 	if(!isPreview){
 		if(canReply){
@@ -170,19 +170,19 @@ void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t sub
 		}
 	}
 	if(showPermaLink){
-		fcgiOut << "<div class='postInfoElement'>"
+		fcgiOut << "<li>"
 		"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "'>Permalink</a>"
-		"</div>";
+		"</li>";
 	}
 	
-	fcgiOut << "<div class='postInfoElement'>" << getFormattedCommentPostTime(data->con, commentId) << "</div>" 
-	"</div>"
+	fcgiOut << "<li>" << getFormattedCommentPostTime(data->con, commentId) << "</div>" 
+	"</li>"
 	"<div class='commentText'>" << formatUserPostBody(body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>";
 }
 
 void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
 	fcgiOut <<
-		"<div class='postInfoElement'>"
+		"<li>"
 		"<div class='dropDown'>"
 		"<div class='dropBtn'>"
 		"Report"
@@ -219,12 +219,12 @@ void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& 
 	fcgiOut << 
 		"</ul>"
 		"</div>"
-		"</div>";
+		"</li>";
 	
 }
 
 void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
-	fcgiOut << "<div class='postInfoElement'>"
+	fcgiOut << "<li>"
 	"<div class='dropDown'>"
 	"<div class='dropBtn'>"
 	"Reply"
@@ -243,11 +243,11 @@ void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& s
 	"</ul>"
 	"</form>"
 	"</div>"
-	"</div>";
+	"</li>";
 }
 
 void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, bool canControl, bool locked, bool stickied){
-	fcgiOut << "<div class='postInfoElement'>"
+	fcgiOut << "<li>"
 	"<div class='dropDown'>"
 	"<div class='dropBtn'>"
 	"Moderate"
@@ -298,11 +298,11 @@ void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std
 	"</ul>"
 	"</form>"
 	"</div>"
-	"</div>";
+	"</li>";
 }
 
 void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId){
-	fcgiOut << "<div class='postInfoElement'>"
+	fcgiOut << "<li>"
 	"<div class='dropDown'>"
 	"<div class='dropBtn'>"
 	"Moderate"
@@ -319,5 +319,5 @@ void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, st
 	"</ul>"
 	"</form>"
 	"</div>"
-	"</div>";
+	"</li>";
 }

@@ -23,7 +23,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::str
 			fcgi->out << 
 			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "/removeSubdatin' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
+			"<div class='spacer'><button type='submit'>Remove</button></div>"
 			"</form>"
 			"<a href=https://" << WebsiteFramework::getDomain() << "/u/" << res->getString("title") << "'>"
 			<< res->getString("name") <<
@@ -38,9 +38,9 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::str
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/addSubdatin' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"title: "
-	"<div class='postInfoElement'><input type='text' name='title'></div>"
+	"<div class='spacer'><input type='text' name='title'></div>"
 	"name: "
-	"<div class='postInfoElement'><input type='text' name='name'></div>"
+	"<div class='spacer'><input type='text' name='name'></div>"
 	"<button type='submit'>Add New</button>"
 	"</form>"
 	
@@ -54,7 +54,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::str
 			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/removeAdministrator' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='userName' value='" << res->getString("userName") << "'>"
-			"<div class='postInfoElement'><button type='submit'>Remove</button></div>"
+			"<div class='spacer'><button type='submit'>Remove</button></div>"
 			"</form>"
 			"<a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(res->getString("userName")) << ">"
 			<< res->getString("userName") <<
@@ -68,7 +68,7 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::str
 	fcgi->out <<
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/addAdministrator' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-	"<div class='postInfoElement'><input type='text' name='userName'></div>"
+	"<div class='spacer'><input type='text' name='userName'></div>"
 	"<button type='submit'>Add New</button>"
 	"</form>";
 	
