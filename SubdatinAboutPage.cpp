@@ -16,8 +16,8 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 		do{
 			std::string userName = getUserName(data->con, res->getInt64("userId"));
 			fcgi->out << 
+			"<a href=https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << ">";
 			
-			"<a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << ">";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << "<div class='bureaucratTag'>" << userName << "[B]</div>";
 			}

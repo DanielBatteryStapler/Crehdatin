@@ -19,7 +19,8 @@ void getSubdatinData(sql::Connection* con, int64_t id, std::string& title, std::
 void getSubdatinLockedData(sql::Connection* con, int64_t id, bool& postLocked, bool& commentLocked);
 std::string getSubdatinTitle(sql::Connection* con, int64_t subdatinId);
 int64_t getThreadCommentCount(sql::Connection* con, int64_t threadId);
-std::string getFormattedThreadPostTime(sql::Connection* con, int64_t threadId);
-std::string getFormattedThreadBumpTime(sql::Connection* con, int64_t threadId);
-std::string getFormattedCommentPostTime(sql::Connection* con, int64_t commentId);
+MarkupString getFormattedTime(sql::Connection* con, int64_t time, std::string verb);
+MarkupString getFormattedThreadPostTime(sql::Connection* con, int64_t threadId);
+MarkupString getFormattedThreadBumpTime(sql::Connection* con, int64_t threadId);
+MarkupString getFormattedCommentPostTime(sql::Connection* con, int64_t commentId);
 int64_t getParentComment(sql::Connection* con, int64_t commentId);

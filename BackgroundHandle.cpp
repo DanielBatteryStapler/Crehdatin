@@ -2,6 +2,7 @@
 
 std::vector<RequestData*> resquestDataReferencePool;
 
+//TODO: make this just use the normal stopRunning mutex that the WebsiteFramework uses instead of its own which it doesn't need
 void backgroundHandle(std::condition_variable* backgroundCondition, std::mutex* backgroundMutex, std::atomic<bool>* backgroundFlag){
 	while(true){
 		{

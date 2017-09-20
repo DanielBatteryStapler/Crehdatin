@@ -78,7 +78,7 @@
 std::function<void(FcgiData*, std::vector<std::string>, void*)> createRedirectPageHandle(std::string url){
 	return [url](FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 		sendStatusHeader(fcgi->out, StatusCode::SeeOther);
-		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/" + url);
+		sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + url);
 		finishHttpHeader(fcgi->out);
 	};
 }
@@ -123,7 +123,7 @@ int main(int argc, char** argv){
 			
 			data->stmt = data->con->createStatement();
 			
-			data->con->setSchema(Config::getSqlDatabaseName());								
+			data->con->setSchema(Config::getSqlDatabaseName());
 			data->stmt->execute("SET NAMES utf8mb4");
 			
 			resquestDataReferencePool.push_back(data);
@@ -146,14 +146,14 @@ int main(int argc, char** argv){
 		WebsiteFramework::setError404Handle([](FcgiData* fcgi, void* _data){
 			RequestData* data = (RequestData*)_data;
 			createPageHeader(fcgi, data, PageTab::Error);
-			fcgi->out << "<div class='errorText'>This Page Does Not Exist</div>"_m;
+			fcgi->out << "<div class='errorText'>This Page Does Not Exist</div>";
 			createPageFooter(fcgi, data);
 		});
 		
-		WebsiteFramework::setExceptionHandle([](void* _data, std::exception& e){
-			std::cout << "std::exception.what()" << e.what() << "\n";
+		WebsiteFramework::setExceptionHandle([](void* _data, const std::exception& e){
+			std::cout << "std::exception.what() = '" << e.what() << "'\n";
 		});
-		
+		//TODO: stop using the <title> html element, just use big or something else
 		WebsiteFramework::addDirectoryHandleMap("/d/*", subdatinDirectoryHandle);
 		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*", threadDirectoryHandle);
 		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*/comment/*", commentDirectoryHandle);
@@ -162,7 +162,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/captcha/*", createCaptchaHandle);
 		WebsiteFramework::addGetHandleMap("/login", createLoginPageHandle);
-		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("login"));
+		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("/login"));
 		
 		WebsiteFramework::addGetHandleMap("/u/*", createUserPage);
 		WebsiteFramework::addGetHandleMap("/settings", createSettingsPageHandle);

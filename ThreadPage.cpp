@@ -175,8 +175,8 @@ void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t sub
 		"</li>";
 	}
 	
-	fcgiOut << "<li>" << getFormattedCommentPostTime(data->con, commentId) << "</div>" 
-	"</li>"
+	fcgiOut << "<li>" << getFormattedCommentPostTime(data->con, commentId) << "</li>"
+	"</div>" 
 	"<div class='commentText'>" << formatUserPostBody(body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>";
 }
 
