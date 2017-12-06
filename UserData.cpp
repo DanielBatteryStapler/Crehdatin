@@ -42,37 +42,44 @@ void setLastPostTime(FcgiData* fcgi, RequestData* data){
 	}
 }
 
-MarkupString getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId,  bool putUserLink){
+MarkupString getFormattedUserString(sql::Connection* con, int64_t userId, int64_t subdatinId, bool putUserLink){
+	std::string userName = getUserName(con, userId);
+	UserPosition userPosition = getEffectiveUserPosition(con, userId, subdatinId);
+	MarkupString output;
+	
+	if(putUserLink){
+		output = "<a href='https://"_m + WebsiteFramework::getDomain() + "/u/" + percentEncode(userName) + "'>"_m;
+	}
+	
+	if(userPosition == UserPosition::Senate){
+		output += "<div class='senateTag'>"_m + userName + "[S]</div>"_m;
+	}
+	else if(userPosition == UserPosition::Administrator){
+		output += "<div class='administratorTag'>"_m + userName + "[A]</div>"_m;
+	}
+	else if(userPosition == UserPosition::Bureaucrat){
+		output += "<div class='bureaucratTag'>"_m + userName + "[B]</div>"_m;
+	}
+	else if(userPosition == UserPosition::Curator){
+		output += "<div class='curatorTag'>"_m + userName + "[C]</div>"_m;
+	}
+	else if(userPosition == UserPosition::None){
+		output += userName;
+	}
+	else{
+		output += userName + "[Error]";
+	}
+	
+	if(putUserLink){
+		output += "</a>"_m;
+	}
+	
+	return output;
+}
+
+MarkupString getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId, bool putUserLink){
 	if(userId != -1){
-		std::string userName = getUserName(con, userId);
-		std::string userPosition = getEffectiveUserPosition(con, userId, subdatinId);
-		MarkupString output;
-		
-		if(putUserLink){
-			output = "<a href='https://"_m + WebsiteFramework::getDomain() + "/u/"_m + percentEncode(userName) + "'>"_m;
-		}
-		
-		if(userPosition == "senate"){
-			output += "user: <div class='senateTag'>"_m + userName + "[S]</div>"_m;
-		}
-		else if(userPosition == "administrator"){
-			output += "user:  <div class='administratorTag'>"_m + userName + "[A]</div>"_m;
-		}
-		else if(userPosition == "bureaucrat"){
-			output += "user:  <div class='bureaucratTag'>"_m + userName + "[B]</div>"_m;
-		}
-		else if(userPosition == "moderator"){
-			output += "user: <div class='moderatorTag'>"_m + userName + "[M]</div>"_m;
-		}
-		else{
-			output += "user: "_m + userName;
-		}
-		
-		if(putUserLink){
-			output += "</a>"_m;
-		}
-		
-		return output;
+		return "user: " + getFormattedUserString(con, userId, subdatinId, putUserLink);
 	}
 	else{
 		if(anonId.size() == 0){
@@ -82,33 +89,4 @@ MarkupString getFormattedPosterString(sql::Connection* con, std::string anonId, 
 			return "id: " + anonId;
 		}
 	}
-}
-
-std::string getEffectiveUserPosition(sql::Connection* con, int64_t userId, int64_t subdatinId){
-	std::string position;
-	
-	if(userId != -1){
-		std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT userPosition FROM users WHERE id = ?"));
-		prepStmt->setInt64(1, userId);
-		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
-		res->beforeFirst();
-		if(res->next()){
-			if(!res->isNull("userPosition")){
-				position = res->getString("userPosition");
-			}
-		}
-		
-		if(position.size() == 0 && subdatinId != -1){
-			prepStmt = std::unique_ptr<sql::PreparedStatement>(con->prepareStatement("SELECT userPosition FROM userPositions WHERE userId = ? AND subdatinId = ?"));
-			prepStmt->setInt64(1, userId);
-			prepStmt->setInt64(2, subdatinId);
-			res = std::unique_ptr<sql::ResultSet>(prepStmt->executeQuery());
-			res->beforeFirst();
-			if(res->next()){
-				position = res->getString("userPosition");
-			}
-		}
-	}
-	
-	return position;
 }

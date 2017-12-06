@@ -25,53 +25,53 @@
 
 #include "Captcha.h"
 
-#include "get/MainPage.h"
-#include "get/LoginPage.h"
-#include "get/CrehdatinControlPanelPage.h"
+#include "MainPage.h"
+#include "LoginPage.h"
+#include "CrehdatinControlPanelPage.h"
 
-#include "get/SettingsPage.h"
-#include "get/UserPage.h"
+#include "SettingsPage.h"
+#include "UserPage.h"
 
-#include "get/SubdatinPage.h"
-#include "get/SubdatinAboutPage.h"
-#include "get/NewThreadPage.h"
-#include "get/ThreadPage.h"
-#include "get/CommentPage.h"
-#include "get/ReportsPage.h"
-#include "get/SubdatinControlPanelPage.h"
+#include "SubdatinPage.h"
+#include "SubdatinAboutPage.h"
+#include "NewThreadPage.h"
+#include "ThreadPage.h"
+#include "CommentPage.h"
+#include "ReportsPage.h"
+#include "SubdatinControlPanelPage.h"
 
-#include "post/HandleNewThread.h"
-#include "post/HandleNewComment.h"
+#include "HandleNewThread.h"
+#include "HandleNewComment.h"
 
-#include "post/HandleCreateAccount.h"
-#include "post/HandleLogin.h"
-#include "post/HandleLogout.h"
+#include "HandleCreateAccount.h"
+#include "HandleLogin.h"
+#include "HandleLogout.h"
 
-#include "post/HandleSetCssTheme.h"
-#include "post/HandleChangePassword.h"
-#include "post/HandleSetSubdatinListing.h"
+#include "HandleSetCssTheme.h"
+#include "HandleChangePassword.h"
+#include "HandleSetSubdatinListing.h"
 
-#include "post/HandleAddAdministrator.h"
-#include "post/HandleRemoveAdministrator.h"
-#include "post/HandleAddSubdatin.h"
-#include "post/HandleRemoveSubdatin.h"
-#include "post/HandleSetDefaultSubdatinListing.h"
+#include "HandleAddAdministrator.h"
+#include "HandleRemoveAdministrator.h"
+#include "HandleAddSubdatin.h"
+#include "HandleRemoveSubdatin.h"
+#include "HandleSetDefaultSubdatinListing.h"
 
-#include "post/HandleAddCurator.h"
-#include "post/HandleSetCurator.h"
-#include "post/HandleSetBureaucrat.h"
-#include "post/HandleRemoveSubdatinOfficial.h"
-#include "post/HandleSetSubdatinPostLocked.h"
-#include "post/HandleSetSubdatinCommentLocked.h"
-#include "post/HandleSetAboutText.h"
-#include "post/HandleSetThreadLocked.h"
-#include "post/HandleSetThreadStickied.h"
+#include "HandleAddModerator.h"
+#include "HandleSetModerator.h"
+#include "HandleSetBureaucrat.h"
+#include "HandleRemoveSubdatinOfficial.h"
+#include "HandleSetSubdatinPostLocked.h"
+#include "HandleSetSubdatinCommentLocked.h"
+#include "HandleSetAboutText.h"
+#include "HandleSetThreadLocked.h"
+#include "HandleSetThreadStickied.h"
 
-#include "post/HandleReportThread.h"
-#include "post/HandleDeleteThread.h"
-#include "post/HandleReportComment.h"
-#include "post/HandleDeleteComment.h"
-#include "post/HandleDismissReports.h"
+#include "HandleReportThread.h"
+#include "HandleDeleteThread.h"
+#include "HandleReportComment.h"
+#include "HandleDeleteComment.h"
+#include "HandleDismissReports.h"
 
 #include "RequestStartHandle.h"
 
@@ -116,10 +116,8 @@ int main(int argc, char** argv){
 		WebsiteFramework::setDomain("website.cloud.karagory.com");
 		//WebsiteFramework::setDomain("crehdatin.karagory.com");
 		
-		WebsiteFramework::setThreadStartHandle([driver](std::size_t id)->void*{
+		WebsiteFramework::setThreadStartHandle([driver]()->void*{
 			RequestData* data = new RequestData;
-			
-			std::cout << "Starting thread #" << std::to_string(id) << "\n";
 			
 			data->con = driver->connect(Config::getSqlAddress(), Config::getSqlUserName(), Config::getSqlPassword());
 			
@@ -128,13 +126,13 @@ int main(int argc, char** argv){
 			data->con->setSchema(Config::getSqlDatabaseName());
 			data->stmt->execute("SET NAMES utf8mb4");
 			
+			resquestDataReferencePool.push_back(data);
+			
 			return (void*)data;
 		});
 		
-		WebsiteFramework::setThreadEndHandle([](void* _data, std::size_t id){
+		WebsiteFramework::setThreadEndHandle([](void* _data){
 			RequestData* data = (RequestData*)_data;
-			
-			std::cout << "Stopping thread #" << std::to_string(id) << "\n";
 			
 			delete data->stmt;
 			data->stmt = nullptr;
@@ -153,8 +151,9 @@ int main(int argc, char** argv){
 		});
 		
 		WebsiteFramework::setExceptionHandle([](void* _data, const std::exception& e){
-			safePrint(std::string("std::exception.what() = '") + e.what() + "'\n");
+			std::cout << "std::exception.what() = '" << e.what() << "'\n";
 		});
+		//TODO: stop using the <title> html element, just use big or something else
 		
 		WebsiteFramework::addDirectoryHandleMap("/d/*", subdatinDirectoryHandle);
 		WebsiteFramework::addDirectoryHandleMap("/d/*/thread/*", threadDirectoryHandle);
@@ -194,8 +193,8 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatin", handleRemoveSubdatin);
 		WebsiteFramework::addPostHandleMap("/setDefaultSubdatinListing", handleSetDefaultSubdatinListing);
 		
-		WebsiteFramework::addPostHandleMap("/d/*/addCurator", handleAddCurator);
-		WebsiteFramework::addPostHandleMap("/d/*/setCurator", handleSetCurator);
+		WebsiteFramework::addPostHandleMap("/d/*/addModerator", handleAddModerator);
+		WebsiteFramework::addPostHandleMap("/d/*/setModerator", handleSetModerator);
 		WebsiteFramework::addPostHandleMap("/d/*/setBureaucrat", handleSetBureaucrat);
 		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatinOfficial", handleRemoveSubdatinOfficial);
 		WebsiteFramework::addPostHandleMap("/d/*/setPostLocked", handleSetSubdatinPostLocked);
@@ -210,8 +209,8 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/deleteComment", handleDeleteComment);
 		WebsiteFramework::addPostHandleMap("/d/*/dismissReports", handleDismissReports);
 		
-		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 8, backgroundHandle);
-		//resquestDataReferencePool.clear();
+		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 16, backgroundHandle);
+		resquestDataReferencePool.clear();
 		
 		std::cout << "Shutting down...\n";
 	}

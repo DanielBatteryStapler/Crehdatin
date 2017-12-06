@@ -206,7 +206,7 @@ void HyperLinkFormat::gotEndTag(const std::string& buffer){
 //===
 
 MarkupString formatUserPostBody(std::string body, bool canRainbow){
-	body = escapeHtml(body);
+	body = MarkupString(body).getUnsafeString();
 	replaceAll(body, "\r", "");
 	
 	GreenTextFormat greenTextFormat;
@@ -245,9 +245,8 @@ MarkupString formatUserPostBody(std::string body, bool canRainbow){
 			}
 		}
 		else{
-			bool anythingValid;
-			do{
-				anythingValid = false;
+			bool anythingValid = false;
+			while(buffer.size() > 0 && anythingValid == false){
 				for(auto y = unusedFormats.begin(); y != unusedFormats.end(); y++){
 					if((*y)->isValidBufferBegin(buffer)){
 						anythingValid = true;
@@ -263,7 +262,7 @@ MarkupString formatUserPostBody(std::string body, bool canRainbow){
 					buffer.erase(0, 1);
 				}
 				
-			}while(buffer.size() > 0 && anythingValid == false);
+			}
 			
 			if(!formatStack.empty() && formatStack.top()->isExactBufferEnd(buffer)){
 				output += formatStack.top()->endTag(buffer);
@@ -283,10 +282,13 @@ MarkupString formatUserPostBody(std::string body, bool canRainbow){
 							formatStack.top()->gotBeginTag(buffer);
 						}
 						buffer.clear();
+						/*
 						if(y == unusedFormats.end()){
 							break;
 						}
 						y--;
+						*/
+						break;
 					}
 				}
 			}

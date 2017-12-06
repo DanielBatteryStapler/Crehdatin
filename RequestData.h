@@ -13,11 +13,11 @@
 #include <random>
 
 struct RequestData{
+	//thread data
 	sql::Connection* con;
 	sql::Statement* stmt;
 	
 	//session/user data
-	
 	std::string sessionToken;
 	std::string captchaCode;
 	int64_t captchaSeed;
@@ -30,7 +30,6 @@ struct RequestData{
 	int64_t lastPostTime;
 	
 	//request data
-	
 	int64_t currentTime;
 	int64_t subdatinId;
 	int64_t threadId;

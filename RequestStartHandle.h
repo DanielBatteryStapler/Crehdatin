@@ -15,9 +15,9 @@
 #include <WebsiteFramework/InputHandler.h>
 
 #include "RequestData.h"
-#include "PageHeader.h"
-#include "PageFooter.h"
-#include "ErrorPages.h"
+#include "get/PageHeader.h"
+#include "get/PageFooter.h"
+#include "get/ErrorPages.h"
 
 #include "Captcha.h"
 

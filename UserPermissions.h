@@ -13,7 +13,10 @@
 
 #include "UserData.h"
 
-bool hasRainbowTextPermissions(std::string position);
-bool hasModerationPermissions(std::string position);
-bool hasSubdatinControlPermissions(std::string position);
-bool hasAdministrationControlPermissions(std::string position);
+enum class UserPosition{None, Error, Curator, Bureaucrat, Administrator, Senate};
+
+UserPosition getEffectiveUserPosition(sql::Connection* con, int64_t userId, int64_t subdatinId = -1);
+bool hasRainbowTextPermissions(UserPosition position);
+bool hasModerationPermissions(UserPosition position);
+bool hasSubdatinControlPermissions(UserPosition position);
+bool hasAdministrationControlPermissions(UserPosition position);

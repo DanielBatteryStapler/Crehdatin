@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1500744768 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
+1512524749 source:/home/daniel/Projects/codeblocks/Crehdatin/main.cpp
 	<iostream>
 	<thread>
 	<vector>
@@ -20,48 +20,48 @@
 	"DirectoryHandles.h"
 	"BackgroundHandle.h"
 	"Captcha.h"
-	"MainPage.h"
-	"LoginPage.h"
-	"CrehdatinControlPanelPage.h"
-	"SettingsPage.h"
-	"UserPage.h"
-	"SubdatinPage.h"
-	"SubdatinAboutPage.h"
-	"NewThreadPage.h"
-	"ThreadPage.h"
-	"CommentPage.h"
-	"ReportsPage.h"
-	"SubdatinControlPanelPage.h"
-	"HandleNewThread.h"
-	"HandleNewComment.h"
-	"HandleCreateAccount.h"
-	"HandleLogin.h"
-	"HandleLogout.h"
-	"HandleSetCssTheme.h"
-	"HandleChangePassword.h"
-	"HandleSetSubdatinListing.h"
-	"HandleAddAdministrator.h"
-	"HandleRemoveAdministrator.h"
-	"HandleAddSubdatin.h"
-	"HandleRemoveSubdatin.h"
-	"HandleSetDefaultSubdatinListing.h"
-	"HandleAddModerator.h"
-	"HandleSetModerator.h"
-	"HandleSetBureaucrat.h"
-	"HandleRemoveSubdatinOfficial.h"
-	"HandleSetSubdatinPostLocked.h"
-	"HandleSetSubdatinCommentLocked.h"
-	"HandleSetAboutText.h"
-	"HandleSetThreadLocked.h"
-	"HandleSetThreadStickied.h"
-	"HandleReportThread.h"
-	"HandleDeleteThread.h"
-	"HandleReportComment.h"
-	"HandleDeleteComment.h"
-	"HandleDismissReports.h"
+	"get/MainPage.h"
+	"get/LoginPage.h"
+	"get/CrehdatinControlPanelPage.h"
+	"get/SettingsPage.h"
+	"get/UserPage.h"
+	"get/SubdatinPage.h"
+	"get/SubdatinAboutPage.h"
+	"get/NewThreadPage.h"
+	"get/ThreadPage.h"
+	"get/CommentPage.h"
+	"get/ReportsPage.h"
+	"get/SubdatinControlPanelPage.h"
+	"post/HandleNewThread.h"
+	"post/HandleNewComment.h"
+	"post/HandleCreateAccount.h"
+	"post/HandleLogin.h"
+	"post/HandleLogout.h"
+	"post/HandleSetCssTheme.h"
+	"post/HandleChangePassword.h"
+	"post/HandleSetSubdatinListing.h"
+	"post/HandleAddAdministrator.h"
+	"post/HandleRemoveAdministrator.h"
+	"post/HandleAddSubdatin.h"
+	"post/HandleRemoveSubdatin.h"
+	"post/HandleSetDefaultSubdatinListing.h"
+	"post/HandleAddCurator.h"
+	"post/HandleSetCurator.h"
+	"post/HandleSetBureaucrat.h"
+	"post/HandleRemoveSubdatinOfficial.h"
+	"post/HandleSetSubdatinPostLocked.h"
+	"post/HandleSetSubdatinCommentLocked.h"
+	"post/HandleSetAboutText.h"
+	"post/HandleSetThreadLocked.h"
+	"post/HandleSetThreadStickied.h"
+	"post/HandleReportThread.h"
+	"post/HandleDeleteThread.h"
+	"post/HandleReportComment.h"
+	"post/HandleDeleteComment.h"
+	"post/HandleDismissReports.h"
 	"RequestStartHandle.h"
 
-1500458261 /home/daniel/Projects/codeblocks//WebsiteFramework/WebsiteFramework.h
+1512023036 /home/daniel/Projects/codeblocks//WebsiteFramework/WebsiteFramework.h
 	<thread>
 	<functional>
 	<tuple>
@@ -72,6 +72,7 @@
 	<mutex>
 	<condition_variable>
 	<atomic>
+	<memory>
 	<sys/socket.h>
 	<csignal>
 	<iostream>
@@ -125,7 +126,7 @@
 1492919624 source:/home/daniel/Projects/codeblocks/Crehdatin/RequestData.cpp
 	"RequestData.h"
 
-1497804580 /home/daniel/Projects/codeblocks/Crehdatin/RequestData.h
+1512006678 /home/daniel/Projects/codeblocks/Crehdatin/RequestData.h
 	"Config.h"
 	<cppconn/driver.h>
 	<cppconn/exception.h>
@@ -334,10 +335,10 @@
 	<string>
 	<mutex>
 
-1505939682 source:/home/daniel/Projects/codeblocks/Crehdatin/ThreadPage.cpp
+1508986053 source:/home/daniel/Projects/codeblocks/Crehdatin/ThreadPage.cpp
 	"ThreadPage.h"
 
-1497921590 /home/daniel/Projects/codeblocks/Crehdatin/UserData.h
+1512488317 /home/daniel/Projects/codeblocks/Crehdatin/UserData.h
 	<memory>
 	<cppconn/driver.h>
 	<cppconn/exception.h>
@@ -351,7 +352,7 @@
 	"UserPermissions.h"
 	"RequestData.h"
 
-1499304634 source:/home/daniel/Projects/codeblocks/Crehdatin/UserData.cpp
+1512499304 source:/home/daniel/Projects/codeblocks/Crehdatin/UserData.cpp
 	"UserData.h"
 
 1498856993 source:/home/daniel/Projects/codeblocks/Crehdatin/HandleNewComment.cpp
@@ -527,10 +528,10 @@
 	"Config.h"
 	"UserPermissions.h"
 
-1498004074 source:/home/daniel/Projects/codeblocks/Crehdatin/FormatPost.cpp
+1512520172 source:/home/daniel/Projects/codeblocks/Crehdatin/FormatPost.cpp
 	"FormatPost.h"
 
-1498010962 /home/daniel/Projects/codeblocks/Crehdatin/RequestStartHandle.h
+1512081018 /home/daniel/Projects/codeblocks/Crehdatin/RequestStartHandle.h
 	<memory>
 	"Config.h"
 	<cppconn/driver.h>
@@ -542,9 +543,9 @@
 	<WebsiteFramework/Cryptography.h>
 	<WebsiteFramework/InputHandler.h>
 	"RequestData.h"
-	"PageHeader.h"
-	"PageFooter.h"
-	"ErrorPages.h"
+	"get/PageHeader.h"
+	"get/PageFooter.h"
+	"get/ErrorPages.h"
 	"Captcha.h"
 
 1498010956 source:/home/daniel/Projects/codeblocks/Crehdatin/RequestStartHandle.cpp
@@ -675,7 +676,7 @@
 	<WebsiteFramework/InputHandler.h>
 	"RequestData.h"
 
-1496105927 /home/daniel/Projects/codeblocks/Crehdatin/UserPermissions.h
+1512487662 /home/daniel/Projects/codeblocks/Crehdatin/UserPermissions.h
 	<memory>
 	"Config.h"
 	<cppconn/driver.h>
@@ -702,7 +703,7 @@
 	<WebsiteFramework/Cryptography.h>
 	"SettingsPage.h"
 
-1496106405 source:/home/daniel/Projects/codeblocks/Crehdatin/UserPermissions.cpp
+1512487694 source:/home/daniel/Projects/codeblocks/Crehdatin/UserPermissions.cpp
 	"UserPermissions.h"
 
 1497831203 /home/daniel/Projects/codeblocks/Crehdatin/UserPage.h
@@ -968,7 +969,7 @@
 1497905288 /home/daniel/Projects/codeblocks//WebsiteFramework/Response.h
 	"WebsiteFramework.h"
 
-1497903944 /home/daniel/Projects/codeblocks//WebsiteFramework/InputHandler.h
+1512158855 /home/daniel/Projects/codeblocks//WebsiteFramework/InputHandler.h
 	<string>
 	<sstream>
 	<map>
@@ -989,7 +990,7 @@
 	<stdint.h>
 	<stddef.h>
 
-1496540833 /home/daniel/Projects/codeblocks/Crehdatin/DirectoryHandles.h
+1512080806 /home/daniel/Projects/codeblocks/Crehdatin/DirectoryHandles.h
 	"Config.h"
 	<cppconn/driver.h>
 	<cppconn/exception.h>
@@ -997,8 +998,8 @@
 	<cppconn/statement.h>
 	<cppconn/prepared_statement.h>
 	<WebsiteFramework/WebsiteFramework.h>
-	"PageHeader.h"
-	"PageFooter.h"
+	"get/PageHeader.h"
+	"get/PageFooter.h"
 
 1497922579 source:/home/daniel/Projects/codeblocks/Crehdatin/DirectoryHandles.cpp
 	"DirectoryHandles.h"
@@ -1053,7 +1054,7 @@
 	"ErrorPages.h"
 	"DeletionHandles.h"
 
-1498005377 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinAboutPage.cpp
+1505940047 source:/home/daniel/Projects/codeblocks/Crehdatin/SubdatinAboutPage.cpp
 	"SubdatinAboutPage.h"
 
 1496462469 /home/daniel/Projects/codeblocks/Crehdatin/SubdatinAboutPage.h
@@ -1104,12 +1105,12 @@
 	"PageFooter.h"
 	"ThreadPage.h"
 
-1496869364 /home/daniel/Projects/codeblocks/Crehdatin/BackgroundHandle.h
+1512006190 /home/daniel/Projects/codeblocks/Crehdatin/BackgroundHandle.h
 	<WebsiteFramework/WebsiteFramework.h>
 	<chrono>
 	"RequestData.h"
 
-1500458253 source:/home/daniel/Projects/codeblocks/Crehdatin/BackgroundHandle.cpp
+1512076596 source:/home/daniel/Projects/codeblocks/Crehdatin/BackgroundHandle.cpp
 	"BackgroundHandle.h"
 
 1498533535 source:/home/daniel/Projects/codeblocks/Crehdatin/DeletionHandles.cpp
@@ -1137,7 +1138,7 @@
 	<WebsiteFramework/Response.h>
 	"RequestData.h"
 
-1498006213 /home/daniel/Projects/codeblocks//WebsiteFramework/MarkupString.h
+1512536336 /home/daniel/Projects/codeblocks//WebsiteFramework/MarkupString.h
 	<string>
 	"InputHandler.h"
 
@@ -1173,4 +1174,740 @@
 	"CrehdatinControlPanelPage.h"
 	"SubdatinData.h"
 	"HandleSetSubdatinListing.h"
+
+1512002904 /home/daniel/Projects/codeblocks//WebsiteFramework/ThreadData.h
+	<thread>
+	<memory>
+	<mutex>
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/PageHeader.h
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/Response.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../SubdatinData.h"
+	"../UserData.h"
+	"../UserPermissions.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/PageFooter.h
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+
+1497923405 source:/home/daniel/Projects/codeblocks/Crehdatin/get/CommentPage.cpp
+	"CommentPage.h"
+
+1512080826 /home/daniel/Projects/codeblocks/Crehdatin/get/CommentPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<string>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../UserData.h"
+	"../StringHelper.h"
+	"PageHeader.h"
+	"PageFooter.h"
+	"ThreadPage.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/ThreadPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<string>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../UserData.h"
+	"../StringHelper.h"
+	"PageHeader.h"
+	"PageFooter.h"
+	"../FormatPost.h"
+
+1498864546 source:/home/daniel/Projects/codeblocks/Crehdatin/get/ErrorPages.cpp
+	"ErrorPages.h"
+
+1512080834 /home/daniel/Projects/codeblocks/Crehdatin/get/ErrorPages.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+
+1498012181 source:/home/daniel/Projects/codeblocks/Crehdatin/get/LoginPage.cpp
+	"LoginPage.h"
+
+1512080844 /home/daniel/Projects/codeblocks/Crehdatin/get/LoginPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+
+1512155376 source:/home/daniel/Projects/codeblocks/Crehdatin/get/MainPage.cpp
+	"MainPage.h"
+
+1512080854 /home/daniel/Projects/codeblocks/Crehdatin/get/MainPage.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"../UserData.h"
+	"PageHeader.h"
+	"PageFooter.h"
+
+1498005701 source:/home/daniel/Projects/codeblocks/Crehdatin/get/NewThreadPage.cpp
+	"NewThreadPage.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/NewThreadPage.h
+	"../Config.h"
+	"../SubdatinData.h"
+	"../UserData.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+
+1496430999 source:/home/daniel/Projects/codeblocks/Crehdatin/get/PageFooter.cpp
+	"PageFooter.h"
+
+1512487188 source:/home/daniel/Projects/codeblocks/Crehdatin/get/PageHeader.cpp
+	"PageHeader.h"
+
+1498861727 source:/home/daniel/Projects/codeblocks/Crehdatin/get/ReportsPage.cpp
+	"ReportsPage.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/ReportsPage.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"../UserPermissions.h"
+	"ThreadPage.h"
+	"PageHeader.h"
+	"PageFooter.h"
+	"ErrorPages.h"
+
+1498861687 source:/home/daniel/Projects/codeblocks/Crehdatin/get/SettingsPage.cpp
+	"SettingsPage.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/SettingsPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+	"ErrorPages.h"
+
+1512488521 source:/home/daniel/Projects/codeblocks/Crehdatin/get/SubdatinAboutPage.cpp
+	"SubdatinAboutPage.h"
+
+1512080878 /home/daniel/Projects/codeblocks/Crehdatin/get/SubdatinAboutPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+	"../FormatPost.h"
+
+1512488579 source:/home/daniel/Projects/codeblocks/Crehdatin/get/SubdatinControlPanelPage.cpp
+	"SubdatinControlPanelPage.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/SubdatinControlPanelPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+	"ErrorPages.h"
+
+1497827548 source:/home/daniel/Projects/codeblocks/Crehdatin/get/SubdatinPage.cpp
+	"SubdatinPage.h"
+
+1512080119 /home/daniel/Projects/codeblocks/Crehdatin/get/SubdatinPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"../UserData.h"
+	"PageHeader.h"
+	"PageFooter.h"
+	"ThreadPage.h"
+
+1512524716 source:/home/daniel/Projects/codeblocks/Crehdatin/get/ThreadPage.cpp
+	"ThreadPage.h"
+
+1512487713 source:/home/daniel/Projects/codeblocks/Crehdatin/get/UserPage.cpp
+	"UserPage.h"
+
+1512080118 /home/daniel/Projects/codeblocks/Crehdatin/get/UserPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<string>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../UserData.h"
+	"../StringHelper.h"
+	"PageHeader.h"
+	"PageFooter.h"
+	"ThreadPage.h"
+
+1499932070 source:/home/daniel/Projects/codeblocks/Crehdatin/get/CrehdatinControlPanelPage.cpp
+	"CrehdatinControlPanelPage.h"
+
+1512080935 /home/daniel/Projects/codeblocks/Crehdatin/get/CrehdatinControlPanelPage.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	"PageHeader.h"
+	"PageFooter.h"
+	"ErrorPages.h"
+
+1512080311 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleNewThread.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../get/NewThreadPage.h"
+	"../UserData.h"
+
+1512080301 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleNewComment.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080248 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleCreateAccount.h
+	<memory>
+	<algorithm>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Cryptography.h>
+	"../get/LoginPage.h"
+	"../Captcha.h"
+	"../get/ErrorPages.h"
+
+1512080292 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleLogin.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Cryptography.h>
+	"../get/LoginPage.h"
+	"../get/ErrorPages.h"
+	"../Captcha.h"
+
+1512080957 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleLogout.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Cryptography.h>
+	"../get/LoginPage.h"
+
+1512080686 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetCssTheme.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../get/SettingsPage.h"
+	"../get/ErrorPages.h"
+
+1512080238 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleChangePassword.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Cryptography.h>
+	"../get/SettingsPage.h"
+
+1512080397 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetSubdatinListing.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../get/SettingsPage.h"
+	"../SubdatinData.h"
+
+1512080190 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddAdministrator.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080322 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleRemoveAdministrator.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080231 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddSubdatin.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080340 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleRemoveSubdatin.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+	"../DeletionHandles.h"
+
+1512080505 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetDefaultSubdatinListing.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../get/CrehdatinControlPanelPage.h"
+	"../SubdatinData.h"
+	"HandleSetSubdatinListing.h"
+
+1512080211 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddModerator.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserData.h"
+	"../UserPermissions.h"
+	"../get/PageHeader.h"
+	"../get/PageFooter.h"
+	"../get/ErrorPages.h"
+
+1512080366 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetModerator.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080705 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetBureaucrat.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080350 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleRemoveSubdatinOfficial.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080975 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetSubdatinPostLocked.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080376 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetSubdatinCommentLocked.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080697 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetAboutText.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080406 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetThreadLocked.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080389 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetThreadStickied.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080678 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleReportThread.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080263 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleDeleteThread.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+	"../DeletionHandles.h"
+
+1512080425 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleReportComment.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512080997 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleDeleteComment.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+	"../DeletionHandles.h"
+
+1512080277 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleDismissReports.h
+	<memory>
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1496981179 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddAdministrator.cpp
+	"HandleAddAdministrator.h"
+
+1496981185 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddModerator.cpp
+	"HandleAddModerator.h"
+
+1498764634 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddSubdatin.cpp
+	"HandleAddSubdatin.h"
+
+1498861461 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleChangePassword.cpp
+	"HandleChangePassword.h"
+
+1498864418 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleCreateAccount.cpp
+	"HandleCreateAccount.h"
+
+1497834433 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleDeleteComment.cpp
+	"HandleDeleteComment.h"
+
+1497889115 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleDeleteThread.cpp
+	"HandleDeleteThread.h"
+
+1498861725 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleDismissReports.cpp
+	"HandleDismissReports.h"
+
+1512487613 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleLogin.cpp
+	"HandleLogin.h"
+
+1496980412 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleLogout.cpp
+	"HandleLogin.h"
+
+1498856993 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleNewComment.cpp
+	"HandleNewComment.h"
+
+1498768621 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleNewThread.cpp
+	"HandleNewThread.h"
+
+1496981323 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleRemoveAdministrator.cpp
+	"HandleRemoveAdministrator.h"
+
+1497740457 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleRemoveSubdatin.cpp
+	"HandleRemoveSubdatin.h"
+
+1496981335 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleRemoveSubdatinOfficial.cpp
+	"HandleRemoveSubdatinOfficial.h"
+
+1496981475 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleReportComment.cpp
+	"HandleReportComment.h"
+
+1496981482 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleReportThread.cpp
+	"HandleReportThread.h"
+
+1496981402 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetAboutText.cpp
+	"HandleSetAboutText.h"
+
+1496981407 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetBureaucrat.cpp
+	"HandleSetBureaucrat.h"
+
+1498861726 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetCssTheme.cpp
+	"HandleSetCssTheme.h"
+
+1498861726 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetDefaultSubdatinListing.cpp
+	"HandleSetDefaultSubdatinListing.h"
+
+1496981419 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetModerator.cpp
+	"HandleSetModerator.h"
+
+1496981426 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetSubdatinCommentLocked.cpp
+	"HandleSetSubdatinCommentLocked.h"
+
+1498861608 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetSubdatinListing.cpp
+	"HandleSetSubdatinListing.h"
+
+1496981432 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetSubdatinPostLocked.cpp
+	"HandleSetSubdatinPostLocked.h"
+
+1496981437 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetThreadLocked.cpp
+	"HandleSetThreadLocked.h"
+
+1496981443 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetThreadStickied.cpp
+	"HandleSetThreadStickied.h"
+
+1512487995 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddCurator.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserData.h"
+	"../UserPermissions.h"
+	"../get/PageHeader.h"
+	"../get/PageFooter.h"
+	"../get/ErrorPages.h"
+
+1512487970 /home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetCurator.h
+	"../Config.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+	<WebsiteFramework/WebsiteFramework.h>
+	<WebsiteFramework/InputHandler.h>
+	<WebsiteFramework/Response.h>
+	"../RequestData.h"
+	"../UserPermissions.h"
+	"../get/ErrorPages.h"
+
+1512488010 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleAddCurator.cpp
+	"HandleAddCurator.h"
+
+1512488004 source:/home/daniel/Projects/codeblocks/Crehdatin/post/HandleSetCurator.cpp
+	"HandleSetCurator.h"
 

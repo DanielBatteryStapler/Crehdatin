@@ -10,8 +10,8 @@
 
 #include <WebsiteFramework/WebsiteFramework.h>
 
-#include "PageHeader.h"
-#include "PageFooter.h"
+#include "get/PageHeader.h"
+#include "get/PageFooter.h"
 
 bool subdatinDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
 bool threadDirectoryHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
