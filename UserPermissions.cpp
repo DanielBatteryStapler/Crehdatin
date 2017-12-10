@@ -41,33 +41,49 @@ UserPosition getEffectiveUserPosition(sql::Connection* con, int64_t userId, int6
 	else if(position == "senate"){
 		return UserPosition::Senate;
 	}
+	safePrint("ERR: User with id '" + std::to_string(userId) + " 'has an invalid user position");
 	return UserPosition::Error;
 }
 
 bool hasRainbowTextPermissions(UserPosition position){
-	if(position == UserPosition::Senate || position == UserPosition::Administrator || position == UserPosition::Bureaucrat || position == UserPosition::Curator){
+	switch(position){
+	case UserPosition::Senate:
+	case UserPosition::Administrator:
+	case UserPosition::Bureaucrat:
+	case UserPosition::Curator:
 		return true;
+		break;
 	}
 	return false;
 }
 
 bool hasModerationPermissions(UserPosition position){
-	if(position == UserPosition::Senate || position == UserPosition::Administrator || position == UserPosition::Bureaucrat || position == UserPosition::Curator){
+	switch(position){
+	case UserPosition::Senate:
+	case UserPosition::Administrator:
+	case UserPosition::Bureaucrat:
+	case UserPosition::Curator:
 		return true;
+		break;
 	}
 	return false;
 }
 
 bool hasSubdatinControlPermissions(UserPosition position){
-	if(position == UserPosition::Senate || position == UserPosition::Bureaucrat){
+	switch(position){
+	case UserPosition::Senate:
+	case UserPosition::Bureaucrat:
 		return true;
+		break;
 	}
 	return false;
 }
 
 bool hasAdministrationControlPermissions(UserPosition position){
-	if(position == UserPosition::Senate){
+	switch(position){
+	case UserPosition::Senate:
 		return true;
+		break;
 	}
 	return false;
 }

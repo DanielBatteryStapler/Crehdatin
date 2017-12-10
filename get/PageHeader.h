@@ -9,6 +9,6 @@
 #include "../UserData.h"
 #include "../UserPermissions.h"
 
-enum PageTab{None, Main, User, Login, Settings, SiteControl, Error, ThreadList, Thread, Comment, About, NewThread, Reports, ControlPanel};
+enum PageTab{None, Main, User, Login, Logout, Settings, SiteControl, Error, ThreadList, Thread, Comment, About, NewThread, Reports, ControlPanel};
 
 void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab);

@@ -11,7 +11,7 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	res->beforeFirst();
 	
 	if(!res->next()){
-		fcgi->out << "<div class='errorText'><i>There don't appear to be any posts here...</i></div>";
+		fcgi->out << "<div class='errorText'><i>There doesn't appear to be any posts here...</i></div>";
 	}
 	else{
 		do{

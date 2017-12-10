@@ -27,6 +27,7 @@
 
 #include "get/MainPage.h"
 #include "get/LoginPage.h"
+#include "get/LogoutPage.h"
 #include "get/CrehdatinControlPanelPage.h"
 
 #include "get/SettingsPage.h"
@@ -111,16 +112,17 @@ int main(int argc, char** argv){
 			return 0;
 		}
 		
-		sql::Driver* driver = sql::mysql::get_driver_instance();
+		
 		
 		WebsiteFramework::setDomain("website.cloud.karagory.com");
 		//WebsiteFramework::setDomain("crehdatin.karagory.com");
 		
-		WebsiteFramework::setThreadStartHandle([driver](std::size_t id)->void*{
+		WebsiteFramework::setThreadStartHandle([](std::size_t id)->void*{
 			RequestData* data = new RequestData;
 			
 			std::cout << "Starting thread #" << std::to_string(id) << "\n";
 			
+			sql::Driver* driver = sql::mysql::get_driver_instance();
 			data->con = driver->connect(Config::getSqlAddress(), Config::getSqlUserName(), Config::getSqlPassword());
 			
 			data->stmt = data->con->createStatement();
@@ -147,9 +149,7 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::setError404Handle([](FcgiData* fcgi, void* _data){
 			RequestData* data = (RequestData*)_data;
-			createPageHeader(fcgi, data, PageTab::Error);
-			fcgi->out << "<div class='errorText'>This Page Does Not Exist</div>";
-			createPageFooter(fcgi, data);
+			createGenericErrorPage(fcgi, data, "Error 404, This page does not exist");
 		});
 		
 		WebsiteFramework::setExceptionHandle([](void* _data, const std::exception& e){
@@ -164,6 +164,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/captcha/*", createCaptchaHandle);
 		WebsiteFramework::addGetHandleMap("/login", createLoginPageHandle);
+		WebsiteFramework::addGetHandleMap("/logout", createLogoutPageHandle);
 		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("/login"));
 		
 		WebsiteFramework::addGetHandleMap("/u/*", createUserPage);
@@ -211,7 +212,6 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/d/*/dismissReports", handleDismissReports);
 		
 		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 8, backgroundHandle);
-		//resquestDataReferencePool.clear();
 		
 		std::cout << "Shutting down...\n";
 	}

@@ -12,12 +12,10 @@
 				<Option type="1" />
 				<Option compiler="clang" />
 				<Compiler>
-					<Add option="-fsanitize=thread" />
-					<Add option="-fsanitize=undefined-trap -fsanitize-undefined-trap-on-error" />
 					<Add option="-g" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
-					<Add option="-fsanitize=thread" />
 					<Add library="../WebsiteFramework/bin/Debug/libWebsiteFramework.a" />
 				</Linker>
 			</Target>
@@ -28,6 +26,7 @@
 				<Option compiler="clang" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="./" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -87,6 +86,8 @@
 		<Unit filename="get/ErrorPages.h" />
 		<Unit filename="get/LoginPage.cpp" />
 		<Unit filename="get/LoginPage.h" />
+		<Unit filename="get/LogoutPage.cpp" />
+		<Unit filename="get/LogoutPage.h" />
 		<Unit filename="get/MainPage.cpp" />
 		<Unit filename="get/MainPage.h" />
 		<Unit filename="get/NewThreadPage.cpp" />

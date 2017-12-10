@@ -131,14 +131,14 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 					fcgiOut << "<li>Stickied</li>";
 				}
 			fcgiOut << "</div>"
-			"<div class='text'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>"
+			"<div class='text'>" << formatUserPostBody(data, res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>"
 		"</div>";
 	}
 	
 	return canReply;
 }
 
-void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t commentId, bool isEven, bool isPreview, bool showPoster, bool showPermaLink, bool canReply, bool canModerate, bool showSubdatin){
+void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t commentId, bool isEven, bool isPreview, bool showPoster, bool showReplyId, bool canReply, bool canModerate, bool showSubdatin, bool includeReplies){
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT threadId, body, anonId, userId FROM comments WHERE id = ?"));
 	prepStmt->setInt64(1, commentId);
 	
@@ -155,15 +155,21 @@ void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t sub
 	if(!res->isNull("userId")){
 		userId = res->getInt64("userId");
 	}
-	
-	fcgiOut << "<a name='" << std::to_string(commentId) << "'></a>"
-	<< (isEven?"<div class='comment even'>":"<div class='comment odd'>") << 
+	if(includeReplies){
+		fcgiOut << "<a name='" << std::to_string(commentId) << "'></a>";
+	}
+	fcgiOut << (isEven?"<div class='comment even'>":"<div class='comment odd'>") << 
 	"<div class='extraPostInfo'>";
 	if(showSubdatin){
-		fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'><li>/" << subdatinTitle << "/</li></a>";
+		fcgiOut << "<li><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'>/" << subdatinTitle << "/</a></li>";
 	}
 	if(showPoster){
 		fcgiOut << "<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</li>";
+	}
+	if(showReplyId){
+		fcgiOut << "<li>"
+		"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "'>" << std::to_string(commentId) << "</a>"
+		"</li>";
 	}
 	if(!isPreview){
 		if(canReply){
@@ -174,24 +180,20 @@ void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t sub
 			createCommentModerationMenu(fcgiOut, data, subdatinTitle, threadId, commentId);
 		}
 	}
-	if(showPermaLink){
-		fcgiOut << "<li>"
-		"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "'>Permalink</a>"
-		"</li>";
-	}
 	
 	fcgiOut << "<li>" << getFormattedCommentPostTime(data->con, commentId) << "</li>"
 	"</div>" 
-	"<div class='commentText'>" << formatUserPostBody(body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>";
+	"<div class='commentText'>" << formatUserPostBody(data, body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)), includeReplies) << "</div>";
 }
 
 void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
 	fcgiOut <<
 		"<li>"
 		"<div class='dropDown'>"
-		"<div class='dropBtn'>"
+		"<input type='checkbox' id='reportMenu" << std::to_string(data->threadId) << "_" << std::to_string(commentId) << "'>"
+		"<label class='dropBtn' for='reportMenu" << std::to_string(data->threadId) << "_" << std::to_string(commentId) << "'>"
 		"Report"
-		"</div>"
+		"</label>"
 		"<ul>";
 	
 	if(commentId == -1){
@@ -231,16 +233,17 @@ void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& 
 void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
 	fcgiOut << "<li>"
 	"<div class='dropDown'>"
-	"<div class='dropBtn'>"
+	"<input type='checkbox' id='commentReply" << std::to_string(commentId) << "'>"
+	"<label class='dropBtn' for='commentReply" << std::to_string(commentId) << "'>"
 	"Reply"
-	"</div>"
+	"</label>"
 	"<ul>"
 	"<li>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/newComment' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='hidden' name='parentId' value='" << std::to_string(commentId) << "'>"
 	"<div class='subjectInput'><input type='text' name='subject'></div>"
-	"<textarea cols='25' name='body'></textarea><br>"
+	"<textarea name='body'></textarea><br>"
 	"<button type='submit' name='submit_param'>"
 	"Create Comment"
 	"</button>"
@@ -254,7 +257,8 @@ void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& s
 void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, bool canControl, bool locked, bool stickied){
 	fcgiOut << "<li>"
 	"<div class='dropDown'>"
-	"<div class='dropBtn'>"
+	"<input type='checkbox' id='moderateMenu" << std::to_string(threadId) << "'>"
+	"<label class='dropBtn' for='moderateMenu" << std::to_string(threadId)<< "'>"
 	"Moderate"
 	"</div>"
 	"<ul>"
@@ -309,7 +313,8 @@ void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std
 void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId){
 	fcgiOut << "<li>"
 	"<div class='dropDown'>"
-	"<div class='dropBtn'>"
+	"<input type='checkbox' id='moderationMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
+	"<label class='dropBtn' for='moderationMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
 	"Moderate"
 	"</div>"
 	"<ul>"

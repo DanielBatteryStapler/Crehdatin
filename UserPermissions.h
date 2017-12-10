@@ -12,6 +12,7 @@
 #include <string>
 
 #include "UserData.h"
+#include "StringHelper.h"
 
 enum class UserPosition{None, Error, Curator, Bureaucrat, Administrator, Senate};
 

@@ -23,6 +23,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	data->threadId = -1;
 	data->commentId = -1;
 	data->userPageId = -1;
+	data->htmlId = 0;
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT " 
 	"blocked, UNIX_TIMESTAMP(lastPostTime) "
@@ -76,15 +77,13 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 }
 
 bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken){
-	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT " 
-	"captchaCode, captchaSeed, userId, authToken, shownId "
-	"FROM sessions "
-	"WHERE sessionToken = ?"));
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT authToken, captchaCode, captchaSeed, userId, shownId FROM sessions WHERE sessionToken = ?"));
 	prepStmt->setString(1, sessionToken);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
 	if(res->next()){
 		data->sessionToken = sessionToken;
+		data->authToken = res->getString("authToken");
 		data->captchaCode = res->getString("captchaCode");
 		data->captchaSeed = res->getInt64("captchaSeed");
 		if(!res->isNull("userId")){
@@ -121,7 +120,6 @@ bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken)
 				return false;
 			}
 		}
-		data->authToken = res->getString("authToken");
 		if(!res->isNull("shownId")){
 			data->shownId = res->getString("shownId");
 		}
@@ -144,7 +142,7 @@ void createNewSession(FcgiData* fcgi, RequestData* data){
 	while(true){
 		data->sessionToken = generateRandomToken();
 		data->authToken = generateRandomToken();
-		data->shownId = generateRandomToken().substr(0, 12);
+		data->shownId = generateRandomToken().substr(0, 8);
 		data->captchaCode = generateCaptchaText();
 		data->captchaSeed = generateCaptchaSeed();
 		

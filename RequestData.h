@@ -28,6 +28,7 @@ struct RequestData{
 	std::string cssTheme;
 	bool blocked;
 	int64_t lastPostTime;
+	int64_t htmlId;
 	
 	//request data
 	int64_t currentTime;

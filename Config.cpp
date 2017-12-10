@@ -2,7 +2,7 @@
 
 std::string Config::getSqlAddress(){
 	return "127.0.0.1:3306";
-	//return "192.168.1.142";
+	//return "192.168.1.142:3306";
 }
 
 std::string Config::getSqlUserName(){

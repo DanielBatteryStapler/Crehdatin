@@ -106,7 +106,7 @@ void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId){
 		
 		fcgi->out << "ip: " << res->getString("posterIp") << 
 			"</div></div>"
-			"<div class='threadText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, res->getInt64("subdatinId")))) << "</div>";
+			"<div class='threadText'>" << formatUserPostBody(data, res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, res->getInt64("subdatinId")))) << "</div>";
 	}
 	else{
 		fcgi->out << "<div class='thread'><div class='threadText'><div class='errorText'>"
@@ -136,7 +136,12 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 		}
 		
 		fcgi->out << "<div class='comment even'><div class='extraPostInfo'><div class='postInfoElement'><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "'>comment</a></div>"
-			"<div class='postInfoElement'><div class='dropDown'><div class='dropBtn'>Actions</div><ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
+			"<div class='postInfoElement'><div class='dropDown'>"
+			"<input type='checkbox' id='actionsMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
+			"<label class='dropBtn' for='actionsMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
+			"Actions"
+			"</label>"
+			"<ul><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<button type='submit' class='link-button'>"
 			"Delete"
@@ -159,7 +164,7 @@ void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, 
 		
 		fcgi->out << "ip: " << res->getString("posterIp") << 
 			"</div></div>"
-			"<div class='commentText'>" << formatUserPostBody(res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, res->getInt64("subdatinId")))) <<
+			"<div class='commentText'>" << formatUserPostBody(data, res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, res->getInt64("subdatinId")))) <<
 			"</div>";
 	}
 	else{

@@ -41,7 +41,7 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 	res->first();
 	if(!res->isNull("description")){
 		fcgi->out << "<h2>Infomation</h2>";
-		fcgi->out << formatUserPostBody(res->getString("description"),  true);
+		fcgi->out << formatUserPostBody(data, res->getString("description"),  true);
 	}
 	
 	createPageFooter(fcgi, data);
