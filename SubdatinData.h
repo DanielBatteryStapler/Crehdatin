@@ -12,6 +12,7 @@
 #include <WebsiteFramework/InputHandler.h>
 
 #include "RequestData.h"
+#include "UserPermissions.h"
 
 int64_t getSubdatinId(sql::Connection* con, std::string subdatinTitle);
 void getSubdatinData(sql::Connection* con, int64_t id, std::string& title, std::string& name, bool& postLocked, bool& commentLocked);
@@ -24,3 +25,5 @@ MarkupString getFormattedThreadPostTime(sql::Connection* con, int64_t threadId);
 MarkupString getFormattedThreadBumpTime(sql::Connection* con, int64_t threadId);
 MarkupString getFormattedCommentPostTime(sql::Connection* con, int64_t commentId);
 int64_t getParentComment(sql::Connection* con, int64_t commentId);
+UserPosition getThreadPosterPosition(sql::Connection* con, int64_t threadId);
+UserPosition getCommentPosterPosition(sql::Connection* con, int64_t commentId);

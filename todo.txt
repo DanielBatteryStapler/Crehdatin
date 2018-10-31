@@ -1,0 +1,44 @@
+
+#TODO list
+allow users to hide thumbnails on their own stuff
+add page-number handling for comments and threads and user pages and subdatins so it doesn't put too much content on the same page and break the website
+unified reports page for officials
+	might just make this a part of the notification system
+add comment removing support
+	allow users to remove their own posts, even let anons do this
+reply notifications
+add some more anti-bot/anti-spam features
+	add temp/perm-ban support for subdatins
+add multi-image posting support
+add more subdatin customizations
+add some help pages for users and officials so they can learn the ropes faster
+	adding some sort of half-static system to load up the help files and show them to users without having to hardcode headers and stuff
+	write some more documentation on terms and what stuff means on the website
+make it so users can decide to post with anon id or with their username if they have that enabled when they are actually posting
+allow users to download images with the original name instead of the name the server decided to give it
+	making this the default might be a bad idea
+add some more formatting options
+	pink text?
+	bullet points?
+add crehdatin-chan logo(?)
+make it so greentext can only appear at the beginning of a line
+add the favicon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+webm support

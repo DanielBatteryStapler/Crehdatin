@@ -45,7 +45,7 @@ bool Database::createDatabase(){
 			con = driver->connect(Config::getSqlAddress(), username, password);
 		}
 		catch(sql::SQLException& e){
-			std::cout << "Error when connecting to sql server:\"" << e.what() << "\"\nAborting...";
+			std::cout << "Error when connecting to sql server:\"" << e.what() << "\"\nAborting...\n";
 			return false;
 		}
 	}
@@ -75,6 +75,7 @@ bool Database::createDatabase(){
 	"id BIGINT NOT NULL AUTO_INCREMENT,"
 	"PRIMARY KEY (id),"
 	"userName TEXT NOT NULL,"
+	"shownId TEXT DEFAULT NULL,"
 	"passwordHash TEXT NOT NULL,"
 	"passwordSalt TEXT NOT NULL,"
 	"userPosition TEXT DEFAULT NULL,"
@@ -116,7 +117,7 @@ bool Database::createDatabase(){
 	"authToken TEXT(" + std::to_string(Config::getUniqueTokenLength()) + ") NOT NULL,"
 	"userId BIGINT DEFAULT NULL,"
 	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE SET NULL,"
-	"shownId TEXT(12) DEFAULT NULL,"
+	"shownId TEXT DEFAULT NULL,"
 	"createdTime TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,"
 	"ip TEXT NOT NULL"
 	") ENGINE = InnoDB");
@@ -162,9 +163,11 @@ bool Database::createDatabase(){
 	stmt->execute("CREATE TABLE images("
 	"id BIGINT NOT NULL AUTO_INCREMENT,"
 	"PRIMARY KEY (id),"
+	"shownId TEXT NOT NULL,"
+	"INDEX (shownId(64)),"
 	"fileName TEXT NOT NULL,"
 	"magickType TEXT NOT NULL,"
-	"thumbnailHidden BOOL NOT NULL,"
+	"showThumbnail BOOL NOT NULL,"
 	"originalName TEXT NOT NULL,"
 	"threadId BIGINT DEFAULT NULL,"
 	"INDEX (threadId),"
@@ -209,8 +212,30 @@ bool Database::createDatabase(){
 	"CONSTRAINT UNIQUE (userId, subdatinId),"
 	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
 	"isDefault BOOL DEFAULT NULL,"//is default must always either be NULL or TRUE, and it should not be checked against.
-	//Rather, check is userId is NULL to find defaults subdatins
+	//Rather, check if userId is NULL to find defaults subdatins
 	"CONSTRAINT UNIQUE (isDefault, subdatinId)"
+	") ENGINE = InnoDB");
+	
+	stmt->execute("CREATE TABLE watchings("
+	"id BIGINT NOT NULL AUTO_INCREMENT,"
+	"PRIMARY KEY (id),"
+	"userId BIGINT NOT NULL,"
+	"INDEX (userId),"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
+	"commentId BIGINT DEFAULT NULL,"
+	"FOREIGN KEY (commentId) REFERENCES comments(id) ON DELETE CASCADE,"
+	"threadId BIGINT DEFAULT NULL,"
+	"FOREIGN KEY (threadId) REFERENCES threads(id) ON DELETE CASCADE"
+	") ENGINE = InnoDB");
+	
+	stmt->execute("CREATE TABLE notifications("
+	"id BIGINT NOT NULL AUTO_INCREMENT,"
+	"PRIMARY KEY (id),"
+	"userId BIGINT NOT NULL,"
+	"INDEX (userId),"
+	"FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,"
+	"commentId BIGINT DEFAULT NULL,"
+	"FOREIGN KEY (commentId) REFERENCES comments(id) ON DELETE CASCADE"
 	") ENGINE = InnoDB");
 	
 	stmt->execute("GRANT ALL ON " + Config::getSqlDatabaseName() + ".* TO '" + Config::getSqlUserName() + "'@'localhost'");

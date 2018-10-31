@@ -137,3 +137,33 @@ int64_t getParentComment(sql::Connection* con, int64_t commentId){
 		return res->getInt64("parentId");
 	}
 }
+
+UserPosition getThreadPosterPosition(sql::Connection* con, int64_t threadId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT subdatinId, userId FROM threads WHERE id = ?"));
+	prepStmt->setInt64(1, threadId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->beforeFirst();
+	if(res->next()){
+		int64_t userId = -1;
+		if(!res->isNull("userId")){
+			userId = res->getInt64("userId");
+		}
+		return getEffectiveUserPosition(con, userId, res->getInt64("subdatinId"));
+	}
+	return UserPosition::Error;
+}
+
+UserPosition getCommentPosterPosition(sql::Connection* con, int64_t commentId){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT subdatinId, userId FROM comments WHERE id = ?"));
+	prepStmt->setInt64(1, commentId);
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->beforeFirst();
+	if(res->next()){
+		int64_t userId = -1;
+		if(!res->isNull("userId")){
+			userId = res->getInt64("userId");
+		}
+		return getEffectiveUserPosition(con, userId, res->getInt64("subdatinId"));
+	}
+	return UserPosition::Error;
+}

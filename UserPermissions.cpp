@@ -60,13 +60,58 @@ bool hasRainbowTextPermissions(UserPosition position){
 bool hasModerationPermissions(UserPosition position){
 	switch(position){
 	case UserPosition::Senate:
-	case UserPosition::Administrator:
 	case UserPosition::Bureaucrat:
 	case UserPosition::Curator:
 		return true;
 		break;
 	}
 	return false;
+}
+
+bool hasModerationPermissionsOver(UserPosition moderator, UserPosition poster){
+	int first = 0;
+	switch(moderator){
+	case UserPosition::Curator:
+		if(poster == UserPosition::Curator){
+			return false;//curators can't do anything to other curators
+		}
+		first = 1;
+		break;
+	case UserPosition::Bureaucrat:
+		first = 2;
+		break;
+	case UserPosition::Administrator:
+		switch(poster){//admins can't delete anything
+		default:
+			return false;
+		}
+		first = 3;
+		break;
+	case UserPosition::Senate:
+		first = 4;
+		break;
+	default:
+		return false;
+		break;
+	}
+	
+	int second = 0;
+	switch(poster){
+	case UserPosition::Curator:
+		second = 1;
+		break;
+	case UserPosition::Bureaucrat:
+		second = 2;
+		break;
+	case UserPosition::Administrator:
+		second = 3;
+		break;
+	case UserPosition::Senate:
+		second = 4;
+		break;
+	}
+	
+	return first >= second;//if they tie, let it be deleted. burs should be able to delete other burs
 }
 
 bool hasSubdatinControlPermissions(UserPosition position){

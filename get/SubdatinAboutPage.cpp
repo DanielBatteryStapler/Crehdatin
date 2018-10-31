@@ -5,7 +5,8 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 	
 	createPageHeader(fcgi, data, PageTab::About);
 	fcgi->out << "<h1>About</h1>"
-	"<h2>Subdatin Officials</h2>";
+	"<ul>"
+	"<div class='title'>Subdatin Officials</div>";
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT userId, userPosition FROM userPositions WHERE subdatinId = ?"));
 	prepStmt->setInt64(1, data->subdatinId);
@@ -16,7 +17,7 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 		do{
 			std::string userName = getUserName(data->con, res->getInt64("userId"));
 			fcgi->out << 
-			"<a href=https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << ">";
+			"<li><a href='https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << "'>";
 			
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << "<div class='bureaucratTag'>" << userName << "[B]</div>";
@@ -27,13 +28,14 @@ void createSubdatinAboutPage(FcgiData* fcgi, std::vector<std::string> parameters
 			else{
 				fcgi->out << "<div class='errorText'>an unknown error occurred!</div>";
 			}
-			fcgi->out << "</a><br>";
+			fcgi->out << "</a></li>";
 			
 		}while(res->next());
 	}
 	else{
 		fcgi->out << "<div class='errorText'><i>There are no subdatin officials...</i></div>";
 	}
+	fcgi->out << "</ul>";
 	
 	prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("SELECT description FROM subdatins WHERE id = ?"));
 	prepStmt->setInt64(1, data->subdatinId);

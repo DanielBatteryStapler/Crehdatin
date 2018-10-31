@@ -26,7 +26,7 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
 	if(res->next()){
-		fcgi->out << "<ul><title>Subdatin Positions:</title></h3>";
+		fcgi->out << "<ul><div class='title'>Subdatin Positions:</div></h3>";
 		do{
 			std::string title = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
 			fcgi->out << "<li><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "'>/" << title << "/</a> : ";
@@ -49,21 +49,19 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 	fcgi->out << "<h3>Posts:</h3>";
 	
 	prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement(
-		"SELECT id AS threadId, NULL AS commentId, subdatinId, createdTime FROM threads WHERE userId = ? UNION "
-		"SELECT NULL AS threadId, id AS commentId, subdatinId, createdTime FROM comments WHERE userId = ? ORDER BY createdTime DESC"));
+		"SELECT id AS threadId, NULL AS commentId, createdTime FROM threads WHERE userId = ? UNION "
+		"SELECT NULL AS threadId, id AS commentId, createdTime FROM comments WHERE userId = ? ORDER BY createdTime DESC"));
 	prepStmt->setInt64(1, data->userPageId);
 	prepStmt->setInt64(2, data->userPageId);
 	res = std::unique_ptr<sql::ResultSet>(prepStmt->executeQuery());
 	res->beforeFirst();
 	if(res->next()){
 		do{
-			int64_t subdatinId = res->getInt64("subdatinId");
-			std::string subdatinTitle = getSubdatinTitle(data->con, subdatinId);
 			if(!res->isNull("threadId")){
-				renderThread(fcgi->out, data, subdatinId, subdatinTitle, res->getInt64("threadId"), true, false, false, true);
+				renderThread(fcgi->out, data, res->getInt64("threadId"), UserPosition::None, ThreadFlags::isPreview | ThreadFlags::showSubdatin);
 			}
 			else if(!res->isNull("commentId")){
-				renderComment(fcgi->out, data, subdatinId, subdatinTitle, res->getInt64("commentId"), false, true, false, true, false, false, true);
+				renderComment(fcgi->out, data, res->getInt64("commentId"), true, false, UserPosition::None, CommentFlags::isPreview | CommentFlags::showSubdatin | CommentFlags::includeReplies | CommentFlags::showReplyId);
 				fcgi->out << "</div>";
 			}
 			else{
@@ -72,7 +70,7 @@ void createUserPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 		}while(res->next());
 	}
 	else{
-		fcgi->out << "<i>This User Has Made No Posts...</i>";
+		fcgi->out << "<div class='errorText'><i>No More Posts...</i></div>";
 	}
 	
 	createPageFooter(fcgi, data);

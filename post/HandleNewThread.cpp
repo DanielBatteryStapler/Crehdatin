@@ -54,11 +54,36 @@ void handleNewThread(FcgiData* fcgi, std::vector<std::string> parameters, void* 
 		break;
 	}
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createNewThreadPage(fcgi, data, "Invalid Authentication Token");
+	bool hasImage = false;
+	UploadedImageData imageData;
+	switch(getUploadedPostImage(fcgi->cgi, imageData, "postImage", Config::getMaxPostImageSize())){
+	case PostImageError::NoError:
+		hasImage = true;
+		break;
+	case PostImageError::NoFile:
+		//continue on, just don't post with an image
+		break;
+	case PostImageError::IsTooLarge:
+		createNewThreadPage(fcgi, data, "Image Is Too Large");
 		return;
+	case PostImageError::InvalidType:
+		createNewThreadPage(fcgi, data, "Image Is An Invalid Type Or Corrupted");
+		return;
+	default:
+		createNewThreadPage(fcgi, data, "Unknown Image Error");
+		return;
+	}
+	
+	std::string showThumbnail;
+	if(hasImage){
+		switch(getPostValue(fcgi->cgi, showThumbnail, "showThumbnail", Config::getMaxPostLength(), InputFlag::AllowStrictOnly)){
+		default:
+			createNewThreadPage(fcgi, data, "Unknown ShownThumbnail Checkbox Error");
+			return;
+		case InputError::NoError:
+		case InputError::IsEmpty:
+			break;
+		}
 	}
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement(
@@ -66,7 +91,7 @@ void handleNewThread(FcgiData* fcgi, std::vector<std::string> parameters, void* 
 	
 	prepStmt->setString(1, title);
 	prepStmt->setString(2, body);
-	if(data->userId == -1){
+	if(data->shownId != ""){
 		prepStmt->setString(3, data->shownId);
 		prepStmt->setNull(4, 0);
 	}
@@ -84,6 +109,10 @@ void handleNewThread(FcgiData* fcgi, std::vector<std::string> parameters, void* 
 	std::unique_ptr<sql::ResultSet> res(data->stmt->executeQuery("SELECT LAST_INSERT_ID()"));
 	res->first();
 	int newThreadId = res->getInt64(1);
+	
+	if(hasImage){
+		saveUploadedPostImage(data->con, std::move(imageData), showThumbnail.size() != 0, newThreadId, -1);//add the image to the thread
+	}
 	
 	sendStatusHeader(fcgi->out, StatusCode::SeeOther);
 	sendLocationHeader(fcgi->out, "https://" + WebsiteFramework::getDomain() + "/d/" + percentEncode(parameters[0]) + "/thread/" + std::to_string(newThreadId));

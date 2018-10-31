@@ -23,9 +23,11 @@
 #include "DirectoryHandles.h"
 #include "BackgroundHandle.h"
 
-#include "Captcha.h"
-
 #include "get/MainPage.h"
+#include "Captcha.h"
+#include "get/PostImage.h"
+#include "get/PostImageThumbnail.h"
+
 #include "get/LoginPage.h"
 #include "get/LogoutPage.h"
 #include "get/CrehdatinControlPanelPage.h"
@@ -51,12 +53,14 @@
 #include "post/HandleSetCssTheme.h"
 #include "post/HandleChangePassword.h"
 #include "post/HandleSetSubdatinListing.h"
+#include "post/HandleSetShownId.h"
 
 #include "post/HandleAddAdministrator.h"
 #include "post/HandleRemoveAdministrator.h"
 #include "post/HandleAddSubdatin.h"
 #include "post/HandleRemoveSubdatin.h"
 #include "post/HandleSetDefaultSubdatinListing.h"
+#include "post/HandleBanIp.h"
 
 #include "post/HandleAddCurator.h"
 #include "post/HandleSetCurator.h"
@@ -72,6 +76,7 @@
 #include "post/HandleDeleteThread.h"
 #include "post/HandleReportComment.h"
 #include "post/HandleDeleteComment.h"
+#include "post/HandleHideThumbnails.h"
 #include "post/HandleDismissReports.h"
 
 #include "RequestStartHandle.h"
@@ -85,7 +90,6 @@ std::function<void(FcgiData*, std::vector<std::string>, void*)> createRedirectPa
 }
 
 int main(int argc, char** argv){
-	
 	Magick::InitializeMagick(nullptr);
 	
 	if(argc > 1){
@@ -112,11 +116,11 @@ int main(int argc, char** argv){
 			return 0;
 		}
 		
-		
-		
+		#ifdef DEBUG
 		WebsiteFramework::setDomain("website.cloud.karagory.com");
-		//WebsiteFramework::setDomain("crehdatin.karagory.com");
-		
+		#else
+		WebsiteFramework::setDomain("crehdatin.karagory.com");
+		#endif // DEBUG
 		WebsiteFramework::setThreadStartHandle([](std::size_t id)->void*{
 			RequestData* data = new RequestData;
 			
@@ -163,6 +167,9 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addGetHandleMap("/", createMainPage);
 		WebsiteFramework::addGetHandleMap("/captcha/*", createCaptchaHandle);
+		WebsiteFramework::addGetHandleMap("/postImages/*", createPostImageHandle);
+		WebsiteFramework::addGetHandleMap("/postImageThumbnails/*", createPostImageThumbnailHandle);
+		
 		WebsiteFramework::addGetHandleMap("/login", createLoginPageHandle);
 		WebsiteFramework::addGetHandleMap("/logout", createLogoutPageHandle);
 		WebsiteFramework::addGetHandleMap("/createAccount", createRedirectPageHandle("/login"));
@@ -185,6 +192,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/setCssTheme", handleSetCssTheme);
 		WebsiteFramework::addPostHandleMap("/changePassword", handleChangePassword);
 		WebsiteFramework::addPostHandleMap("/setSubdatinListing", handleSetSubdatinListing);
+		WebsiteFramework::addPostHandleMap("/setShownId", handleSetShownId);
 		
 		WebsiteFramework::addPostHandleMap("/d/*/newThread", handleNewThread);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/newComment", handleNewComment);
@@ -194,6 +202,7 @@ int main(int argc, char** argv){
 		WebsiteFramework::addPostHandleMap("/addSubdatin", handleAddSubdatin);
 		WebsiteFramework::addPostHandleMap("/d/*/removeSubdatin", handleRemoveSubdatin);
 		WebsiteFramework::addPostHandleMap("/setDefaultSubdatinListing", handleSetDefaultSubdatinListing);
+		WebsiteFramework::addPostHandleMap("/banIp", handleBanIp);
 		
 		WebsiteFramework::addPostHandleMap("/d/*/addCurator", handleAddCurator);
 		WebsiteFramework::addPostHandleMap("/d/*/setCurator", handleSetCurator);
@@ -207,8 +216,11 @@ int main(int argc, char** argv){
 		
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/reportThread", handleReportThread);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/deleteThread", handleDeleteThread);
+		WebsiteFramework::addPostHandleMap("/d/*/thread/*/hideThumbnails", handleHideThumbnails);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/reportComment", handleReportComment);
 		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/deleteComment", handleDeleteComment);
+		WebsiteFramework::addPostHandleMap("/d/*/thread/*/comment/*/hideThumbnails", handleHideThumbnails);
+		
 		WebsiteFramework::addPostHandleMap("/d/*/dismissReports", handleDismissReports);
 		
 		WebsiteFramework::run(":8222", std::thread::hardware_concurrency() * 8, backgroundHandle);

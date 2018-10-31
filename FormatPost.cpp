@@ -61,7 +61,6 @@ std::string HyperLinkFormat::finishExclusiveFormat(const std::string& start, con
 
 //=====
 
-
 GreenTextFormat::GreenTextFormat(){
 	isExclusive = false;
 }
@@ -90,7 +89,7 @@ std::string GreenTextFormat::endTag(const std::string& buffer){
 	return "</div>" + buffer;
 }
 
-//====
+//=====
 
 ReplyFormat::ReplyFormat(){
 	isExclusive = true;
@@ -113,16 +112,15 @@ int ReplyFormat::validEnd(const std::string& buffer, std::size_t i){
 
 std::string ReplyFormat::finishExclusiveFormat(const std::string& start, const std::string& end, const std::string& internal, RequestData* data, bool includeReplies){
 	if(includeReplies){
-		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT subdatinId, threadId FROM comments WHERE id = ?"));
+		std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id FROM comments WHERE id = ?"));
 		prepStmt->setString(1, internal);
 		std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 		
 		res->beforeFirst();
 		if(res->next()){
-			std::string subdatinTitle = getSubdatinTitle(data->con, res->getInt64("subdatinId"));
 			std::ostringstream commentStream;
 			MarkupOutStream markupStream(commentStream);
-			renderComment(markupStream, data, res->getInt64("subdatinId"), subdatinTitle, std::stoll(internal), false, true, true, true, false, false, true, false);
+			renderComment(markupStream, data, res->getInt64("id"), true, false, UserPosition::None, CommentFlags::showReplyId | CommentFlags::showPoster | CommentFlags::isPreview | CommentFlags::showSubdatin);
 			std::string commentHtml = commentStream.str();
 			data->htmlId++;
 			return ("<div class='replyDropDown'><input type='checkbox' id='replyDropDown" + std::to_string(data->htmlId) + "'><label for='replyDropDown" + std::to_string(data->htmlId) + "' class='replyDropBtn'>" + start + internal + "</label>" + commentHtml + "</div></div>" + end);
@@ -206,6 +204,14 @@ MarkupString formatUserPostBody(RequestData* data, std::string body, bool canRai
 			}
 		}
 		else{
+			if(body[i] == '\\'){
+				i++;
+				if(i >= body.size()){
+					break;
+				}
+				output += body[i];
+				continue;
+			}
 			if(!formatStack.empty()){
 				int length = formatStack.top()->validEnd(body, i);
 				if(length != -1){

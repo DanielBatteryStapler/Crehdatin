@@ -3,7 +3,7 @@
 void handleDeleteThread(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 		
-	if(!hasModerationPermissions(getEffectiveUserPosition(data->con, data->userId, data->subdatinId))){
+	if(!hasModerationPermissionsOver(getEffectiveUserPosition(data->con, data->userId, data->subdatinId), getThreadPosterPosition(data->con, data->threadId))){
 		createInvalidPermissionsErrorPage(fcgi, data);
 		return;
 	}

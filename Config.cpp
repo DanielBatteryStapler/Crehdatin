@@ -2,7 +2,6 @@
 
 std::string Config::getSqlAddress(){
 	return "127.0.0.1:3306";
-	//return "192.168.1.142:3306";
 }
 
 std::string Config::getSqlUserName(){
@@ -10,6 +9,14 @@ std::string Config::getSqlUserName(){
 }
 
 std::string Config::getSqlPassword(){
+	/*
+	static std::string password;
+	if(password.size() == 0){
+		std::cout << "Input SQL password for user \"" << getSqlUserName() << "\":";
+		std::getline(std::cin, password);
+	}
+	return password;
+	*/
 	return "password";
 }
 
@@ -18,8 +25,11 @@ std::string Config::getSqlDatabaseName(){
 }
 
 boost::filesystem::path Config::getCrehdatinDataDirectory(){
-	//return boost::filesystem::path("/home/server/webServer/crehdatinData");
+	#ifdef DEBUG
 	return boost::filesystem::path("/home/daniel/Projects/crehdatinData");
+	#else
+	return boost::filesystem::path("/home/danielbatterystapler/webServer/crehdatinData");
+	#endif // DEBUG
 }
 
 std::size_t Config::getUniqueTokenLength(){
@@ -35,11 +45,15 @@ std::size_t Config::getMaxPasswordLength(){
 }
 
 std::size_t Config::getMaxPostLength(){
-	return 2048;
+	return 65535;
 }
 
 std::size_t Config::getMaxTitleLength(){
 	return 64;
+}
+
+std::size_t Config::getMaxPostImageSize(){
+	return 4000000;//4MB
 }
 
 int64_t Config::anonPostingTimeout(){

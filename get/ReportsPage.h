@@ -20,6 +20,4 @@
 #include "ErrorPages.h"
 
 void createReportsPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createReportedThread(FcgiData* fcgi, RequestData* data, int64_t threadId);
-void createReportedComment(FcgiData* fcgi, RequestData* data, int64_t threadId, int64_t commentId);
 void createReport(FcgiData* fcgi, RequestData* data, std::string& reason, std::string& ip, int64_t userId);

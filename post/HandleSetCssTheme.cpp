@@ -11,14 +11,15 @@ void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void
 	std::string theme;
 	switch(getPostValue(fcgi->cgi, theme, "theme", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly)){
 	default:
-		createSettingsPage(fcgi, data, "Invalid Theme");
+		createGenericErrorPage(fcgi, data, "Invalid Theme");
 		return;
 	case InputError::NoError:
 		break;
 	}
 	
-	if(theme != "dark" && theme != "light" && theme != "aesthicc" && theme != "anime" && theme != "synthwave"){
-		createSettingsPage(fcgi, data, "Invalid Theme");
+	if(theme != "light" && theme != "gray" && theme != "dark" && theme != "flatLight" && theme != "flatDark" && theme != "meme"){
+		createGenericErrorPage(fcgi, data, "Invalid Theme");
+		return;
 	}
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("UPDATE users SET cssTheme=? WHERE id=?"));

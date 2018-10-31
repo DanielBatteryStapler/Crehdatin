@@ -11,26 +11,30 @@ void createSettingsPageHandle(FcgiData* fcgi, std::vector<std::string> parameter
 	createSettingsPage(fcgi, data);
 }
 
-void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError, std::string passwordError, std::string subdatinListError){
+void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string passwordError, std::string subdatinListError){
 	createPageHeader(fcgi, data, PageTab::Settings);
 	
 	fcgi->out << "<h1>Settings</h1>"
 	"<h3>Username: " << data->userName << "</h3>"
 	"<h3>Current Theme: ";
-	if(data->cssTheme == "dark"){
-		fcgi->out << "Dark";
-	}
-	else if(data->cssTheme == "light"){
+	
+	if(data->cssTheme == "light"){
 		fcgi->out << "Light";
 	}
-	else if(data->cssTheme == "aesthicc"){
-		fcgi->out << "Aesthicc";
+	else if(data->cssTheme == "gray"){
+		fcgi->out << "Gray";
 	}
-	else if(data->cssTheme == "anime"){
-		fcgi->out << "Animu";
+	else if(data->cssTheme == "dark"){
+		fcgi->out << "Dark";
 	}
-	else if(data->cssTheme == "synthwave"){
-		fcgi->out << "Synthwave";
+	else if(data->cssTheme == "flatLight"){
+		fcgi->out << "Flat Light";
+	}
+	else if(data->cssTheme == "flatDark"){
+		fcgi->out << "Flat Dark";
+	}
+	else if(data->cssTheme == "meme"){
+		fcgi->out << "Meme";
 	}
 	else{
 		fcgi->out << "ERROR";
@@ -40,26 +44,21 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setCssTheme' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<select name='theme'>"
-	"<option value='dark'>Dark</option>"
 	"<option value='light'>Light</option>"
-	"<option value='aesthicc'>Aesthicc</option>"
-	"<option value='anime'>Animu</option>"
-	"<option value='synthwave'>Synthwave</option>"
+	"<option value='gray'>Gray</option>"
+	"<option value='dark'>Dark</option>"
+	"<option value='flatLight'>Flat Light</option>"
+	"<option value='flatDark'>Flat Dark</option>"
+	"<option value='meme'>Meme</option>"
 	"</select>"
 	"<button type='submit'>"
 	"Change Theme"
 	"</button>"
 	"</form>";
-	if(cssError != ""){
-		fcgi->out << 
-		"<p><div class='errorText'>"
-		<< cssError <<
-		"</div></p>";
-	}
 	
 	
 	fcgi->out << "<br><ul>"
-	"<title>Your Subdatins</title>";
+	"<div class='title'>Your Subdatins</div>";
 	std::size_t numberOfSubdatins = 0;
 	{
 		std::size_t num = 0;
@@ -120,6 +119,29 @@ void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError,
 	"</form>";
 	if(passwordError != ""){
 		fcgi->out << "<p><div class='errorText'>" << passwordError << "</div></p>";
+	}
+	
+	fcgi->out << "<h2>Shown Id</h2>";
+	if(data->shownId == ""){
+		fcgi->out << "Posting with " << getFormattedUserString(data->con, data->userId, -1, false);
+		fcgi->out << "<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setShownId' accept-charset='UTF-8'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<input type='hidden' name='anonFlag' value='1'>"
+		"<button type='submit'>Use Id</button>"
+		"</form>";
+	}
+	else{
+		fcgi->out << "Posting with id: " << data->shownId.substr(0, 8);
+		fcgi->out << "<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setShownId' accept-charset='UTF-8'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<input type='hidden' name='anonFlag' value='0'>"
+		"<button type='submit'>Use UserName</button>"
+		"</form>";
+		fcgi->out << "<form method='post' action='https://" << WebsiteFramework::getDomain() << "/setShownId' accept-charset='UTF-8'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<input type='hidden' name='anonFlag' value='1'>"
+		"<button type='submit'>Use Different Id</button>"
+		"</form>";
 	}
 	
 	createPageFooter(fcgi, data);

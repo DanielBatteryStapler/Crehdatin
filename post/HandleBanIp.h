@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "../Config.h"
 
 #include <cppconn/driver.h>
@@ -12,10 +10,10 @@
 
 #include <WebsiteFramework/WebsiteFramework.h>
 #include <WebsiteFramework/InputHandler.h>
+#include <WebsiteFramework/Response.h>
 
 #include "../RequestData.h"
 #include "../UserPermissions.h"
 #include "../get/ErrorPages.h"
-#include "../PostImageHandlers.h"
 
-void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void handleBanIp(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

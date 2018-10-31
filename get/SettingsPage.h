@@ -15,4 +15,4 @@
 #include "ErrorPages.h"
 
 void createSettingsPageHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
-void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string cssError = "", std::string passwordError = "", std::string subdatinListError = "");
+void createSettingsPage(FcgiData* fcgi, RequestData* data, std::string passwordError = "", std::string subdatinListError = "");

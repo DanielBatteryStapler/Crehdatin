@@ -2,10 +2,10 @@
 
 void printIfSelected(FcgiData* fcgi, PageTab selected, PageTab correct){
 	if(selected == correct){
-		fcgi->out << "<div class='selectedTab'>";
+		fcgi->out << "<li id='selectedTab'>";
 	}
 	else{
-		fcgi->out << "<div class='tab'>";
+		fcgi->out << "<li>";
 	}
 }
 
@@ -30,9 +30,9 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	"<head>"
 	"<link rel='stylesheet' type='text/css' href='https://" << WebsiteFramework::getDomain() << "/static/" << data->cssTheme << ".css'>"
 	"<meta charset='UTF-8'>"
-	"<meta name='viewport' content='width=device-width; maximum-scale=1; minimum-scale=1;' />"
+	"<meta name='viewport' content='width=device-width, maximum-scale=1, minimum-scale=1, initial-scale=1' />"
 	"<title>"
-	"Creh-Datin"
+	<< getPageTitle(fcgi, data, selectedTab) <<
 	"</title>"
 	"</head>"
 	"<body>"
@@ -61,97 +61,95 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	fcgi->out <<
 	"</header>";
 	//tab bar
-	fcgi->out << "<div id='tabbar'>";
+	fcgi->out << "<div id='tabbarDropDown'>"
+	"<input type='checkbox' id='tabbarDropDownCheckBox'>"
+	"<label id='tabbarButton' for='tabbarDropDownCheckBox'>"//button for use on phones
+	"Tabs"
+	"</label>"
+	"<ul id='tabbar'>";
 	if(data->subdatinId == -1){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/'>";
 			printIfSelected(fcgi, selectedTab, PageTab::Main);
-			fcgi->out << "Crehdatin</div></a>";
+			fcgi->out << "Crehdatin</li></a>";
 			
 			if(selectedTab == PageTab::User){
-				fcgi->out << "<div class='selectedTab'>User</div>";
+				fcgi->out << "<li id='selectedTab'>User</li>";
 			}
 			
 			if(hasAdministrationControlPermissions(effectiveUserPosition)){
 				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/controlPanel'>";
 				printIfSelected(fcgi, selectedTab, PageTab::SiteControl);
-				fcgi->out << "Site Control</div></a>";
+				fcgi->out << "Site Control</li></a>";
 			}
 	}
 			
 	if(data->subdatinId != -1){
 		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'>";
 		printIfSelected(fcgi, selectedTab, PageTab::ThreadList);
-		fcgi->out << "Listing</div></a>";
+		fcgi->out << "Listing</li></a>";
 		
 		if(selectedTab == PageTab::Thread){
-			fcgi->out << "<div class='selectedTab'>Thread</div>";
+			fcgi->out << "<li id='selectedTab'>Thread</li>";
 		}
 		
 		if(selectedTab == PageTab::Comment){
-			fcgi->out << "<div class='selectedTab'>Comment</div>";
+			fcgi->out << "<li id='selectedTab'>Comment</li>";
 		}
-		if(selectedTab != PageTab::Thread && selectedTab != PageTab::Comment){
-			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/about'>";
-			printIfSelected(fcgi, selectedTab, PageTab::About);
-			fcgi->out << "About</div></a>";
-			
-			if(data->subdatinId != -1 && (!postLocked || hasModerationPermissions(effectiveUserPosition))){
-				fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/newThread'>";
-				printIfSelected(fcgi, selectedTab, PageTab::NewThread);
-				fcgi->out << "New Thread</div></a>";
-			}
+		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/about'>";
+		printIfSelected(fcgi, selectedTab, PageTab::About);
+		fcgi->out << "About</li></a>";
+		
+		if(data->subdatinId != -1 && (!postLocked || hasModerationPermissions(effectiveUserPosition))){
+			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/newThread'>";
+			printIfSelected(fcgi, selectedTab, PageTab::NewThread);
+			fcgi->out << "New Thread</li></a>";
 		}
 	}
 		
-	if(data->userId == -1){
-		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/login'>";
-		printIfSelected(fcgi, selectedTab, PageTab::Login);
-		fcgi->out << "Login</div></a>";
-	}
-	else{
-		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/settings'>";
-		printIfSelected(fcgi, selectedTab, PageTab::Settings);
-		fcgi->out << "Settings</div></a>";
-	}
-		
-		
-	if(data->subdatinId == -1){
+	if(data->subdatinId != -1){
 		if(hasModerationPermissions(effectiveUserPosition)){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/reports'>";
 			printIfSelected(fcgi, selectedTab, PageTab::Reports);
-			fcgi->out << "Reports</div></a>";
+			fcgi->out << "Reports</li></a>";
 		}
 		
 		if(hasSubdatinControlPermissions(effectiveUserPosition)){
 			fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/controlPanel'>";
 			printIfSelected(fcgi, selectedTab, PageTab::ControlPanel);
-			fcgi->out << "Control Panel</div></a>";
+			fcgi->out << "Control Panel</li></a>";
 		}
 	}
 	if(selectedTab == PageTab::Error){
-		fcgi->out << "<div class='selectedTab'>Error</div>";
+		fcgi->out << "<li id='selectedTab'>Error</li>";
 	}
 	
 	if(data->userId == -1){
 		fcgi->out <<
-		"<div class='tab'>"
-		"Id: " << data->shownId << 
-		"</div>";
+		"<li>"
+		"Id: " << data->shownId.substr(0, 8) << 
+		"</li>";
+		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/login'>";
+		printIfSelected(fcgi, selectedTab, PageTab::Login);
+		fcgi->out << "Login</li></a>";
 	}
 	else{
 		fcgi->out <<
 		"<a href='https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(data->userName) << "'>"
-		"<div class='tab'>"
-		""  << data->userName << ""
-		"</div>"
+		"<li>"
+		<< data->userName <<
+		"</li>"
 		"</a>";
 		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/logout'>";
 		printIfSelected(fcgi, selectedTab, PageTab::Logout);
-		fcgi->out << "Logout</div></a>";
+		fcgi->out << "Logout</li></a>";
+		fcgi->out << "<a href='https://" << WebsiteFramework::getDomain() << "/settings'>";
+		printIfSelected(fcgi, selectedTab, PageTab::Settings);
+		fcgi->out << "Settings</li></a>";
 	}
 	
 	
-	fcgi->out << "</div>";
+	fcgi->out << "</div>"
+	"</div>";
 	
 	//Subdatin list
 	fcgi->out << 
@@ -240,7 +238,42 @@ void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
 	"<main>";
 }
 
-
+std::string getPageTitle(FcgiData* fcgi, RequestData* data, PageTab selectedTab){
+	switch(selectedTab){
+	case None:
+		return "Creh-Datin";
+	case Main:
+		return "Creh-Datin - Main";
+	case User:
+		return "Creh-Datin - User Page";
+	case Login:
+		return "Creh-Datin - Login";
+	case Logout:
+		return "Creh-Datin - Logout";
+	case Settings:
+		return "Creh-Datin - User Settings";
+	case SiteControl:
+		return "Creh-Datin - Site Control";
+	case Error:
+		return "Creh-Datin - Error";
+	case ThreadList:
+		return "Creh-Datin - Thread Listings";
+	case Thread:
+		return "Creh-Datin - Thread";
+	case Comment:
+		return "Creh-Datin - Comment";
+	case About:
+		return "Creh-Datin - About";
+	case NewThread:
+		return "Creh-Datin - New Thread";
+	case Reports:
+		return "Creh-Datin - Reports";
+	case ControlPanel:
+		return "Creh-Datin - Subdatin Control Panel";
+	default:
+		return "Creh-Datin - Title Error";
+	}
+}
 
 
 

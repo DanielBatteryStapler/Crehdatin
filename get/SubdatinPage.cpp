@@ -15,7 +15,7 @@ void createSubdatinPage(FcgiData* fcgi, std::vector<std::string> parameters, voi
 	}
 	else{
 		do{
-			renderThread(fcgi->out, data, data->subdatinId, parameters[0], res->getInt64("id"), true);
+			renderThread(fcgi->out, data, res->getInt64("id"), UserPosition::None, ThreadFlags::isPreview);
 		}while(res->next());
 	}
 	createPageFooter(fcgi, data);

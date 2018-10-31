@@ -9,9 +9,10 @@
 #include <cppconn/prepared_statement.h>
 
 #include <memory>
+#include <boost/filesystem.hpp>
 
 void deleteSubdatin(sql::Connection* con, std::size_t id);
 void deleteThread(sql::Connection* con, std::size_t id);
 void deleteComment(sql::Connection* con, std::size_t id);
 void deleteImages(sql::Connection* con, std::size_t threadId, std::size_t commentId);
-void deleteImage(sql::Connection* con, std::size_t id);
+void deleteImage(sql::Connection* con, std::size_t id, std::string fileName);

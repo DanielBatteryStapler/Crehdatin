@@ -14,7 +14,7 @@ bool requestStartHandle(FcgiData* fcgi, void* _data){
 	data->userId = -1;
 	data->authToken = "";
 	data->shownId = "";
-	data->cssTheme = "dark";
+	data->cssTheme = "light";
 	data->blocked = false;
 	data->lastPostTime = 0;
 	
@@ -90,7 +90,7 @@ bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken)
 			data->userId = res->getInt64("userId");
 			
 			std::unique_ptr<sql::PreparedStatement> prepStmtB(data->con->prepareStatement("SELECT " 
-			"userName, cssTheme, UNIX_TIMESTAMP(lastPostTime) "
+			"userName, shownId, cssTheme, UNIX_TIMESTAMP(lastPostTime)"
 			"FROM users "
 			"WHERE id = ?"));
 			
@@ -102,6 +102,10 @@ bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken)
 			
 			if(resB->next()){
 				data->userName = resB->getString("userName");
+				
+				if(resB->isNull("shownId") == false){
+					data->shownId = resB->getString("shownId");
+				}
 				
 				if(resB->isNull("cssTheme") == false){
 					data->cssTheme = resB->getString("cssTheme");
@@ -120,7 +124,7 @@ bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken)
 				return false;
 			}
 		}
-		if(!res->isNull("shownId")){
+		else{
 			data->shownId = res->getString("shownId");
 		}
 	}
@@ -132,45 +136,20 @@ bool getSessionData(FcgiData* fcgi, RequestData* data, std::string sessionToken)
 }
 
 void createNewSession(FcgiData* fcgi, RequestData* data){
-	data->stmt->execute("BEGIN");
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("INSERT INTO sessions "
-	"(sessionToken, authToken, shownId, ip) SELECT ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS "
-	"(SELECT id FROM sessions WHERE sessionToken=? OR authToken=? OR shownId=?)"));
+	"(sessionToken, authToken, shownId, ip) VALUES (?, ?, ?, ?)"));
 	
-	int64_t rowCount;
+	data->sessionToken = generateRandomToken();
+	data->authToken = generateRandomToken();
+	data->shownId = generateRandomToken();
+	data->captchaCode = generateCaptchaText();
+	data->captchaSeed = generateCaptchaSeed();
 	
-	while(true){
-		data->sessionToken = generateRandomToken();
-		data->authToken = generateRandomToken();
-		data->shownId = generateRandomToken().substr(0, 8);
-		data->captchaCode = generateCaptchaText();
-		data->captchaSeed = generateCaptchaSeed();
-		
-		prepStmt->setString(1, data->sessionToken);
-		prepStmt->setString(2, data->authToken);
-		prepStmt->setString(3, data->shownId);
-		
-		prepStmt->setString(4, fcgi->env->getRemoteAddr());
-		
-		prepStmt->setString(5, data->sessionToken);
-		prepStmt->setString(6, data->authToken);
-		prepStmt->setString(7, data->shownId);
-		prepStmt->execute();
-		
-		std::unique_ptr<sql::ResultSet> res(data->stmt->executeQuery("SELECT ROW_COUNT()"));
-		
-		res->first();
-		
-		rowCount = res->getInt64(1);
-		if(rowCount == 0){
-			data->stmt->execute("ROLLBACK");
-			continue;
-		}
-		else{
-			data->stmt->execute("COMMIT");
-			break;
-		}
-	}
+	prepStmt->setString(1, data->sessionToken);
+	prepStmt->setString(2, data->authToken);
+	prepStmt->setString(3, data->shownId);
+	prepStmt->setString(4, fcgi->env->getRemoteAddr());
+	prepStmt->execute();
 	
 	createNewCaptchaSession(data);
 }

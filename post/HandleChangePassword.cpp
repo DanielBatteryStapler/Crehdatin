@@ -11,13 +11,13 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 	std::string oldPassword;
 	switch(getPostValue(fcgi->cgi, oldPassword, "oldPassword", Config::getMaxPasswordLength(), InputFlag::DontCheckInputContents)){
 	default:
-		createSettingsPage(fcgi, data, "", "Unknown Old Password Error");
+		createSettingsPage(fcgi, data, "Unknown Old Password Error");
 		return;
 	case InputError::IsTooLarge:
-		createSettingsPage(fcgi, data, "", "Old Password Too Long");
+		createSettingsPage(fcgi, data, "Old Password Too Long");
 		return;
 	case InputError::IsEmpty:
-		createSettingsPage(fcgi, data, "", "Old Password Cannot Be Empty");
+		createSettingsPage(fcgi, data, "Old Password Cannot Be Empty");
 		return;
 	case InputError::NoError:
 		break;
@@ -26,13 +26,13 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 	std::string newPassword;
 	switch(getPostValue(fcgi->cgi, newPassword, "newPassword", Config::getMaxPasswordLength(), InputFlag::DontCheckInputContents)){
 	default:
-		createSettingsPage(fcgi, data, "", "Unknown New Password Error");
+		createSettingsPage(fcgi, data, "Unknown New Password Error");
 		return;
 	case InputError::IsTooLarge:
-		createSettingsPage(fcgi, data, "", "New Password Too Long");
+		createSettingsPage(fcgi, data, "New Password Too Long");
 		return;
 	case InputError::IsEmpty:
-		createSettingsPage(fcgi, data, "", "New Password Cannot Be Empty");
+		createSettingsPage(fcgi, data, "New Password Cannot Be Empty");
 		return;
 	case InputError::NoError:
 		break;
@@ -41,20 +41,20 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 	std::string repeatNewPassword;
 	switch(getPostValue(fcgi->cgi, repeatNewPassword, "repeatNewPassword", Config::getMaxPasswordLength(), InputFlag::DontCheckInputContents)){
 	default:
-		createSettingsPage(fcgi, data, "", "Unknown Repeated Password Error");
+		createSettingsPage(fcgi, data, "Unknown Repeated Password Error");
 		return;
 	case InputError::IsTooLarge:
-		createSettingsPage(fcgi, data, "", "Repeated Password Too Long");
+		createSettingsPage(fcgi, data, "Repeated Password Too Long");
 		return;
 	case InputError::IsEmpty:
-		createSettingsPage(fcgi, data, "", "Repeated Password Cannot Be Empty");
+		createSettingsPage(fcgi, data, "Repeated Password Cannot Be Empty");
 		return;
 	case InputError::NoError:
 		break;
 	}
 	
 	if(newPassword != repeatNewPassword){
-		createSettingsPage(fcgi, data, "", "Passwords Do Not Match");
+		createSettingsPage(fcgi, data, "Passwords Do Not Match");
 		return;
 	}
 	
@@ -69,7 +69,7 @@ void handleChangePassword(FcgiData* fcgi, std::vector<std::string> parameters, v
 		std::string passwordSalt = res->getString("passwordSalt");
 		
 		if(passwordHash != generateSecureHash(oldPassword, passwordSalt)){
-			createSettingsPage(fcgi, data, "", "Incorrect Current Password");
+			createSettingsPage(fcgi, data, "Incorrect Current Password");
 			return;
 		}
 	}

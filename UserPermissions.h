@@ -19,5 +19,6 @@ enum class UserPosition{None, Error, Curator, Bureaucrat, Administrator, Senate}
 UserPosition getEffectiveUserPosition(sql::Connection* con, int64_t userId, int64_t subdatinId = -1);
 bool hasRainbowTextPermissions(UserPosition position);
 bool hasModerationPermissions(UserPosition position);
+bool hasModerationPermissionsOver(UserPosition moderator, UserPosition poster);
 bool hasSubdatinControlPermissions(UserPosition position);
 bool hasAdministrationControlPermissions(UserPosition position);

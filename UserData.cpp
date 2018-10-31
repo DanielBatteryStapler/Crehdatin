@@ -1,7 +1,7 @@
 #include "UserData.h"
 
 std::string getUserName(sql::Connection* con, int64_t userId){
-	std::string userName = "<nonexistent>";
+	std::string userName = "<removed>";
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(con->prepareStatement("SELECT userName FROM users WHERE id = ?"));
 	prepStmt->setInt64(1, userId);
@@ -78,15 +78,10 @@ MarkupString getFormattedUserString(sql::Connection* con, int64_t userId, int64_
 }
 
 MarkupString getFormattedPosterString(sql::Connection* con, std::string anonId, int64_t userId, int64_t subdatinId, bool putUserLink){
-	if(userId != -1){
+	if(anonId == ""){
 		return "user: " + getFormattedUserString(con, userId, subdatinId, putUserLink);
 	}
 	else{
-		if(anonId.size() == 0){
-			return "user: <removed>";
-		}
-		else{
-			return "id: " + anonId;
-		}
+		return "id: " + anonId.substr(0, 8);//only show the first 8 characters to users
 	}
 }

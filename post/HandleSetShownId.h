@@ -12,10 +12,8 @@
 
 #include <WebsiteFramework/WebsiteFramework.h>
 #include <WebsiteFramework/InputHandler.h>
+#include <WebsiteFramework/Cryptography.h>
 
-#include "../RequestData.h"
-#include "../UserPermissions.h"
 #include "../get/ErrorPages.h"
-#include "../PostImageHandlers.h"
 
-void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void handleSetShownId(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

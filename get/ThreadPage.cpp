@@ -1,5 +1,14 @@
 #include "ThreadPage.h"
 
+namespace{
+	inline bool flagContains(ThreadFlags a, ThreadFlags b){
+		return static_cast<bool>(a & b);
+	}
+	inline bool flagContains(CommentFlags a, CommentFlags b){
+		return static_cast<bool>(a & b);
+	}
+};
+
 void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _data){
 	RequestData* data = (RequestData*)_data;
 	
@@ -7,17 +16,14 @@ void createThreadPage(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	
 	createPageHeader(fcgi, data, PageTab::Thread);
 	
-	bool canModerate = hasModerationPermissions(userPosition);
-	bool canControl = hasSubdatinControlPermissions(userPosition);
+	bool canReply = renderThread(fcgi->out, data, data->threadId, userPosition, ThreadFlags::none);
 	
-	bool canReply = renderThread(fcgi->out, data, data->subdatinId, parameters[0], data->threadId, false, canModerate, canControl);
-	
-	createCommentLine(fcgi->out, data, canModerate, canReply, parameters[0]);
+	createCommentLine(fcgi->out, data, canReply, userPosition, parameters[0]);
 	
 	createPageFooter(fcgi, data);
 }
 
-void createCommentLine(MarkupOutStream& fcgiOut, RequestData* data, bool canModerate, bool canReply, std::string& subdatinTitle, int64_t layer, int64_t parentId){
+void createCommentLine(MarkupOutStream& fcgiOut, RequestData* data, bool canReply, UserPosition position, std::string& subdatinTitle, int64_t layer, int64_t parentId){
 	std::unique_ptr<sql::PreparedStatement> prepStmt;
 		
 	if(parentId == -1){
@@ -36,28 +42,28 @@ void createCommentLine(MarkupOutStream& fcgiOut, RequestData* data, bool canMode
 	res->beforeFirst();
 	if(res->next()){
 		if(layer >= 10){
-		fcgiOut << (layer%2==0?"<div class='comment even'>":"<div class='comment odd'>")
-		<< "<div class='commentText'>"
-		"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(parentId) << "'>"
-		"View Replies"
-		"</a>"
-		"</div>";
-	}
-	else{
-		do{
-			renderComment(fcgiOut, data, data->subdatinId, subdatinTitle, res->getInt64("id"), layer%2==0, false, true, true, canReply, canModerate);
+			fcgiOut << (layer%2==0?"<div class='comment even'>":"<div class='comment odd'>")
+			<< "<div class='commentText'>"
+			"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(parentId) << "'>"
+			"View Replies"
+			"</a>"
+			"</div>";
+		}
+		else{
+			do{
+				renderComment(fcgiOut, data, res->getInt64("id"), layer%2==0, canReply, position, CommentFlags::showPoster | CommentFlags::showReplyId | CommentFlags::includeReplies);
 
-			createCommentLine(fcgiOut, data, canModerate, canReply, subdatinTitle, layer + 1, res->getInt64("id"));
+				createCommentLine(fcgiOut, data, canReply, position, subdatinTitle, layer + 1, res->getInt64("id"));
 
-			fcgiOut << "</div>";
-		}while(res->next());
-	}
+				fcgiOut << "</div>";
+			}while(res->next());
+		}
 	}
 }
 
 
-bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t threadId, bool isPreview, bool canModerate, bool canControl, bool showSubdatin){
-	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, body, anonId, userId, locked, stickied FROM threads WHERE id = ?"));
+bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::size_t threadId, UserPosition position, ThreadFlags flags){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT subdatinId, title, body, anonId, userId, locked, stickied FROM threads WHERE id = ?"));
 	prepStmt->setInt64(1, threadId);
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
@@ -67,11 +73,14 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 		return false;
 	}
 	
+	int64_t subdatinId = res->getInt64("subdatinId");
+	std::string subdatinTitle = getSubdatinTitle(data->con, subdatinId);
+	
 	bool postLocked;
 	bool commentLocked;
 	getSubdatinLockedData(data->con, subdatinId, postLocked, commentLocked);
 	
-	bool canReply = (!res->getBoolean("locked") && !commentLocked) || canModerate;
+	bool canReply = (!res->getBoolean("locked") && !commentLocked) || hasModerationPermissions(position);
 	
 	std::string anonId;
 	if(!res->isNull("anonId")){
@@ -82,68 +91,83 @@ bool renderThread(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subd
 		userId = res->getInt64("userId");
 	}
 	
-	if(isPreview){
+	if(flagContains(ThreadFlags::isPreview, flags)){
 		fcgiOut << 
 		"<a style='display:block' href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/thread/" << std::to_string(threadId) << "'>"
-		"<div class='thread'>"
-			"<div class='title'>" << res->getString("title") << "</div>"
-			"<div class='extraPostInfo'>";
-				if(showSubdatin){
-					fcgiOut << "<li>/" << subdatinTitle << "/</li>";
-				}
-				fcgiOut << "<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId, false) << "</li>"
-				"<li>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</li>"
-				"<li>" << getFormattedThreadPostTime(data->con, threadId) << "</li>"
-				"<li>" << getFormattedThreadBumpTime(data->con, threadId) << "</li>";
-				if(res->getBoolean("stickied")){
-					fcgiOut << "<li>Stickied</li>";
-				}
-				if(res->getBoolean("locked")){
-					fcgiOut << "<li>Locked</li>";
-				}
-			fcgiOut << "</div>"
-			"</div>"
+		"<div class='thread'>";
+		createPostImages(fcgiOut, data, threadId, -1, flagContains(ThreadFlags::isPreview, flags));
+		fcgiOut << "<div class='title'>";
+		if(res->getBoolean("stickied")){
+			fcgiOut << "<div class='greenText'>";
+		}
+		fcgiOut << res->getString("title");
+		if(res->getBoolean("stickied")){
+			fcgiOut << "</div>";
+		}
+		fcgiOut << "</div>"
+		"<div class='extraPostInfo'>";
+		if(flagContains(ThreadFlags::showSubdatin, flags)){
+			fcgiOut << "<li>/" << subdatinTitle << "/</li>";
+		}
+		fcgiOut << "<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId, false) << "</li>"
+		"<li>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</li>"
+		"<li>" << getFormattedThreadPostTime(data->con, threadId) << "</li>"
+		"<li>" << getFormattedThreadBumpTime(data->con, threadId) << "</li>";
+		if(res->getBoolean("stickied")){
+			fcgiOut << "<li>Stickied</li>";
+		}
+		if(res->getBoolean("locked")){
+			fcgiOut << "<li>Locked</li>";
+		}
+		fcgiOut << "</div>"
+		"</div>"
 		"</a>";
 	}
 	else{
-		fcgiOut << "<div class='thread'>"
-			"<div class='title'>" << res->getString("title") << "</div>"
-			"<div class='extraPostInfo'>";
-				if(showSubdatin){
-					fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'><li>/" << subdatinTitle << "/</li></a>";
-				}
-				fcgiOut << 
-				"<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</li>"
-				"<li>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</li>";
-				if(canReply){
-					createReplyMenu(fcgiOut, data, subdatinTitle);
-				}
-				createReportMenu(fcgiOut, data, subdatinTitle);
-				if(canModerate){
-					createThreadModerationMenu(fcgiOut, data, subdatinTitle, threadId, canControl, res->getBoolean("locked"), res->getBoolean("stickied"));
-				}
-				fcgiOut << "<li>" << getFormattedThreadPostTime(data->con, threadId) << "</li>"
-				"<li>" << getFormattedThreadBumpTime(data->con, threadId) << "</li>";
-				if(res->getBoolean("locked")){
-					fcgiOut << "<li>Locked</li>";
-				}
-				if(res->getBoolean("stickied")){
-					fcgiOut << "<li>Stickied</li>";
-				}
-			fcgiOut << "</div>"
-			"<div class='text'>" << formatUserPostBody(data, res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId))) << "</div>"
+		fcgiOut << "<div class='thread'>";
+		createPostImages(fcgiOut, data, threadId, -1, flagContains(ThreadFlags::isPreview, flags));
+		fcgiOut << "<div class='title'>" << res->getString("title") << "</div><br>"
+		"<div class='extraPostInfo'>";
+		if(flagContains(ThreadFlags::showSubdatin, flags)){
+			fcgiOut << "<a href='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "'><li>/" << subdatinTitle << "/</li></a>";
+		}
+		fcgiOut << 
+		"<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</li>"
+		"<li>comments: " << std::to_string(getThreadCommentCount(data->con, threadId)) << "</li>";
+		if(canReply){
+			createReplyMenu(fcgiOut, data, subdatinTitle, subdatinId, threadId);
+		}
+		createReportMenu(fcgiOut, data, subdatinTitle, threadId);
+		if(hasModerationPermissions(position)){
+			createThreadModerationMenu(fcgiOut, data, subdatinTitle, threadId, position, getEffectiveUserPosition(data->con, userId, subdatinId), res->getBoolean("locked"), res->getBoolean("stickied"), flagContains(ThreadFlags::showDismissReport, flags));
+		}
+		fcgiOut << "<li>" << getFormattedThreadPostTime(data->con, threadId) << "</li>"
+		"<li>" << getFormattedThreadBumpTime(data->con, threadId) << "</li>";
+		if(res->getBoolean("locked")){
+			fcgiOut << "<li>Locked</li>";
+		}
+		if(res->getBoolean("stickied")){
+			fcgiOut << "<li>Stickied</li>";
+		}
+		fcgiOut << "</div>"
+		"<div class='text'>"
+		<< formatUserPostBody(data, res->getString("body"), hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)))
+		<< "</div>"
 		"</div>";
 	}
 	
 	return canReply;
 }
 
-void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t subdatinId, std::string& subdatinTitle, std::size_t commentId, bool isEven, bool isPreview, bool showPoster, bool showReplyId, bool canReply, bool canModerate, bool showSubdatin, bool includeReplies){
-	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT threadId, body, anonId, userId FROM comments WHERE id = ?"));
+void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::size_t commentId, bool isEven, bool canReply, UserPosition position, CommentFlags flags){
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT subdatinId, threadId, body, anonId, userId FROM comments WHERE id = ?"));
 	prepStmt->setInt64(1, commentId);
 	
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->first();
+	
+	int64_t subdatinId = res->getInt64("subdatinId");
+	std::string subdatinTitle = getSubdatinTitle(data->con, subdatinId);
 	
 	int64_t threadId = res->getInt64("threadId");
 	std::string body = res->getString("body");
@@ -155,50 +179,51 @@ void renderComment(MarkupOutStream& fcgiOut, RequestData* data, std::int64_t sub
 	if(!res->isNull("userId")){
 		userId = res->getInt64("userId");
 	}
-	if(includeReplies){
+	if(flagContains(CommentFlags::includeReplies, flags)){
 		fcgiOut << "<a name='" << std::to_string(commentId) << "'></a>";
 	}
 	fcgiOut << (isEven?"<div class='comment even'>":"<div class='comment odd'>") << 
 	"<div class='extraPostInfo'>";
-	if(showSubdatin){
+	if(flagContains(CommentFlags::showSubdatin, flags)){
 		fcgiOut << "<li><a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "'>/" << subdatinTitle << "/</a></li>";
 	}
-	if(showPoster){
+	if(flagContains(CommentFlags::showPoster, flags)){
 		fcgiOut << "<li>" << getFormattedPosterString(data->con, anonId, userId, subdatinId) << "</li>";
 	}
-	if(showReplyId){
+	if(flagContains(CommentFlags::showReplyId, flags)){
 		fcgiOut << "<li>"
-		"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "'>" << std::to_string(commentId) << "</a>"
+		"<a href='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "'>" << std::to_string(commentId) << "</a>"
 		"</li>";
 	}
-	if(!isPreview){
+	if(!flagContains(CommentFlags::isPreview, flags)){
 		if(canReply){
-			createReplyMenu(fcgiOut, data, subdatinTitle, commentId);
+			createReplyMenu(fcgiOut, data, subdatinTitle, subdatinId, threadId, commentId);
 		}
-		createReportMenu(fcgiOut, data, subdatinTitle, commentId);
-		if(canModerate){
-			createCommentModerationMenu(fcgiOut, data, subdatinTitle, threadId, commentId);
+		createReportMenu(fcgiOut, data, subdatinTitle, threadId, commentId);
+		if(hasModerationPermissions(position)){
+			createCommentModerationMenu(fcgiOut, data, subdatinTitle, threadId, commentId, position, getEffectiveUserPosition(data->con, userId, subdatinId), flagContains(CommentFlags::showDismissReport, flags));
 		}
 	}
 	
 	fcgiOut << "<li>" << getFormattedCommentPostTime(data->con, commentId) << "</li>"
-	"</div>" 
-	"<div class='commentText'>" << formatUserPostBody(data, body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)), includeReplies) << "</div>";
+	"</div>";
+	createPostImages(fcgiOut, data, -1, commentId, flagContains(CommentFlags::isPreview, flags));
+	fcgiOut << "<div class='commentText'>" << formatUserPostBody(data, body, hasRainbowTextPermissions(getEffectiveUserPosition(data->con, userId, subdatinId)), flagContains(CommentFlags::includeReplies, flags)) << "</div>";
 }
 
-void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
+void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId){
 	fcgiOut <<
 		"<li>"
 		"<div class='dropDown'>"
-		"<input type='checkbox' id='reportMenu" << std::to_string(data->threadId) << "_" << std::to_string(commentId) << "'>"
-		"<label class='dropBtn' for='reportMenu" << std::to_string(data->threadId) << "_" << std::to_string(commentId) << "'>"
+		"<input type='checkbox' id='reportMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
+		"<label class='dropBtn' for='reportMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
 		"Report"
 		"</label>"
 		"<ul>";
 	
 	if(commentId == -1){
 		fcgiOut <<
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/reportThread' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/reportThread' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<div class='subjectInput'><input type='text' name='subject'></div>"
 			"<li><button type='submit' name='reason' value='Illegal' class='link-button'>Illegal</button></li>"
@@ -211,7 +236,7 @@ void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& 
 	}
 	else{
 		fcgiOut <<
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
+			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "/reportComment' class='inline'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<div class='subjectInput'><input type='text' name='subject'></div>"
 			"<li><button type='submit' name='reason' value='Illegal' class='link-button'>Illegal</button></li>"
@@ -230,20 +255,23 @@ void createReportMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& 
 	
 }
 
-void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t commentId){
+void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t subdatinId, int64_t threadId, int64_t commentId){
 	fcgiOut << "<li>"
 	"<div class='dropDown'>"
-	"<input type='checkbox' id='commentReply" << std::to_string(commentId) << "'>"
-	"<label class='dropBtn' for='commentReply" << std::to_string(commentId) << "'>"
+	"<input type='checkbox' id='reply" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
+	"<label class='dropBtn' for='reply" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
 	"Reply"
 	"</label>"
 	"<ul>"
 	"<li>"
-	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(data->threadId) << "/newComment' accept-charset='UTF-8'>"
+	"Posting as " << getFormattedPosterString(data->con, data->shownId, data->userId, subdatinId, false) << "<br>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/newComment' accept-charset='UTF-8' enctype='multipart/form-data'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"<input type='hidden' name='parentId' value='" << std::to_string(commentId) << "'>"
 	"<div class='subjectInput'><input type='text' name='subject'></div>"
 	"<textarea name='body'></textarea><br>"
+	"Image: <input type='file' name='postImage' accept='image/*'><br>"
+	"Show Thumbnail?<input type='checkbox' name='showThumbnail' checked='checked' style='display: inline-block;'><br>"
 	"<button type='submit' name='submit_param'>"
 	"Create Comment"
 	"</button>"
@@ -254,14 +282,16 @@ void createReplyMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& s
 	"</li>";
 }
 
-void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, bool canControl, bool locked, bool stickied){
+void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, UserPosition moderator, UserPosition poster, bool locked, bool stickied, bool showDismissReport){
 	fcgiOut << "<li>"
 	"<div class='dropDown'>"
 	"<input type='checkbox' id='moderateMenu" << std::to_string(threadId) << "'>"
 	"<label class='dropBtn' for='moderateMenu" << std::to_string(threadId)<< "'>"
 	"Moderate"
-	"</div>"
-	"<ul>"
+	"</label>"
+	"<ul>";
+	if(hasModerationPermissionsOver(moderator, poster)){
+		fcgiOut <<
 		"<li>"
 		"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/deleteThread' class='inline'>"
 		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
@@ -270,54 +300,78 @@ void createThreadModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std
 		"</button>"
 		"</form>"
 		"</li>";
-		fcgiOut <<
-		"<li>"
-		"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/setThreadLocked' class='inline'>"
-		"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
-		if(locked){
-			fcgiOut << "<button type='submit' class='link-button' name='locked' value='false'>"
-			"Unlock Thread"
+	}
+	fcgiOut <<
+	"<li>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/setThreadLocked' class='inline'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
+	if(locked){
+		fcgiOut << "<button type='submit' class='link-button' name='locked' value='false'>"
+		"Unlock Thread"
+		"</button>";
+	}
+	else{
+		fcgiOut << "<button type='submit' class='link-button' name='locked' value='true'>"
+		"Lock Thread"
+		"</button>";
+	}
+	fcgiOut << "</form>"
+	"</li>";
+	fcgiOut <<
+	"<li>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/setThreadStickied' class='inline'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
+	if(hasSubdatinControlPermissions(moderator)){
+		if(stickied){
+			fcgiOut << "<button type='submit' class='link-button' name='stickied' value='false'>"
+			"Make Thread Non-sticky"
 			"</button>";
 		}
 		else{
-			fcgiOut << "<button type='submit' class='link-button' name='locked' value='true'>"
-			"Lock Thread"
+			fcgiOut << "<button type='submit' class='link-button' name='stickied' value='true'>"
+			"Make Thread Sticky"
 			"</button>";
 		}
-		fcgiOut << "</form>"
-		"</li>";
-		fcgiOut <<
-		"<li>"
-		"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/setThreadStickied' class='inline'>"
-		"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
-		if(canControl){
-			if(stickied){
-				fcgiOut << "<button type='submit' class='link-button' name='stickied' value='false'>"
-				"Make Thread Non-sticky"
-				"</button>";
-			}
-			else{
-				fcgiOut << "<button type='submit' class='link-button' name='stickied' value='true'>"
-				"Make Thread Sticky"
-				"</button>";
-			}
-		}
-		fcgiOut << "</form>"
-		"</li>"
-	"</ul>"
+	}
+	fcgiOut << "</form>"
+	"</li>";
+	
+	fcgiOut <<
+	"<li>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/hideThumbnails' class='inline'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+	"<button type='submit' class='link-button'>"
+	"Hide Image Thumbnails"
+	"</button>"
 	"</form>"
+	"</li>";
+	
+	if(showDismissReport){
+		fcgiOut << "<li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/dismissReports' class='inline'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<input type='hidden' name='threadId' value='" << std::to_string(threadId) << "'>"
+		"<input type='hidden' name='commentId' value='-1'>"
+		"<button type='submit' class='link-button'>"
+		"Dismiss Reports"
+		"</button>"
+		"</form></li>";
+	}
+	
+	fcgiOut << "</ul>"
 	"</div>"
 	"</li>";
 }
 
-void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId){
+void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, std::string& subdatinTitle, int64_t threadId, int64_t commentId, UserPosition moderator, UserPosition poster, bool showDismissReport){
 	fcgiOut << "<li>"
 	"<div class='dropDown'>"
 	"<input type='checkbox' id='moderationMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
 	"<label class='dropBtn' for='moderationMenu" << std::to_string(threadId) << "_" << std::to_string(commentId) << "'>"
 	"Moderate"
-	"</div>"
-	"<ul>"
+	"</label>"
+	"<ul>";
+	if(hasModerationPermissionsOver(moderator, poster)){
+		fcgiOut << 
 		"<li>"
 		"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "/deleteComment' class='inline'>"
 		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
@@ -325,9 +379,75 @@ void createCommentModerationMenu(MarkupOutStream& fcgiOut, RequestData* data, st
 		"Delete"
 		"</button>"
 		"</form>"
-		"</li>"
+		"</li>";
+	}
+	
+	fcgiOut <<
+	"<li>"
+	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/thread/" << std::to_string(threadId) << "/comment/" << std::to_string(commentId) << "/hideThumbnails' class='inline'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+	"<button type='submit' class='link-button'>"
+	"Hide Image Thumbnails"
+	"</button>"
+	"</form>"
+	"</li>";
+	
+	if(showDismissReport){
+		fcgiOut << "<li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(subdatinTitle) << "/dismissReports' class='inline'>"
+		"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+		"<input type='hidden' name='threadId' value='" << std::to_string(threadId) << "'>"
+		"<input type='hidden' name='commentId' value='" << std::to_string(commentId) << "'>"
+		"<button type='submit' class='link-button'>"
+		"Dismiss Reports"
+		"</button>"
+		"</form></li>";
+	}
+	
+	fcgiOut <<
 	"</ul>"
 	"</form>"
 	"</div>"
 	"</li>";
+}
+
+void createPostImages(MarkupOutStream& fcgiOut, RequestData* data, int64_t threadId, int64_t commentId, bool isPreview){
+	std::unique_ptr<sql::PreparedStatement> prepStmt;
+	if(threadId != -1){
+		prepStmt.reset(data->con->prepareStatement("SELECT shownId, showThumbnail FROM images WHERE threadId = ?"));
+		prepStmt->setInt64(1, threadId);
+	}
+	else{
+		prepStmt.reset(data->con->prepareStatement("SELECT shownId, showThumbnail FROM images WHERE commentId = ?"));
+		prepStmt->setInt64(1, commentId);
+	}
+	
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	res->beforeFirst();
+	if(res->next()){
+		fcgiOut << "<div class='postImage'>";
+		if(isPreview){
+			if(res->getBoolean("showThumbnail")){
+				fcgiOut << "<img class='previewThumbnail' src='https://" << WebsiteFramework::getDomain() << "/postImageThumbnails/" << res->getString("shownId") << "'>";
+			}
+			else{
+				fcgiOut << "<img class='previewThumbnail' src='https://" << WebsiteFramework::getDomain() << "/static/images/thumbnailHidden.png'>";
+			}
+		}
+		else{
+			fcgiOut << 
+			"<input type='checkbox' id='image_" << res->getString("shownId") << "'>"
+			"<label class='thumbnailLabel' for='image_" << res->getString("shownId") << "'>";
+			if(res->getBoolean("showThumbnail")){
+				fcgiOut << "<img class='thumbnail' src='https://" << WebsiteFramework::getDomain() << "/postImageThumbnails/" << res->getString("shownId") << "'>";
+			}
+			else{
+				fcgiOut << "<img class='thumbnail' src='https://" << WebsiteFramework::getDomain() << "/static/images/thumbnailHidden.png'>";
+			}
+			fcgiOut << "</label>"
+			"<label class='fullImageLabel' for='image_" << res->getString("shownId") << "'>"
+			"<img class='fullImage' src='https://" << WebsiteFramework::getDomain() << "/postImages/" << res->getString("shownId") << "'>"
+			"</label>";
+		}
+		fcgiOut << "</div>";
+	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 
 #include <boost/filesystem.hpp>
@@ -17,6 +18,7 @@ public:
 	static std::size_t getMaxPasswordLength();
 	static std::size_t getMaxPostLength();
 	static std::size_t getMaxTitleLength();
+	static std::size_t getMaxPostImageSize();
 	static int64_t anonPostingTimeout();
 	static int64_t userPostingTimeout();
 	static int64_t anonReportingTimeout();

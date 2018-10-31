@@ -14,66 +14,74 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::str
 	createPageHeader(fcgi, data, PageTab::SiteControl);
 	
 	fcgi->out << "<h1>Crehdatin Control Panel</h1>"
-	"<h2>Subdatins</h2>";
+	"<ul>"
+	"<div class='title'>Subdatins</div>";
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT title, name FROM subdatins"));
 	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
 	res->beforeFirst();
 	if(res->next()){
 		do{
 			fcgi->out << 
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "/removeSubdatin' accept-charset='UTF-8'>"
+			"<li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << res->getString("title") << "/removeSubdatin' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-			"<div class='spacer'><button type='submit'>Remove</button></div>"
+			"<button type='submit'>Remove</button>"
 			"</form>"
 			"<a href=https://" << WebsiteFramework::getDomain() << "/u/" << res->getString("title") << "'>"
 			<< res->getString("name") <<
-			"</a><br>";
+			"</a></li>";
 		}while(res->next());
 	}
 	else{
-		fcgi->out << "<div class='errorText'><i>There are no subdatins...</i></div>";
+		fcgi->out << "<li><div class='errorText'><i>There are no subdatins...</i></div></li>";
 	}
 	
 	fcgi->out << 
+	"<li>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/addSubdatin' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 	"title: "
-	"<div class='spacer'><input type='text' name='title'></div>"
+	"<input type='text' name='title'>"
 	"name: "
-	"<div class='spacer'><input type='text' name='name'></div>"
+	"<input type='text' name='name'>"
 	"<button type='submit'>Add New</button>"
 	"</form>"
+	"</li>"
+	"</ul><br>"
 	
-	"<h2>Administrators</h2>";
+	"<ul>"
+	"<div class='title'>Administrators</div>";
 	prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("SELECT userName FROM users WHERE userPosition = 'administrator'"));
 	res = std::unique_ptr<sql::ResultSet>(prepStmt->executeQuery());
 	res->beforeFirst();
 	if(res->next()){
 		do{
 			fcgi->out << 
-			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/removeAdministrator' accept-charset='UTF-8'>"
+			"<li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/removeAdministrator' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='userName' value='" << res->getString("userName") << "'>"
-			"<div class='spacer'><button type='submit'>Remove</button></div>"
+			"<button type='submit'>Remove</button>"
 			"</form>"
 			"<a href=https://'" << WebsiteFramework::getDomain() << "/u/" << percentEncode(res->getString("userName")) << ">"
 			<< res->getString("userName") <<
-			"</a><br>";
+			"</a></li>";
 		}while(res->next());
 	}
 	else{
-		fcgi->out << "<div class='errorText'><i>There are no administrators...</i></div>";
+		fcgi->out << "<li><div class='errorText'><i>There are no administrators...</i></div></li>";
 	}
 	
 	fcgi->out <<
+	"<li>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/addAdministrator' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-	"<div class='spacer'><input type='text' name='userName'></div>"
+	"<input type='text' name='userName'>"
 	"<button type='submit'>Add New</button>"
-	"</form>";
+	"</form>"
+	"</li>"
+	"</ul><br>";
 	
-	fcgi->out << "<br><ul>"
-	"<title>Default Subdatin List</title>";
+	fcgi->out << "<ul>"
+	"<div class='title'>Default Subdatin List</div>";
 	std::size_t numberOfSubdatins = 0;
 	{
 		std::size_t num = 0;
@@ -119,6 +127,12 @@ void createCrehdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::str
 	if(subdatinListError != ""){
 		fcgi->out << "<p><div class='errorText'>" << subdatinListError << "</div></p>";
 	}
+	
+	fcgi->out << "<br><ul><div class='title'>Ip Banning</div><li><form method='post' action='https://" << WebsiteFramework::getDomain() << "/banIp' accept-charset='UTF-8'>"
+	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
+	"<input type='text' name='ip'>"
+	"<button type='submit'>Ban Ip</button>"
+	"</form></li></ul>";
 	
 	createPageFooter(fcgi, data);
 }

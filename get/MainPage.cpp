@@ -6,11 +6,21 @@ void createMainPage(FcgiData* fcgi, std::vector<std::string> parameters, void* _
 	createPageHeader(fcgi, data, PageTab::Main);
 	
 	fcgi->out << "<h1>Creh-Datin</h1>"
-	"<h2>What is this?</h2>"
-	"<p>This is a website I've been working on. It will be a mix between Reddit and a classic imageboard. The hope is to get the best of the two systems.</p>"
-	"<p>That is, to get a better discussions system than an imageboard, which always has too much chaos, but without the problem of dissenting opinions being buried, which is a major problem with reddit.</p>"
-	"<p>The main purpose of making this website is just practice, I guess. I haven't really thought about it all that much.</p>"
-	"<a href='https://github.com/DanielBatteryStapler/Crehdatin'>My Github</a>";
+	"<i>An extendable Reddit and Imageboard mix written in C++! <div class='underline'><a href='https://github.com/DanielBatteryStapler/Crehdatin'>Github</a></div></i>"
+	"<h2>Latest Bumped Threads</h2>";
+	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT id FROM threads ORDER BY lastBumpTime DESC LIMIT 20"));
+	std::unique_ptr<sql::ResultSet> res(prepStmt->executeQuery());
+	
+	res->beforeFirst();
+	
+	if(!res->next()){
+		fcgi->out << "<div class='errorText'><i>No More Threads...</i></div>";
+	}
+	else{
+		do{
+			renderThread(fcgi->out, data, res->getInt64("id"), UserPosition::None, ThreadFlags::isPreview | ThreadFlags::showSubdatin);
+		}while(res->next());
+	}
 	
 	createPageFooter(fcgi, data);
 }

@@ -36,17 +36,42 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 		break;
 	}
 	
-	std::string authToken;
-	if(getPostValue(fcgi->cgi, authToken, "authToken", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError 
-		|| authToken != data->authToken){
-		createGenericErrorPage(fcgi, data, "Invalid Authentication Token");
-		return;
-	}
-	
 	std::string parentId;
 	if(getPostValue(fcgi->cgi, parentId, "parentId", Config::getUniqueTokenLength(), InputFlag::AllowStrictOnly) != InputError::NoError){
 		createGenericErrorPage(fcgi, data, "Invalid Parent Comment Id");
 		return;
+	}
+	
+	bool hasImage = false;
+	UploadedImageData imageData;
+	switch(getUploadedPostImage(fcgi->cgi, imageData, "postImage", Config::getMaxPostImageSize())){
+	case PostImageError::NoError:
+		hasImage = true;
+		break;
+	case PostImageError::NoFile:
+		//continue on, just don't post with an image
+		break;
+	case PostImageError::IsTooLarge:
+		createGenericErrorPage(fcgi, data, "Image Is Too Large");
+		return;
+	case PostImageError::InvalidType:
+		createGenericErrorPage(fcgi, data, "Image Is An Invalid Type Or Corrupted");
+		return;
+	default:
+		createGenericErrorPage(fcgi, data, "Unknown Image Error");
+		return;
+	}
+	
+	std::string showThumbnail;
+	if(hasImage){
+		switch(getPostValue(fcgi->cgi, showThumbnail, "showThumbnail", Config::getMaxPostLength(), InputFlag::AllowStrictOnly)){
+		default:
+			createGenericErrorPage(fcgi, data, "Unknown ShownThumbnail Checkbox Error");
+			return;
+		case InputError::NoError:
+		case InputError::IsEmpty:
+			break;
+		}
 	}
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT locked FROM threads WHERE id = ? AND subdatinId = ?"));
@@ -80,7 +105,7 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 		"INSERT INTO comments (body, anonId, userId, posterIp, threadId, subdatinId, parentId) VALUES (?, ?, ?, ?, ?, ?, ?)"));
 	
 	prepStmt->setString(1, body);
-	if(data->userId == -1){
+	if(data->shownId != ""){
 		prepStmt->setString(2, data->shownId);
 		prepStmt->setNull(3, 0);
 	}
@@ -100,11 +125,15 @@ void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void*
 	
 	prepStmt->execute();
 	
-	res = std::unique_ptr<sql::ResultSet>(data->stmt->executeQuery("SELECT LAST_INSERT_ID()"));
+	res.reset(data->stmt->executeQuery("SELECT LAST_INSERT_ID()"));
 	
 	res->first();
 	
 	int64_t newCommentId = res->getInt64(1);
+	
+	if(hasImage){
+		saveUploadedPostImage(data->con, std::move(imageData), showThumbnail.size() != 0, -1, newCommentId);//add the image to the thread
+	}
 	
 	if(parentId == "-1"){//if we should bump the thread
 		prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("UPDATE threads SET lastBumpTime = CURRENT_TIMESTAMP WHERE id = ?"));

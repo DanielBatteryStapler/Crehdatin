@@ -15,5 +15,6 @@
 
 #include "../get/NewThreadPage.h"
 #include "../UserData.h"
+#include "../PostImageHandlers.h"
 
 void handleNewThread(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

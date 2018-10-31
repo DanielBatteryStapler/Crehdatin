@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "../Config.h"
 
 #include <cppconn/driver.h>
@@ -11,11 +9,10 @@
 #include <cppconn/prepared_statement.h>
 
 #include <WebsiteFramework/WebsiteFramework.h>
-#include <WebsiteFramework/InputHandler.h>
+#include <boost/filesystem.hpp>
 
 #include "../RequestData.h"
-#include "../UserPermissions.h"
-#include "../get/ErrorPages.h"
-#include "../PostImageHandlers.h"
+#include "ErrorPages.h"
+#include "PostImage.h"
 
-void handleNewComment(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);
+void createPostImageThumbnailHandle(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

@@ -13,7 +13,6 @@
 #include <WebsiteFramework/WebsiteFramework.h>
 #include <WebsiteFramework/InputHandler.h>
 
-#include "../get/SettingsPage.h"
 #include "../get/ErrorPages.h"
 
 void handleSetCssTheme(FcgiData* fcgi, std::vector<std::string> parameters, void* _data);

@@ -6,7 +6,7 @@ void createCaptchaHandle(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	RequestData* data = (RequestData*)_data;
 	
 	sendStatusHeader(fcgi->out, StatusCode::Ok);
-	sendContentTypeHeader(fcgi->out, ContentType::Image);
+	sendContentTypeHeader(fcgi->out, "image/png");
 	finishHttpHeader(fcgi->out);
 	
 	const int width = 200;
@@ -47,7 +47,7 @@ void createCaptchaHandle(FcgiData* fcgi, std::vector<std::string> parameters, vo
 	captcha.write(&imageData, "PNG");
 	char* dataBuffer = (char*)imageData.data();
 	std::size_t dataLength = imageData.length();
-	fcgi->out.write(dataBuffer, dataLength);
+	fcgi->out.getUnsafeOutputStream().write(dataBuffer, dataLength);
 }
 
 std::string generateCaptchaText(){

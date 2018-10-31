@@ -12,3 +12,4 @@
 enum PageTab{None, Main, User, Login, Logout, Settings, SiteControl, Error, ThreadList, Thread, Comment, About, NewThread, Reports, ControlPanel};
 
 void createPageHeader(FcgiData* fcgi, RequestData* data, PageTab selectedTab);
+std::string getPageTitle(FcgiData* fcgi, RequestData* data, PageTab selectedTab);

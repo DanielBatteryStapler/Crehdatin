@@ -20,7 +20,8 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 	getSubdatinData(data->con, data->subdatinId, title, name, postsLocked, commentsLocked);
 	
 	fcgi->out << "<h1>Control Panel</h1>"
-	"<h2>Subdatin Officials</h2>";
+	"<ul>"
+	"<div class='title'>Subdatin Officials</div>";
 	
 	std::unique_ptr<sql::PreparedStatement> prepStmt(data->con->prepareStatement("SELECT userId, userPosition FROM userPositions WHERE subdatinId = ?"));
 	prepStmt->setInt64(1, data->subdatinId);
@@ -32,14 +33,14 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			std::string userName = getUserName(data->con, res->getInt64("userId"));
 			fcgi->out << 
 			
-			"<div class='spacer'><a href=https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << "'>";
+			"<li><div class='spacer'><a href='https://" << WebsiteFramework::getDomain() << "/u/" << percentEncode(userName) << "'>";
 			if(res->getString("userPosition") == "bureaucrat"){
 				fcgi->out << 
 				"<div class='bureaucratTag'>" << userName << "[B]</div></a></div>"
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setCurator' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << userName << "'>"
-				"<div class='spacer'><button type='submit'>Set Curator</button></div>"
+				"<button type='submit'>Set Curator</button>"
 				"</form>";
 			}
 			else if(res->getString("userPosition") == "curator"){
@@ -48,7 +49,7 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 				"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setBureaucrat' accept-charset='UTF-8'>"
 				"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 				"<input type='hidden' name='userName' value='" << userName << "'>"
-				"<div class='spacer'><button type='submit'>Set Bureaucrat</button></div>"
+				"<button type='submit'>Set Bureaucrat</button>"
 				"</form>";
 			}
 			else{
@@ -58,21 +59,25 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 			"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/removeSubdatinOfficial' accept-charset='UTF-8'>"
 			"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
 			"<input type='hidden' name='userName' value='" << userName << "'>"
-			"<div class='spacer'><button type='submit'>Remove</button></div>"
+			"<button type='submit'>Remove</button>"
 			"</form>"
-			"<br>";
+			"</li>";
 		}while(res->next());
 	}
 	else{
-		fcgi->out << "<div class='errorText'><i>There are no subdatin officials...</i></div>";
+		fcgi->out << "<li><div class='errorText'><i>There are no subdatin officials...</i></div></li>";
 	}
 	
 	fcgi->out << 
+	"<li>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/addCurator' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-	"<div class='spacer'><input type='text' name='userName'></div>"
+	"<input type='text' name='userName'>"
 	"<button type='submit'>Add New</button>"
 	"</form>"
+	"</li>"
+	"</ul>"
+	
 	"<h2>Settings</h2>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << subdatinTitle << "/setPostLocked' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>";
@@ -96,7 +101,17 @@ void createSubdatinControlPanelPage(FcgiData* fcgi, RequestData* data, std::stri
 	"<p>This is text that is displayed under the 'About' tab to users.</p>"
 	"<form method='post' action='https://" << WebsiteFramework::getDomain() << "/d/" << percentEncode(title) << "/setAboutText' accept-charset='UTF-8'>"
 	"<input type='hidden' name='authToken' value='" << data->authToken << "'>"
-	"<textarea name='text'></textarea><br>"
+	"<textarea name='text'>";
+	
+	prepStmt = std::unique_ptr<sql::PreparedStatement>(data->con->prepareStatement("SELECT description FROM subdatins WHERE id = ?"));
+	prepStmt->setInt64(1, data->subdatinId);
+	res = std::unique_ptr<sql::ResultSet>(prepStmt->executeQuery());
+	res->first();
+	if(!res->isNull("description")){
+		fcgi->out << res->getString("description");
+	}
+	
+	fcgi->out << "</textarea><br>"
 	"<button type='submit'>"
 	"Set About Text"
 	"</button>"

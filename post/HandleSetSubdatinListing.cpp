@@ -11,7 +11,7 @@ void handleSetSubdatinListing(FcgiData* fcgi, std::vector<std::string> parameter
 	std::string listNumberS;
 	switch(getPostValue(fcgi->cgi, listNumberS, "listNumber", 2, InputFlag::AllowStrictOnly)){
 	default:
-		createSettingsPage(fcgi, data, "", "", "Invalid List Number");
+		createSettingsPage(fcgi, data, "", "Invalid List Number");
 		return;
 	case InputError::NoError:
 		break;
@@ -21,14 +21,14 @@ void handleSetSubdatinListing(FcgiData* fcgi, std::vector<std::string> parameter
 		listNumber = std::stol(listNumberS);
 	}
 	catch(std::exception& e){
-		createSettingsPage(fcgi, data, "", "", "Invalid List Number");
+		createSettingsPage(fcgi, data, "", "Invalid List Number");
 		return;
 	}
 	
 	std::string title;
 	switch(getPostValue(fcgi->cgi, title, "title", Config::getMaxNameLength(), InputFlag::AllowStrictOnly)){
 	default:
-		createSettingsPage(fcgi, data, "", "", "Invalid Subdatin Title");
+		createSettingsPage(fcgi, data, "", "Invalid Subdatin Title");
 		return;
 	case InputError::NoError:
 		break;
@@ -36,7 +36,7 @@ void handleSetSubdatinListing(FcgiData* fcgi, std::vector<std::string> parameter
 	
 	size_t subdatinId = getSubdatinId(data->con, title);
 	if(subdatinId == -1){
-		createSettingsPage(fcgi, data, "", "", "That Subdatin Does Not Exist");
+		createSettingsPage(fcgi, data, "", "That Subdatin Does Not Exist");
 		return;
 	}
 	
