@@ -1,0 +1,805 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 			0;
+	padding: 			0;
+	border: 			0;
+	vertical-align: 	baseline;
+	list-style:             none;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: 			block;
+}
+body {
+	line-height: 		1;
+}
+ol, ul {
+	list-style: 		none;
+}
+blockquote, q {
+	quotes: 			none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: 			'';
+	content: 			none;
+}
+table {
+	border-collapse: 	collapse;
+	border-spacing: 	0;
+}
+
+/*This is the inline logout button*/
+.inline {
+  	display: 			inline;
+}
+
+.link-button {
+	display:			inline;
+  	text-decoration: 		underline;
+  	cursor: 			pointer;
+   	background: 			none;
+	border:				none;
+	color:				var(--foreground-primary);/*dd*/
+}
+.link-button:focus {
+  	outline: 			none;
+}
+.link-button:active {
+  	/*color:red;*/
+}
+
+/*This is my stuff*/
+
+.subjectInput{/*for the "subject input"*/
+	height: 0px;
+	width: 0px;
+	overflow: hidden;
+}
+
+form{/*just to get this out of the way*/
+	display:			inline;
+}
+
+a{
+	text-decoration:		none;
+}
+
+input[type=checkbox]{/*this too*/
+    	display: 			none;
+}
+
+.underline{
+	text-decoration:		underline;
+	display:			inline;
+}
+
+/*first, the big layout stuff*/
+
+body{
+	display:			grid;
+	font-family:			"liberation sans", "Microsoft Sans Serif", sans-serif;
+}
+
+header{
+	display:			block;
+	height:				7rem;
+	grid-area:			header;
+}
+
+header a{
+	text-decoration:		underline;
+}
+
+#headerText{
+	display:			block;
+	float:				left;
+	width:				auto;
+	height:				auto;
+	font-family:			sans-serif;
+	font-size:			3rem;
+	padding:			1rem;
+}
+
+.subHeaderText{
+	display: 			inline-block;
+	font-size:			1rem;
+	margin: 			0.5rem 1rem 0.5rem 1rem;
+}
+
+/*top tab bar*/
+
+#tabbarDropDown{
+	display:			inline;/*should not normally do anything*/
+	grid-area:			tabs;
+}
+
+#tabbarButton{
+	display:			none;/*should not normally be displayed to users*/
+	font-size:			0.75rem;
+	padding:			0.1rem 0.1rem 0.1rem 0.1rem;
+	cursor:				pointer;
+}
+
+#tabbar{
+	display:			block;
+	padding-left:			0rem;
+}
+
+#tabbar li{
+	display:			inline-block;
+	padding:			0.2rem 0.2rem 0.2rem 0.2rem;
+	margin:				0rem 0.2rem 0rem 0.2rem;
+}
+
+.logout-button:focus {
+  	outline: 			none;
+}
+.logout-button:active {
+  /*color:red;*/
+}
+
+/*subdatin list*/
+
+#subdatinDropDown{
+	display:			inline;/*should not normally do anything*/
+	grid-area:			listings;
+}
+
+#subdatinListBtn{
+	display:			none;/*should not normally be displayed to users*/
+	font-size:			0.75rem;
+	padding:			0.1rem 0.1rem 0.1rem 0.1rem;
+	cursor:				pointer;
+}
+
+#subdatinList{
+	display: 			inline;
+	font-size: 			1.2rem;
+}
+
+
+#subdatinList li{
+	display:			block;
+	margin:				0.2rem;
+	padding:			0.1rem;
+	width:				9.5rem;
+	height: 			2.5rem;
+}
+
+#subdatinList a{
+	text-decoration: 		none;
+}
+
+#subdatinList .name{
+	display:			block;
+}
+
+#subdatinList .title{
+	display:			block;
+	padding:			0.1rem;
+	float:				right;
+}
+
+/*main content*/
+
+main{
+	display: 			block;
+	font-family:			sans-serif;
+	margin:				0rem;
+	padding:			0.5rem;
+	font-size: 			1rem;
+	grid-area:			main;
+}
+
+p{
+	display: 			block;
+}
+
+.thread{
+	display:			grid;
+	grid-template-areas:		"image title"
+					"image ."
+					"info info"
+					"text text";
+	grid-template-columns: 		auto 1fr;
+	/*grid-template-rows:		auto 1fr;*/
+	margin:				0.3rem;
+	padding:			0.3rem;
+	border-radius: 			5px;
+}
+
+.thread>.title{
+	word-wrap: 			break-word;
+	overflow: 			hidden;
+	display: 			block;
+	font-weight: 			bold;
+	font-size: 			1.4rem;
+	padding-bottom:			0.1rem;
+	grid-area:			title;
+}
+
+.thread>.text{
+	word-wrap: 			break-word;
+	overflow: 			hidden;
+	font-weight: 			normal;
+	font-family:			sans-serif;
+	display:			inline;
+	padding: 			0.3rem;
+	font-size: 			1rem;
+	grid-area:			text;
+}
+
+.text>a{
+	text-decoration:		underline;
+}
+
+.commentText>a{
+	text-decoration:		underline;
+}
+
+.thread>.postImage{
+	grid-area:			image;
+	padding:			0.1rem;
+	padding-right:			0.2rem;
+	display:			block;
+}
+
+.previewThumbnail{
+	max-height:			50px;
+	max-width:			50px;	
+}
+
+.thumbnail{
+	max-height:			100px;
+	max-width:			100px;
+	cursor: 			pointer;
+}
+
+.fullImageLabel{
+	display:			none;
+}
+
+.fullImage{
+	max-width:			80vw;
+	cursor:				pointer;
+}
+
+input[type=checkbox]:checked~.thumbnailLabel{
+	display:			none;
+}
+
+input[type=checkbox]:checked~.fullImageLabel{
+	display:			block;
+}
+
+.thread>a{
+	grid-area:			image;
+	padding:			0.1rem;
+	padding-right:			0.2rem;
+}
+
+.thread>.extraPostInfo{
+	grid-area:			info;
+}
+
+.comment{
+	display:			block;
+	font-family:			sans-serif;
+	border-style: 			solid;
+	border-left-width: 		3px;
+	margin:				0.3rem 0rem 0rem 0.1rem;
+	padding:			0.3rem 0rem 0rem 0.3rem;
+	font-size: 			1.5rem;
+	border-color: 			inherit;
+}
+
+.commentText{
+	word-wrap: 			break-word;
+	overflow: 			hidden;
+	font-weight: 			normal;
+	font-family:			sans-serif;
+	height: 			auto;
+	display:			block;
+	padding: 			0.3rem;
+	font-size: 			1rem;
+}
+
+.commentText:hover{
+	overflow:			visible;
+}
+
+.extraPostInfo{
+	display:			block;
+	font-family:			sans-serif;
+	font-size: 			0.8rem;
+}
+
+.extraPostInfo>li{
+	display:			inline;
+	padding-right:			1.25rem;
+	text-decoration:		none;
+}
+
+.extraPostInfo>li>a{
+	text-decoration: 		none;
+}
+
+.spacer{
+	display:			inline;
+	margin-right: 			1.25rem;
+}
+
+h1{
+	font-family:			sans-serif;
+	font-size: 			3rem;
+	padding-bottom: 		0.625rem;
+}
+
+h2{
+	font-family:			sans-serif;
+	font-size: 			2rem;
+	padding-top:			0.625rem;
+}
+
+h3{
+	font-family:			sans-serif;
+	font-size: 			1.5rem;
+	padding-top:			0.625rem;
+}
+
+a{
+	color:				inherit;
+}
+
+/*Generic List For Any Page*/
+
+main>ul{
+	display:			inline-block;
+	width:				auto;
+	border-radius: 			5px;
+	margin:				0.3rem;
+}
+
+main>ul li{
+	display: 			block;
+	border-style: 			solid;
+	border-left-width: 		3px;
+	margin:				0.3rem;
+	padding:			0.3rem;
+}
+
+main>ul>.title{
+	font-family:			sans-serif;
+	font-size: 			1.5rem;
+	padding-top:			0.625rem;
+	padding-left:			0.8rem;
+	padding-right:			0.8rem;
+	font-weight: 			bold;
+}
+
+.dropDown{
+	position: 			relative;
+    	display: 			inline-block;
+	padding-right: 			0.1rem;
+        border-radius:          	0px;
+}
+
+.dropBtn{
+   	border: 			none;
+    	cursor: 			pointer;
+	text-decoration:		underline;
+}
+
+.dropDown>ul{
+	display: 			none;
+    	position: 			absolute;
+    	z-index: 			1;
+	width:				auto;
+	border-radius:  		0px;
+	margin: 			0px;
+	padding:			0px;
+	border-width:			0px;
+	box-shadow: 			0px 0.5rem 1rem 0px rgba(0,0,0,0.2);
+}
+
+.dropDown>ul li{
+    	text-decoration: 		none;
+    	display: 			block;
+	margin:				0px;
+	white-space: 			nowrap;
+}
+
+input[type=checkbox]:checked~ul{
+    	display: 			block;
+}
+
+.replyDropDown{
+        position:                       relative;
+    	display:                    	inline-block;
+        padding-right:          	0.1rem;
+        border-radius:          	0px;
+}
+
+.replyDropBtn{
+    	border:                     	none;
+    	cursor:                     	pointer;
+}
+
+.replyDropDown>.comment{
+        display:                        none;
+    	position:                   	absolute;
+    	z-index:                    	1;
+        width:                          30rem;
+        border-radius:          	0px;
+        margin:                 	0px;
+        padding:                	0.2rem;
+        border-width:           	0px;
+        box-shadow:             	0px 0.5rem 1rem 0px rgba(0,0,0,0.2);
+}
+
+input[type=checkbox]:checked~.comment{
+    	display:                   	block;
+}
+
+/*now fixes for each of the media types*/
+
+@media (max-device-width:960px), (max-width:960px){ /*phone*/
+	body{
+		grid-template-areas:
+			"header tabs listings"
+			"main main main";
+		grid-template-columns: 	auto auto 1fr;
+	}
+	/*===*/
+	#subdatinDropDown{
+    		display: 		block;
+	}
+	#subdatinList{
+		display:		none;
+		position: 		absolute;
+    		z-index: 		2;
+    		width:			100vw;
+    		box-shadow: 		0px 0.5rem 1rem 0px rgba(0,0,0,0.2);
+		padding:		0.2rem 0rem 0rem 0rem;
+	}
+	input[type=checkbox]:checked~#subdatinList{
+		display:		block;
+	}
+	#subdatinListBtn{
+		display:		inline-block;
+		font-size:		1.2rem;		
+		padding:		0.8rem 0.5rem 0.8rem 0.5rem;
+		margin:			0rem 0.1rem 0rem 0.1rem;
+	}
+	#subdatinList li{
+		display:		block;
+		height:			auto;
+		width:			initial;
+		margin:			0px;
+		height:			2rem;
+	}
+	#subdatinList li .name{
+		display:		none;
+	}
+	#subdatinList li .title{
+		padding:		0.1rem;
+		margin:			0.1rem;
+		float:			none;
+	}
+	/*===*/
+	#tabbarDropDown{
+    		display: 		block;
+	}
+	#tabbar{
+		display:		none;
+		position: 		absolute;
+    		z-index: 		2;
+    		width:			100vw;
+    		box-shadow: 		0px 0.5rem 1rem 0px rgba(0,0,0,0.2);
+		padding:		0.2rem 0rem 0rem 0rem;
+	}
+	#tabbarButton{
+		display:		inline-block;
+		font-size:		1.2rem;
+		padding:		0.8rem 0.5rem 0.8rem 0.5rem;
+		margin:			0rem 0.1rem 0rem 0.1rem;
+	}
+	input[type=checkbox]:checked~#tabbar{
+		display:		block;
+	}
+	#tabbar li{
+		display:		block;
+		height:			auto;
+		width:			initial;
+		margin:			0px;
+		height:			2rem;
+	}
+	/*===*/
+	#headerText{
+		font-size:		2rem;
+		padding:		0.25rem;
+	}
+	header{
+		height:			auto;
+	}
+	.dropDown{
+		position:		static;
+	}
+	.dropDown>ul{
+		position:		absolute;
+		left:			0;
+		right:			0;
+	}
+	textarea{
+		width:			100%;
+		height:			10rem;
+	}
+	.replyDropDown{
+		position:		static;
+	}
+	.replyDropDown>.comment{
+		position:		absolute;
+		left:			0;
+		width:			100vw;
+	}
+}
+
+@media (min-width:961px) and (max-width:1280px){ /*tablet*/
+	body{
+		grid-template-areas: 
+			"header listings"
+			"tabs tabs"
+			"main main";
+		grid-template-columns: 	auto 1fr;
+	}
+	#subdatinList li{
+		display:		inline-block;
+		height:			auto;
+		width:			10rem;
+		float:			left;
+	}
+	#subdatinList li .name{
+		display:		none;
+	}
+	#subdatinList li .title{
+		padding:		0.1rem;
+		margin:			0.1rem;
+	}
+	textarea{
+		width:			50rem;
+		height:			10rem;
+	}
+}
+
+@media (min-width:1281px){ /*desktop*/
+	body{
+		grid-template-areas: 
+			"header header"
+			". tabs"
+			"listings main"
+			"listings .";
+		grid-template-columns: 	auto 1fr;
+	}
+	textarea{
+		width:			50rem;
+		height:			10rem;
+	}
+}
+
+/*Text Formatting*/
+.senateTag{
+	display: 			inline;
+	color: 				purple;
+}
+.administratorTag{
+	display: 			inline;
+	color: 				red;
+}
+.bureaucratTag{
+	display:			inline;
+	color: 				lightgreen;
+}
+.curatorTag{
+	display: 			inline;
+	color: 				lightblue;
+}
+
+.errorText{
+	color:				#FFAAAA;
+}
+
+.greenText{
+	display: 			inline;
+	color: 				lightgreen;
+}
+
+.rainbowText{
+	animation: 			rainbow 1s infinite;
+}
+
+@keyframes rainbow{
+  	0%				{color: red;}
+  	10%				{color: orange;}
+  	25%				{color: yellow;}
+  	40%				{color: green;}
+  	55%				{color: blue;}
+  	70%				{color: purple;}
+  	85%				{color: fuschia;}
+  	100%				{color: red;}
+}
+
+/*get the colors setup for themes to be able to change them later*/
+
+@keyframes slide{
+	from {opacity:0;left:-20px;}
+	to {opacity:1;left:0px;}
+}
+
+:root{
+	background-color:		var(--subbackground);
+	color:				var(--foreground-secondary);
+}
+
+button{
+	color:				#FFFFFF;
+}
+
+#tabbar li{
+	background-color: 		var(--background-secondary);
+	color:				var(--foreground-primary);
+}
+
+#tabbar #selectedTab{
+	background-color: 		var(--background-primary);
+	color:				var(--foreground-primary);
+	
+}
+
+#subdatinListBtn{
+	background-color: 		var(--background-secondary);
+	color:				var(--foreground-primary);
+}
+
+#tabbarButton{
+	background-color: 		var(--background-secondary);
+	color:				var(--foreground-primary);
+}
+
+#subdatinList li{
+	background-color: 		var(--background-secondary);
+	color:				var(--foreground-primary);
+}
+
+#subdatinList #selectedSubdatin{
+	background-color: 		var(--background-primary);
+}
+
+main{
+	background-color: 		var(--background-primary);
+	color:				var(--foreground-primary);
+}
+
+.thread{
+	background-color:		var(--background-secondary);
+	color:				var(--foreground-primary);
+}
+
+.comment{
+	background-color: 		var(--background-primary);
+	color:				var(--foreground-primary);
+}
+
+.even{
+	border-color: 			var(--edge-primary);
+}
+
+.odd{
+	border-color: 			var(--edge-secondary);
+}
+
+main>ul{
+	background-color:		var(--background-secondary);
+	color:				var(--foreground-primary);
+}
+
+main>ul li{
+	border-color: 			var(--edge-primary);
+}
+
+.dropDown{
+	color:				var(--foreground-primary);
+}
+
+.dropDown>ul{
+	background-color:      		var(--background-secondary);/*dd*/
+}
+
+.dropDown>ul li{
+	color:				var(--foreground-primary);/*dd*/
+}
+
+.dropDown>ul li:hover{
+	background-color: 		var(--background-primary);/*dd*/
+}
+
+input[type=checkbox]:checked~.dropBtn{
+    	background-color: 		var(--background-primary);/*dd*/
+}
+
+.replyDropDown>.comment{
+        background-color:       	var(--background-secondary);/*dd*/
+}
+
+input[type=checkbox]:checked~.comment{
+    	animation-name: 		slide;
+	animation-direction:		forwards;
+	animation-duration: 		0.2s;
+	animation-iteration-count: 	1;
+	animation-fill-mode:		fowards;
+	animation-timing-function:	ease-out;
+}
+
+input[type=checkbox]:checked~ul{
+    	animation-name: 		slide;
+	animation-direction:		forwards;
+	animation-duration: 		0.2s;
+	animation-iteration-count: 	1;
+	animation-fill-mode:		fowards;
+	animation-timing-function:	ease-out;
+}
+
+input[type=checkbox]:checked~#subdatinListBtn{
+	background-color:       	var(--background-primary);
+}
+
+input[type=checkbox]:checked~#tabbarButton{
+	background-color:       	var(--background-primary);
+}
+
+@media (max-device-width:960px), (max-width:960px){ /*phone*/
+	#subdatinList li:hover{
+		background-color:       var(--background-primary);/*dd*/
+	}
+	#tabbar a li:hover{
+		background-color:       var(--background-primary);/*dd*/
+	}
+	#tabbar a{
+		text-decoration:	none;
+	}
+	input[type=checkbox]:checked~#subdatinList{
+		animation-name: 		slide;
+		animation-direction:		forwards;
+    		animation-duration: 		0.2s;
+    		animation-iteration-count: 	1;
+    		animation-fill-mode:		forwards;
+    		animation-timing-function:	ease-out;
+	}
+	input[type=checkbox]:checked~#tabbar{
+		animation-name: 		slide;
+		animation-direction:		forwards;
+    		animation-duration: 		0.2s;
+    		animation-iteration-count: 	1;
+    		animation-fill-mode:		forwards;
+    		animation-timing-function:	ease-out;
+	}
+}
+
+

@@ -1,0 +1,27 @@
+
+@import url("base.css");
+
+:root{/*set the colors*/
+	--background-primary: 		#C1A5A5;
+	--background-secondary: 	#F1F1DF;
+	--subbackground: 		#DCD8BF;
+
+	--foreground-primary: 		#962E35;
+	--foreground-secondary: 	#962E35;
+
+	--edge-primary: 		#793131;
+	--edge-secondary: 		#793131;
+}
+
+.greenText{
+	color:				#006400;
+}
+
+.bureaucratTag{
+	color:				#006400;
+}
+
+.curatorTag{
+	color:				#00008B;
+}
+

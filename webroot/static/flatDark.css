@@ -1,0 +1,144 @@
+
+@import url("base.css");
+
+:root{/*set the colors, but more will have to editted anyways. This theme is too different for just a color change*/
+	--background-primary:	 	#052A3F;
+	--background-secondary: 	#052A3F;
+	--subbackground: 		#02091C;
+
+	--foreground-primary: 		#BBBBBB;
+	--foreground-secondary: 	#BBBBBB;
+
+	--edge-primary: 		#010B11;
+	--edge-secondary: 		#031926;
+
+	--lines:			#333333;
+	--internalLines:		#031126;
+}
+
+#subdatinList #selectedSubdatin{
+	outline-style:			solid;
+	outline-width:			1px;
+	outline-color:			var(--lines);
+}
+
+#tabbar{
+	box-shadow: 			0 -1px 0 var(--lines) inset;
+}
+
+#tabbar li{
+	border-style:			solid;
+	border-width:			1px;
+	border-color:			var(--lines);
+}
+
+#tabbar #selectedTab{
+	border-bottom-color:		var(--background-primary);
+}
+
+.thread{
+	border-style:			solid;
+	border-width:			0px 0px 1px 0px;
+	border-radius:			0px;
+	border-color:			var(--internalLines);
+}
+
+main{
+	box-shadow: 			-1px 0 0 var(--lines),
+					1px 0 0 var(--lines),
+					0 1px 0 var(--lines);
+}
+
+main ul{
+	border-style:			solid;
+	border-width:			0px 0px 1px 0px;
+	border-radius:			0px;
+	border-color:			var(--internalLines);
+}
+
+h1{
+	border-style:			solid;
+	border-width:			0px 0px 1px 0px;
+	border-radius:			0px;
+	border-color:			var(--internalLines);
+}
+
+.dropDown>ul{
+	border-style:			solid;
+	border-width:			1px;
+	border-radius:			0px;
+	border-color:			var(--lines);
+}
+
+.dropDown>ul li:hover{
+	box-shadow: 			3px 0 0 var(--lines) inset,
+					-3px 0 0 var(--lines) inset;
+}
+
+@media (max-device-width:960px), (max-width:960px){ /*phone*/	
+	#tabbarButton{
+		border-style:			solid;
+		border-width:			1px;
+		border-color:			var(--lines);
+	}
+	input[type=checkbox]:checked~#tabbarButton{
+		border-bottom-color:		var(--background-primary);
+	}
+	
+	#tabbar li{
+		box-shadow: 			0 -1px 0 var(--lines) inset;
+		border-style: 			none;
+		border-width:			0px;
+	}
+	#tabbar #selectedTab{
+		box-shadow: 			0 -1px 0 var(--lines) inset,
+						3px 0 0 var(--lines) inset,
+						-3px 0 0 var(--lines) inset;
+	}
+	#tabbar li:hover{
+		box-shadow: 			0 -1px 0 var(--lines) inset,
+						3px 0 0 var(--lines) inset,
+						-3px 0 0 var(--lines) inset;
+	}
+
+	#subdatinListBtn{
+		border-style:			solid;
+		border-width:			1px;
+		border-color:			var(--lines);
+	}
+	input[type=checkbox]:checked~#subdatinListBtn{
+		border-bottom-color:		var(--background-primary);
+	}
+	
+	#subdatinList li{
+		box-shadow: 			0 -1px 0 var(--lines) inset;
+		outline-style:			none;
+		border-style: 			none;
+		border-width:			0px;
+	}
+	#subdatinList #selectedSubdatin{
+		box-shadow: 			0 -1px 0 var(--lines) inset,
+						3px 0 0 var(--lines) inset,
+						-3px 0 0 var(--lines) inset;
+		outline-style:			none;
+	}
+	#subdatinList li:hover{
+		box-shadow: 			0 -1px 0 var(--lines) inset,
+						3px 0 0 var(--lines) inset,
+						-3px 0 0 var(--lines) inset;
+	}
+
+	header{
+		box-shadow: 			0 -1px 0 var(--lines) inset;
+	}
+
+	#subdatinDropDown{
+		box-shadow: 			0 -1px 0 var(--lines) inset;
+	}
+
+	#tabbarDropDown{
+		box-shadow: 			0 -1px 0 var(--lines) inset;
+	}
+}
+
+

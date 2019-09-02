@@ -1,0 +1,20 @@
+
+@import url("base.css");
+
+:root{/*just set of all of the colors*/
+	--background-primary:	 	#052A3F;
+	--background-secondary: 	#031126;
+	--subbackground: 		#02091C;
+
+	--foreground-primary: 		#BBBBBB;
+	--foreground-secondary: 	#BBBBBB;
+
+	--edge-primary: 		#010B11;
+	--edge-secondary: 		#031926;
+}
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="WebsiteFramework" />
+		<Option pch_mode="2" />
+		<Option compiler="clang" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/WebsiteFramework" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Debug/" />
+				<Option type="2" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/WebsiteFramework" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="" />
+				<Option object_output="obj/Release/" />
+				<Option type="2" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<VirtualTargets>
+			<Add alias="All" targets="Debug;Release;" />
+		</VirtualTargets>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++14" />
+		</Compiler>
+		<Linker>
+			<Add option="-lfcgi" />
+			<Add option="-lfcgi++" />
+			<Add option="-lpthread" />
+			<Add option="-lboost_system" />
+			<Add option="-lboost_filesystem" />
+			<Add option="-lcrypto++" />
+			<Add option="-lcgicc" />
+		</Linker>
+		<Unit filename="Cryptography.cpp" />
+		<Unit filename="Cryptography.h" />
+		<Unit filename="InputHandler.cpp" />
+		<Unit filename="InputHandler.h" />
+		<Unit filename="MarkupString.cpp" />
+		<Unit filename="MarkupString.h" />
+		<Unit filename="Response.cpp" />
+		<Unit filename="Response.h" />
+		<Unit filename="StringHelper.h" />
+		<Unit filename="WebsiteFramework.cpp" />
+		<Unit filename="WebsiteFramework.h" />
+		<Unit filename="scrypt/config.h" />
+		<Unit filename="scrypt/crypto_scrypt-nosse.cpp" />
+		<Unit filename="scrypt/crypto_scrypt.h" />
+		<Unit filename="scrypt/scrypt_platform.h" />
+		<Unit filename="scrypt/sha256.cpp" />
+		<Unit filename="scrypt/sha256.h" />
+		<Unit filename="scrypt/sysendian.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

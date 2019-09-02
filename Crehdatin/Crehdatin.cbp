@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Crehdatin" />
+		<Option pch_mode="2" />
+		<Option compiler="clang" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Crehdatin" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add directory="./" />
+					<Add directory="post/" />
+					<Add directory="get/" />
+				</Compiler>
+				<Linker>
+					<Add library="../WebsiteFramework/bin/Debug/libWebsiteFramework.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Crehdatin" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="clang" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="./" />
+					<Add directory="post/" />
+					<Add directory="get/" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="../WebsiteFramework/bin/Release/libWebsiteFramework.a" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=c++14" />
+			<Add option="$\(GraphicsMagick++-config --cppflags --cxxflags\)" />
+			<Add directory="/home/daniel/Projects/codeblocks/Crehdatin" />
+		</Compiler>
+		<Linker>
+			<Add option="-lfcgi++" />
+			<Add option="-lfcgi" />
+			<Add option="-lpthread" />
+			<Add option="-lboost_system" />
+			<Add option="-lboost_filesystem" />
+			<Add option="-lcrypto++" />
+			<Add option="-lcgicc" />
+			<Add option="-lmysqlcppconn" />
+			<Add option="$\(GraphicsMagick++-config --ldflags --libs\)" />
+		</Linker>
+		<Unit filename="BackgroundHandle.cpp" />
+		<Unit filename="BackgroundHandle.h" />
+		<Unit filename="Captcha.cpp" />
+		<Unit filename="Captcha.h" />
+		<Unit filename="Config.cpp" />
+		<Unit filename="Config.h" />
+		<Unit filename="Database.cpp" />
+		<Unit filename="Database.h" />
+		<Unit filename="DeletionHandles.cpp" />
+		<Unit filename="DeletionHandles.h" />
+		<Unit filename="DirectoryHandles.cpp" />
+		<Unit filename="DirectoryHandles.h" />
+		<Unit filename="FormatPost.cpp" />
+		<Unit filename="FormatPost.h" />
+		<Unit filename="PostImageHandlers.cpp" />
+		<Unit filename="PostImageHandlers.h" />
+		<Unit filename="RequestData.h" />
+		<Unit filename="RequestStartHandle.cpp" />
+		<Unit filename="RequestStartHandle.h" />
+		<Unit filename="StringHelper.h" />
+		<Unit filename="SubdatinData.cpp" />
+		<Unit filename="SubdatinData.h" />
+		<Unit filename="TerminologyHelp.txt">
+			<Option target="&lt;{~None~}&gt;" />
+		</Unit>
+		<Unit filename="UserData.cpp" />
+		<Unit filename="UserData.h" />
+		<Unit filename="UserPermissions.cpp" />
+		<Unit filename="UserPermissions.h" />
+		<Unit filename="get/CommentPage.cpp" />
+		<Unit filename="get/CommentPage.h" />
+		<Unit filename="get/CrehdatinControlPanelPage.cpp" />
+		<Unit filename="get/CrehdatinControlPanelPage.h" />
+		<Unit filename="get/ErrorPages.cpp" />
+		<Unit filename="get/ErrorPages.h" />
+		<Unit filename="get/LoginPage.cpp" />
+		<Unit filename="get/LoginPage.h" />
+		<Unit filename="get/LogoutPage.cpp" />
+		<Unit filename="get/LogoutPage.h" />
+		<Unit filename="get/MainPage.cpp" />
+		<Unit filename="get/MainPage.h" />
+		<Unit filename="get/NewThreadPage.cpp" />
+		<Unit filename="get/NewThreadPage.h" />
+		<Unit filename="get/PageFooter.cpp" />
+		<Unit filename="get/PageFooter.h" />
+		<Unit filename="get/PageHeader.cpp" />
+		<Unit filename="get/PageHeader.h" />
+		<Unit filename="get/PostImage.cpp" />
+		<Unit filename="get/PostImage.h" />
+		<Unit filename="get/PostImageThumbnail.cpp" />
+		<Unit filename="get/PostImageThumbnail.h" />
+		<Unit filename="get/ReportsPage.cpp" />
+		<Unit filename="get/ReportsPage.h" />
+		<Unit filename="get/SettingsPage.cpp" />
+		<Unit filename="get/SettingsPage.h" />
+		<Unit filename="get/SubdatinAboutPage.cpp" />
+		<Unit filename="get/SubdatinAboutPage.h" />
+		<Unit filename="get/SubdatinControlPanelPage.cpp" />
+		<Unit filename="get/SubdatinControlPanelPage.h" />
+		<Unit filename="get/SubdatinPage.cpp" />
+		<Unit filename="get/SubdatinPage.h" />
+		<Unit filename="get/ThreadPage.cpp" />
+		<Unit filename="get/ThreadPage.h" />
+		<Unit filename="get/UserPage.cpp" />
+		<Unit filename="get/UserPage.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="post/HandleAddAdministrator.cpp" />
+		<Unit filename="post/HandleAddAdministrator.h" />
+		<Unit filename="post/HandleAddCurator.cpp" />
+		<Unit filename="post/HandleAddCurator.h" />
+		<Unit filename="post/HandleAddSubdatin.cpp" />
+		<Unit filename="post/HandleAddSubdatin.h" />
+		<Unit filename="post/HandleBanIp.cpp" />
+		<Unit filename="post/HandleBanIp.h" />
+		<Unit filename="post/HandleChangePassword.cpp" />
+		<Unit filename="post/HandleChangePassword.h" />
+		<Unit filename="post/HandleCreateAccount.cpp" />
+		<Unit filename="post/HandleCreateAccount.h" />
+		<Unit filename="post/HandleDeleteComment.cpp" />
+		<Unit filename="post/HandleDeleteComment.h" />
+		<Unit filename="post/HandleDeleteThread.cpp" />
+		<Unit filename="post/HandleDeleteThread.h" />
+		<Unit filename="post/HandleDismissReports.cpp" />
+		<Unit filename="post/HandleDismissReports.h" />
+		<Unit filename="post/HandleHideThumbnails.cpp" />
+		<Unit filename="post/HandleHideThumbnails.h" />
+		<Unit filename="post/HandleLogin.cpp" />
+		<Unit filename="post/HandleLogin.h" />
+		<Unit filename="post/HandleLogout.cpp" />
+		<Unit filename="post/HandleLogout.h" />
+		<Unit filename="post/HandleNewComment.cpp" />
+		<Unit filename="post/HandleNewComment.h" />
+		<Unit filename="post/HandleNewThread.cpp" />
+		<Unit filename="post/HandleNewThread.h" />
+		<Unit filename="post/HandleRemoveAdministrator.cpp" />
+		<Unit filename="post/HandleRemoveAdministrator.h" />
+		<Unit filename="post/HandleRemoveSubdatin.cpp" />
+		<Unit filename="post/HandleRemoveSubdatin.h" />
+		<Unit filename="post/HandleRemoveSubdatinOfficial.cpp" />
+		<Unit filename="post/HandleRemoveSubdatinOfficial.h" />
+		<Unit filename="post/HandleReportComment.cpp" />
+		<Unit filename="post/HandleReportComment.h" />
+		<Unit filename="post/HandleReportThread.cpp" />
+		<Unit filename="post/HandleReportThread.h" />
+		<Unit filename="post/HandleSetAboutText.cpp" />
+		<Unit filename="post/HandleSetAboutText.h" />
+		<Unit filename="post/HandleSetBureaucrat.cpp" />
+		<Unit filename="post/HandleSetBureaucrat.h" />
+		<Unit filename="post/HandleSetCssTheme.cpp" />
+		<Unit filename="post/HandleSetCssTheme.h" />
+		<Unit filename="post/HandleSetCurator.cpp" />
+		<Unit filename="post/HandleSetCurator.h" />
+		<Unit filename="post/HandleSetDefaultSubdatinListing.cpp" />
+		<Unit filename="post/HandleSetDefaultSubdatinListing.h" />
+		<Unit filename="post/HandleSetShownId.cpp" />
+		<Unit filename="post/HandleSetShownId.h" />
+		<Unit filename="post/HandleSetSubdatinCommentLocked.cpp" />
+		<Unit filename="post/HandleSetSubdatinCommentLocked.h" />
+		<Unit filename="post/HandleSetSubdatinListing.cpp" />
+		<Unit filename="post/HandleSetSubdatinListing.h" />
+		<Unit filename="post/HandleSetSubdatinPostLocked.cpp" />
+		<Unit filename="post/HandleSetSubdatinPostLocked.h" />
+		<Unit filename="post/HandleSetThreadLocked.cpp" />
+		<Unit filename="post/HandleSetThreadLocked.h" />
+		<Unit filename="post/HandleSetThreadStickied.cpp" />
+		<Unit filename="post/HandleSetThreadStickied.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<lib_finder disable_auto="1" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
