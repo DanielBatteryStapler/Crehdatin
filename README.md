@@ -42,12 +42,15 @@ For more about the terminology used for the different parts of the website and f
 The following are pictures of the website in action while showing off some of the different features. All images use the "flat dark" theme, but there are several other themes available too.
 
 Example thread with the desktop version
+
 ![Example Thread on Desktop](images/desktop.png)
 
 Example thread with the tablet version
+
 ![Example Thread on Tablet](images/tablet.png)
 
 Example thread with the mobile version
+
 ![Example Thread on Mobile](images/mobile.png)
 
 ## Dependencies
